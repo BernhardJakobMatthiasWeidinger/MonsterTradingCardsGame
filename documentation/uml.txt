@@ -1,0 +1,135 @@
+@startuml
+scale 1800*900
+enum CardType {
+    monster
+    spell
+}
+
+enum ElementType {
+    fire
+    water
+    normal
+}
+
+enum MonsterType {
+    Goblin
+    Dragon
+    Wizard
+    Ork
+    Knight
+    Kraken
+    Elf
+}
+
+abstract class Card {
+    +<<get>> -<<set>> id : Guid
+    +<<get>> -<<set>> name : String
+    +<<get>> -<<set>> damage : int
+    +<<get>> -<<set>> elementType : ElementType
+
+    +{method} Card(id : Guid, name : String, damage : int)
+}
+
+class MonsterCard{
+    +<<get>> -<<set>> monsterType : MonsterType
+
+    +{method} Card(id : Guid, name : String, damage : int)
+}
+
+class SpellCard {}
+
+class Package {
+    +<<get>> -<<set>> id : Guid
+    +<<get>> -<<set>> cards : List<Card>
+
+    +{method} Package(cards : List<Card>)
+    +{method} aquirePackage(user User) : void
+}
+
+class User { 
+    +<<get>> -<<set>> id : Guid
+    +<<get>> -<<set>> username : String
+    +<<get>> -<<set>> password : String
+
+    +{field} <<get, set>> name : String
+    +{field} <<get, set>> bio : String
+    +{field} <<get, set>> image : String
+    +{field} <<get, set>> coins : int
+    +{field} <<get, set>> gamesPlayed : int
+    +{field} <<get, set>> gamesWon : int
+    +{field} <<get, set>> elo : int
+    +{field} <<get, set>> stack : List<Card>
+    +{field} <<get, set>> deck : List<Card>
+
+    +{method} User(username : string, password : string)
+    +{method} getCardFromDeck() : Card
+    +{method} getUserData(isJson : bool) : string
+    +{method} getUserStats(isJson : bool) : string
+
+}
+
+class Trade {
+    +<<get>> -<<set>> id : Guid
+    +<<get>> -<<set>> cardToTrade : Card
+    +<<get>> -<<set>> user : User
+    +<<get>> -<<set>> cardType : CardType
+    +<<get>> -<<set>> elementType: ElementType
+    +<<get>> -<<set>> minimumDamage : int
+
+    +{method} Trade(id: Guid, cardToTrade : Card, user : User, cardType : CardType, elementType : ElementType, minimumDamage : int)
+}
+
+class Battle {
+    +<<get>> -<<set>> id : Guid
+    +<<get>> -<<set>> player1 : User
+    +<<get>> -<<set>> player2 : User
+
+    +{method} Battle(player1 : User)
+    +{method} play(player2 : User) : string
+    +{method} compareCards() : string
+}
+
+class DBUtils {
+    -{method} {static} GetConnection() : NpgsqlConnection
+
+    +{method} {static} selectRecords(tableName : string, colNames : List<string>, conditionName : string, conditionValue : Guid)
+    +{method} {static} insertRecord(tableName : string, colNames : List<string>, colValues : List<string>)
+    +{method} {static} updateRecord(tableName : string, colNames : List<string>, colValues : List<values>, conditionName : string, conditionValue : Guid)
+    +{method} {static} deleteRecord(tableName : string, colName : string, colValue : Guid)
+}
+
+class RestUtils {
+    -{field} {static} listener : HttpListener
+    -{field} {static} url : string
+    -{field} {static} battles : List<Battle>
+    -{field} {static} trades : List<Trade>
+    -{field} {static} packages : List<Pacakge>
+    -{field} {static} users : List<User>
+
+    -{method} {static} generateToken(user : User) : string
+    -{method} {static} getTradingDeals(userId : Guid) : List<Trade>
+    -{method} {static} tradeCard(tradeId : Guid, cardToTrade : Guid, userId : Guid) : bool
+    -{method} {static} deleteTrade(tradeId : Guid) : bool
+    -{method} {static} addToBattleQueue(id : Guid) : void
+    -{method} {static} checkBattleQueue(id : Guid) : void
+    
+    +{method} {static} HandleIncomingRequests : Task
+}
+
+Card<|--MonsterCard
+Card<|--SpellCard
+
+Card -- ElementType
+MonsterCard -- MonsterType
+Trade -- CardType
+
+Package "0,1" o-- "5" Card: contains
+User "0,1" o-- "*" Card: contains
+
+Trade "0,1" o-- "1" Card: contains
+Trade "*" o-- "1" User: contains
+
+Battle "0,1" o-- "2" User: contains
+
+RestUtils ..> DBUtils
+@enduml
