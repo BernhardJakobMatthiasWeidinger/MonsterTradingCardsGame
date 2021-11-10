@@ -28,7 +28,7 @@ namespace MTCG.src {
             return res;
         }
 
-        private string compareCards(int round) {
+        public string compareCards(int round) {
             //Round 1: PlayerA: FireSpell (10 Damage) vs PlayerB: WaterSpell (20 Damage) => 10 VS 20 -> 05 VS 40 => WaterSpell wins
             Card card1 = user1.getCardFromDeck();
             Card card2 = user2.getCardFromDeck();
@@ -37,8 +37,27 @@ namespace MTCG.src {
             double calc2 = card2.damage;
             
             string res = $"Round {round}: {user1.username}: {card1.name} ({card1.damage} Damage) vs {user2.username}: {card2.name} ({card2.damage} Damage) ";
-            if (card1.GetType().Name == "SpellCard" || card2.GetType().Name == "SpellCard") {
+            if (card1.name.ToLower().Contains("goblin") && card2.name.ToLower().Contains("dragon") ||
+                card1.name.ToLower().Contains("ork") && card2.name.ToLower().Contains("wizard") ||
+                card1.name.ToLower().Contains("spell") && card2.name.ToLower().Contains("kraken") ||
+                card1.name.ToLower().Contains("dragon") && card2.name.ToLower().Contains("fireelf")) {
+                calc1 = 0;
+                res += $"=> {card1.damage} VS {card2.damage} -> {calc1} VS {calc2} ";
+            } else if (card1.name.ToLower().Contains("wizard") && card2.name.ToLower().Contains("ork") ||
+                card1.name.ToLower().Contains("kraken") && card2.name.ToLower().Contains("spell") ||
+                card1.name.ToLower().Contains("fireelf") && card2.name.ToLower().Contains("dragon") ||
+                card1.name.ToLower().Contains("dragon") && card2.name.ToLower().Contains("goblin")) {
+                calc2 = 0;
+                res += $"=> {card1.damage} VS {card2.damage} -> {calc1} VS {calc2} ";
+            } else if (card1.name.ToLower().Contains("knight") && card2.name.ToLower().Contains("waterspell")) {
+                calc2 = 999;
+                res += $"=> {card1.damage} VS {card2.damage} -> {calc1} VS {calc2} ";
+            } else if (card1.name.ToLower().Contains("waterspell") && card2.name.ToLower().Contains("knight")) {
+                calc1 = 999;
+                res += $"=> {card1.damage} VS {card2.damage} -> {calc1} VS {calc2} ";
+            } 
 
+            if (card1.GetType().Name == "SpellCard" || card2.GetType().Name == "SpellCard") {
                 //if card1 has disadvantage type
                 if (card1.elementType == ElementType.fire && card2.elementType == ElementType.water ||
                     card1.elementType == ElementType.water && card2.elementType == ElementType.normal ||
@@ -53,7 +72,7 @@ namespace MTCG.src {
                 }
 
                 res += $"=> {card1.damage} VS {card2.damage} -> {calc1} VS {calc2} ";
-            }
+            } 
 
             string winner = "Draw";
             if (calc1 > calc2) {

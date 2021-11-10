@@ -17,6 +17,7 @@ namespace MTCG.src {
         public int elo { get; set; }
         public List<Card> stack { get; set; }
         public List<Card> deck { get; set; }
+        public List<User> friends { get; set; }
 
         public User(string username, string password) {
             this.username = username;

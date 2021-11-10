@@ -92,6 +92,7 @@ namespace MTCG {
             Console.WriteLine("User1 has card s5 in stack: " + u1.stack.Contains(s5));
             Console.WriteLine("User2 has card s2 in stack: " + u2.stack.Contains(s2));
 
+            Console.WriteLine("\nBattle:");
             Battle b1 = new Battle(Guid.NewGuid(), u1);
             Console.WriteLine(b1.play(u2));
 
