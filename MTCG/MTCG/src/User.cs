@@ -42,6 +42,26 @@ namespace MTCG.src {
             }
         }
 
+        public void configureDeck(List<Guid> guids) {
+            List<Card> res = new List<Card>();
+
+            if (guids.Count != 4) {
+                throw new ArgumentException($"A deck should be provided with 4 cards, " +
+                    $"cards given: {guids.Count}");
+            }
+
+            foreach (Guid guid in guids) {
+                Card card = stack.Find(c => c.id == guid);
+                if (card != null) {
+                    res.Add(card);
+                } else {
+                    throw new ArgumentException($"Card with id {guid} was not found in stack!");
+                }
+            }
+
+            deck = res;
+        }
+
         public string getUserData(bool isJson) {
             return "";
         }
