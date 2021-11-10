@@ -13,13 +13,14 @@ namespace MTCG.src {
             this.id = id;
             this.name = name;
             this.damage = damage;
+            this.elementType = ElementType.normal;
 
-            if (name.Substring(0, 4).ToLower() == "fire") {
-                elementType = ElementType.fire;
-            } else if (name.Substring(0, 5).ToLower() == "water") {
-                elementType = ElementType.water;
-            } else {
-                elementType = ElementType.normal;
+            if (name.Length >= 5) {
+                if (name.Substring(0, 4).ToLower() == "fire") {
+                    this.elementType = ElementType.fire;
+                } else if (name.Substring(0, 5).ToLower() == "water") {
+                    this.elementType = ElementType.water;
+                } 
             }
         }
     }
