@@ -92,10 +92,11 @@ namespace MTCG {
             Console.WriteLine("User1 has card s5 in stack: " + u1.stack.Contains(s5));
             Console.WriteLine("User2 has card s2 in stack: " + u2.stack.Contains(s2));
 
-            //get 100 times a random card from the deck
-            for (int i=0; i < 100; ++i) {
-                Console.WriteLine(u2.getCardFromDeck().name);
-            }
+            Battle b1 = new Battle(Guid.NewGuid(), u1);
+            Console.WriteLine(b1.play(u2));
+
+            Console.WriteLine(u1.deck.Count);
+            Console.WriteLine(u2.deck.Count);
             Console.Read();
         }
     }
