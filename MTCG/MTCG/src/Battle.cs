@@ -50,28 +50,26 @@ namespace MTCG.src {
                 calc2 = 0;
                 res += $"=> {card1.damage} VS {card2.damage} -> {calc1} VS {calc2} ";
             } else if (card1.name.ToLower().Contains("knight") && card2.name.ToLower().Contains("waterspell")) {
-                calc2 = 999;
+                calc2 = 9999;
                 res += $"=> {card1.damage} VS {card2.damage} -> {calc1} VS {calc2} ";
             } else if (card1.name.ToLower().Contains("waterspell") && card2.name.ToLower().Contains("knight")) {
-                calc1 = 999;
+                calc1 = 9999;
                 res += $"=> {card1.damage} VS {card2.damage} -> {calc1} VS {calc2} ";
-            } 
-
-            if (card1.GetType().Name == "SpellCard" || card2.GetType().Name == "SpellCard") {
+            } else if (card1.GetType().Name == "SpellCard" || card2.GetType().Name == "SpellCard") {
                 //if card1 has disadvantage type
                 if (card1.elementType == ElementType.fire && card2.elementType == ElementType.water ||
                     card1.elementType == ElementType.water && card2.elementType == ElementType.normal ||
                     card1.elementType == ElementType.normal && card2.elementType == ElementType.fire) {
                     calc1 /= 2;
                     calc2 *= 2;
+                    res += $"=> {card1.damage} VS {card2.damage} -> {calc1} VS {calc2} ";
                 } else if (card1.elementType == ElementType.fire && card2.elementType == ElementType.normal ||
                     card1.elementType == ElementType.water && card2.elementType == ElementType.fire ||
                     card1.elementType == ElementType.normal && card2.elementType == ElementType.water) {
                     calc1 *= 2;
                     calc2 /= 2;
+                    res += $"=> {card1.damage} VS {card2.damage} -> {calc1} VS {calc2} ";
                 }
-
-                res += $"=> {card1.damage} VS {card2.damage} -> {calc1} VS {calc2} ";
             } 
 
             string winner = "Draw";
