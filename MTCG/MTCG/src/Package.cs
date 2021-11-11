@@ -17,7 +17,12 @@ namespace MTCG.src {
         }
 
         public void aquirePackage(User user) {
-            user.stack.AddRange(cards);
+            if (user.coins >= 5) {
+                user.coins -= 5;
+                user.stack.AddRange(cards);
+            } else {
+                throw new ArgumentException($"User {user.username} has an insufficent amount of coins ({user.coins}), coins needed: 5");
+            }
         }
     }
 }

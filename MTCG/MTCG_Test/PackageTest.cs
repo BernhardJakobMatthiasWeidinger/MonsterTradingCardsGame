@@ -46,15 +46,26 @@ namespace MTCG_Test {
             MonsterCard m4 = new MonsterCard(Guid.NewGuid(), "WaterGoblin", 25.0);
             MonsterCard m5 = new MonsterCard(Guid.NewGuid(), "FireGoblin", 25.0);
 
+            MonsterCard m6 = new MonsterCard(Guid.NewGuid(), "WaterDragon", 25.0);
+            MonsterCard m7 = new MonsterCard(Guid.NewGuid(), "FireDragon", 25.0);
+            MonsterCard m8 = new MonsterCard(Guid.NewGuid(), "Dragon", 25.0);
+            MonsterCard m9 = new MonsterCard(Guid.NewGuid(), "WaterGoblin", 25.0);
+            MonsterCard m10 = new MonsterCard(Guid.NewGuid(), "FireGoblin", 25.0);
+
             User u1 = new User("maxi", "musterpassword1");
+            User u2 = new User("mini", "musterpassword1");
+            u2.coins = 3;
+
             Package p1 = new Package(new List<Card> { m1, m2, m3, m4, m5 });
+            Package p2 = new Package(new List<Card> { m6, m7, m8, m9, m10 });
 
             //act
             p1.aquirePackage(u1);
+            ArgumentException ex = Assert.Throws<ArgumentException>(delegate { p2.aquirePackage(u2); });
 
             //assert
             Assert.AreEqual(u1.stack.Count, 5);
-
+            Assert.That(ex.Message, Is.EqualTo($"User mini has an insufficent amount of coins (3), coins needed: 5"));
         }
     }
 }
