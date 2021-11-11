@@ -20,9 +20,9 @@ namespace MTCG.src {
             this.minimumDamage = minimumDamage;
 
             if (user.deck.Contains(cardToTrade)) {
-                throw new ArgumentException("Cannot trade card if it's in the deck!");
+                throw new ArgumentException("Cannot trade card if it's in the deck.");
             } else if (!user.stack.Contains(cardToTrade)) {
-                throw new ArgumentException("Cannot trade card if it's not in the stack!");
+                throw new ArgumentException("Cannot trade card if it's not in the stack.");
             } else {
                 this.cardToTrade = cardToTrade;
             }
@@ -30,18 +30,18 @@ namespace MTCG.src {
 
         public void TradeCard(User u2, Card cardForTrade) {
             if (user == u2) {
-                throw new ArgumentException("Cannot trade card with yourself!");
+                throw new ArgumentException("Cannot trade card with yourself.");
             } else if (u2.deck.Contains(cardForTrade)) {
-                throw new ArgumentException("Cannot trade card if it's in the deck!");
+                throw new ArgumentException("Cannot trade card if it's in the deck.");
             } else if (!u2.stack.Contains(cardForTrade)) {
-                throw new ArgumentException("Cannot trade card if it's not in the stack!");
+                throw new ArgumentException("Cannot trade card if it's not in the stack.");
             } else if (cardForTrade.GetType().Name == "MonsterCard" && cardType == CardType.spell ||
                 cardForTrade.GetType().Name == "SpellCard" && cardType == CardType.monster) {
-                throw new ArgumentException("Cannot trade card, wrong card type was provided!");
+                throw new ArgumentException("Cannot trade card, wrong card type was provided.");
             } else if (this.elementType != cardForTrade.elementType) {
-                throw new ArgumentException("Cannot trade card, wrong element type was provided!");
+                throw new ArgumentException("Cannot trade card, wrong element type was provided.");
             } else if (this.minimumDamage > cardForTrade.damage) {
-                throw new ArgumentException("Cannot trade card, damage of card is too small!");
+                throw new ArgumentException("Cannot trade card, damage of card is too small.");
             }
 
             //trade provided card

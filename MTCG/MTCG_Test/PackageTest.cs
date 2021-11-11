@@ -1,8 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using NUnit;
 using NUnit.Framework;
+
 using MTCG.src;
-using System.Collections.Generic;
 
 namespace MTCG_Test {
     public class PackageTest {
@@ -20,14 +21,20 @@ namespace MTCG_Test {
             SpellCard s3 = new SpellCard(Guid.NewGuid(), "RegularSpell", 3.0);
             SpellCard s4 = new SpellCard(Guid.NewGuid(), "FireSpell", 3.0);
             SpellCard s5 = new SpellCard(Guid.NewGuid(), "WaterSpell", 3.0);
+            SpellCard s6 = new SpellCard(Guid.NewGuid(), "WaterSpell", 3.0);
+            SpellCard s7 = new SpellCard(Guid.NewGuid(), "WaterSpell", 3.0);
+            SpellCard s8 = new SpellCard(Guid.NewGuid(), "WaterSpell", 3.0);
+            SpellCard s9 = new SpellCard(Guid.NewGuid(), "WaterSpell", 3.0);
 
             //act
             Package p1 = new Package(new List<Card> { m1, m2, m3, s1, s2 });
             ArgumentException ex1 = Assert.Throws<ArgumentException>(delegate { new Package(new List<Card> { m4, m5, m6, s3, s4, s5 }); });
+            ArgumentException ex2 = Assert.Throws<ArgumentException>(delegate { new Package(new List<Card> { s6, s7, s8, s9 }); });
 
             //assert
             Assert.AreEqual(p1.cards.Count, 5);
             Assert.That(ex1.Message, Is.EqualTo("A package should be provided with 5 cards, cards given: 6"));
+            Assert.That(ex2.Message, Is.EqualTo("A package should be provided with 5 cards, cards given: 4"));
         }
 
         [Test]
