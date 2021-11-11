@@ -14,13 +14,19 @@ namespace MTCG.src {
             this.name = name;
             this.damage = damage;
             this.elementType = ElementType.normal;
+            
+            if (damage < 0) {
+                throw new ArgumentException("Damage has to be positive.");
+            }
 
-            if (name.Length >= 5) {
+            if (name.Length >= 7) {
                 if (name.Substring(0, 4).ToLower() == "fire") {
                     this.elementType = ElementType.fire;
                 } else if (name.Substring(0, 5).ToLower() == "water") {
                     this.elementType = ElementType.water;
-                } 
+                } else if (name.Substring(0, 7).ToLower() == "regular") {
+                    this.elementType = ElementType.normal;
+                }
             }
         }
     }
@@ -29,17 +35,26 @@ namespace MTCG.src {
         public MonsterType monsterType { get; private set; }
 
         public MonsterCard(Guid id, string name, double damage) : base(id, name, damage) {
-            string monsterName = name;
+            int idx = 0;
             if (elementType == ElementType.fire) {
-                monsterName = name.Substring(4);
+                idx = 4;
             } else if (elementType == ElementType.water) {
-                monsterName = name.Substring(5);
+                idx = 5;
             }
-            monsterType = (MonsterType)System.Enum.Parse(typeof(MonsterType), monsterName.ToLower());
+
+            monsterType = (MonsterType)System.Enum.Parse(typeof(MonsterType), name.Substring(idx).ToLower());
         }
     }
 
     public class SpellCard : Card {
-        public SpellCard(Guid id, string name, double damage) : base(id, name, damage) { }
+        public SpellCard(Guid id, string name, double damage) : base(id, name, damage) {
+            if (this.elementType == ElementType.normal && name.Substring(0, 7).ToLower() != "regular") {
+                throw new ArgumentException("Spell card has to begin with 'Regular', 'Fire' or 'Water'.");
+            }
+
+            if (name.Substring(name.Length-5).ToLower() != "spell") {
+                throw new ArgumentException("Spell card has to end with 'Spell'.");
+            }
+        }
     }
 }
