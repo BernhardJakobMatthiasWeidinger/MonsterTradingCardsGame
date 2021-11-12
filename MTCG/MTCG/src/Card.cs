@@ -29,6 +29,10 @@ namespace MTCG.src {
                 }
             }
         }
+
+        public override string ToString() {
+            return $"id:{this.id},name:{this.name},damage:{this.damage},elementType:{this.elementType}";
+        }
     }
 
     public class MonsterCard : Card {
@@ -43,6 +47,10 @@ namespace MTCG.src {
             }
 
             monsterType = (MonsterType)System.Enum.Parse(typeof(MonsterType), name.Substring(idx).ToLower());
+        }
+
+        public override string ToString() {
+            return base.ToString() + $",monsterType:{this.monsterType}";
         }
     }
 

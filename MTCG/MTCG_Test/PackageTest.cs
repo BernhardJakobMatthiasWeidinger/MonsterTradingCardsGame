@@ -65,6 +65,7 @@ namespace MTCG_Test {
 
             //assert
             Assert.AreEqual(u1.stack.Count, 5);
+            Assert.AreEqual(u1.coins, 15);
             Assert.That(ex.Message, Is.EqualTo($"User mini has an insufficent amount of coins (3), coins needed: 5"));
         }
     }

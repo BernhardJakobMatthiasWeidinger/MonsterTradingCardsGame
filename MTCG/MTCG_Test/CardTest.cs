@@ -85,5 +85,19 @@ namespace MTCG_Test {
             Assert.AreEqual(m7.monsterType, MonsterType.wizard);
             Assert.That(ex.Message, Is.EqualTo("Requested value 'unicorn' was not found."));
         }
+
+        [Test]
+        public void CheckToString() {
+            //arrange
+            //act
+            MonsterCard m1 = new MonsterCard(Guid.NewGuid(), "WaterDragon", 25.0);
+            MonsterCard m2 = new MonsterCard(Guid.NewGuid(), "Elf", 12.0);
+            SpellCard s1 = new SpellCard(Guid.NewGuid(), "FireSpell", 12.0);
+
+            //assert
+            Assert.AreEqual(m1.ToString(), $"id:{m1.id},name:WaterDragon,damage:25,elementType:water,monsterType:dragon");
+            Assert.AreEqual(m2.ToString(), $"id:{m2.id},name:Elf,damage:12,elementType:normal,monsterType:elf");
+            Assert.AreEqual(s1.ToString(), $"id:{s1.id},name:FireSpell,damage:12,elementType:fire");
+        }
     }
 }

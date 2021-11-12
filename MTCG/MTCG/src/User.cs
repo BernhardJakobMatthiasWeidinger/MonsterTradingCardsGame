@@ -64,10 +64,17 @@ namespace MTCG.src {
         }
 
         public string getUserData(bool isJson) {
+            if (isJson) {
+
+            }
             return "";
         }
 
         public string getUserStats(bool isJson) {
+            return "";
+        }
+
+        public string deckToString(bool isJson) {
             return "";
         }
     }
