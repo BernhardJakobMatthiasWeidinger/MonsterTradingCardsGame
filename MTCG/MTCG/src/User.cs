@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Newtonsoft.Json;
 
 namespace MTCG.src {
     public class User {
@@ -76,6 +77,20 @@ namespace MTCG.src {
 
         public string deckToString(bool isJson) {
             return "";
+        }
+
+        public string stackToString(bool isJson) {
+            string res = "";
+            if (isJson) {
+                foreach (Card card in stack) {
+                    string json = JsonConvert.SerializeObject(card);
+                }
+            } else {
+                foreach (Card card in stack) {
+                    res += card.ToString() + "\n";
+                }
+            }
+            return res;
         }
     }
 }
