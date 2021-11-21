@@ -9,11 +9,19 @@ namespace MTCG.src {
         public User user2 { get; private set; }
 
         public Battle(Guid id, User user1) {
+            if (user1.deck.Count != 4) {
+                throw new ArgumentException($"A deck should consist of 4 cards, " +
+                    $"cards in deck: {user1.deck.Count}");
+            }
             this.id = id;
             this.user1 = user1;
         }
 
         public string play(User user2) {
+            if (user2.deck.Count != 4) {
+                throw new ArgumentException($"A deck should consist of 4 cards, " +
+                    $"cards in deck: {user2.deck.Count}");
+            }
             this.user2 = user2;
 
             string res = "";
@@ -24,6 +32,23 @@ namespace MTCG.src {
                     break;
                 } 
             }
+
+            user1.gamesPlayed++;
+            user2.gamesPlayed++;
+            if (user1.deck.Count > user2.deck.Count) {
+                user1.gamesWon++;
+                user1.elo += 3;
+                user2.gamesLost++;
+                user2.elo -= 5;
+            } else if (user1.deck.Count < user2.deck.Count) {
+                user2.gamesWon++;
+                user2.elo += 3;
+                user1.gamesLost++;
+                user1.elo -= 5;
+            } 
+
+            user1.configureDeckAfterBattle();
+            user2.configureDeckAfterBattle();
 
             return res;
         }
@@ -76,11 +101,13 @@ namespace MTCG.src {
             if (calc1 > calc2) {
                 winner = $"{card1.name} wins";
                 user2.deck.Remove(card2);
-                user1.deck.Add(card2);
+                user2.stack.Remove(card2);
+                user1.addCards(new List<Card> { card2 }, true, true);
             } else if (calc1 < calc2) {
                 winner = $"{card2.name} wins";
                 user1.deck.Remove(card1);
-                user2.deck.Add(card1);
+                user1.stack.Remove(card1);
+                user2.addCards(new List<Card> { card1 }, true, true);
             }
 
             return res + $"=> {winner}";

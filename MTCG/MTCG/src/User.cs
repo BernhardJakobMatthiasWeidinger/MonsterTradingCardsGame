@@ -88,7 +88,7 @@ namespace MTCG.src {
                 deck.AddRange(newCards);
             }
         }
-
+        
         public void configureDeckAfterBattle() {
             if (deck.Count > 4) {
                 //deck should only consist of the 4 strongest cards

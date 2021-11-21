@@ -96,9 +96,6 @@ namespace MTCG {
             Battle b1 = new Battle(Guid.NewGuid(), u1);
             Console.WriteLine(b1.play(u2));
 
-            Console.WriteLine(u1.deck.Count);
-            Console.WriteLine(u2.deck.Count);
-
             Console.WriteLine(u1.stackToString(true));
             Console.WriteLine(u1.deckToString(true));
             Console.WriteLine(u1.getUserStats(true));
