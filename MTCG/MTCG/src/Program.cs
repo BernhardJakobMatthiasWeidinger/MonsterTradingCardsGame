@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using MTCG.src;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace MTCG {
     class Program {
@@ -96,6 +98,8 @@ namespace MTCG {
             Battle b1 = new Battle(Guid.NewGuid(), u1);
             Console.WriteLine(b1.play(u2));
 
+            u1.addFriend(u2);
+
             Console.WriteLine(u1.stackToString(true));
             Console.WriteLine(u1.deckToString(true));
             Console.WriteLine(u1.getUserStats(true));
@@ -105,6 +109,13 @@ namespace MTCG {
             Console.WriteLine(u1.deckToString(false));
             Console.WriteLine(u1.getUserStats(false));
             Console.WriteLine(u1.getUserData(false));
+
+            Console.WriteLine();
+
+            JArray u1Deck = (JArray)((JObject)JsonConvert.DeserializeObject(u1.deckToString(true))).GetValue("deck");
+            JObject firstCard = (JObject)JsonConvert.DeserializeObject(u1Deck[0].ToString());
+            
+            Console.WriteLine(firstCard.GetValue("id"));
             Console.Read();
         }
     }

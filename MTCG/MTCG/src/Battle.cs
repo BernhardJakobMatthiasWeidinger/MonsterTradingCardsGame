@@ -102,12 +102,14 @@ namespace MTCG.src {
                 winner = $"{card1.name} wins";
                 user2.deck.Remove(card2);
                 user2.stack.Remove(card2);
-                user1.addCards(new List<Card> { card2 }, true, true);
+                user1.stack.Add(card2);
+                user1.deck.Add(card2);
             } else if (calc1 < calc2) {
                 winner = $"{card2.name} wins";
                 user1.deck.Remove(card1);
                 user1.stack.Remove(card1);
-                user2.addCards(new List<Card> { card1 }, true, true);
+                user2.stack.Add(card1);
+                user2.deck.Add(card1);
             }
 
             return res + $"=> {winner}";

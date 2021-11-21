@@ -24,15 +24,15 @@ namespace MTCG.src {
         public List<Card> stack { get; set; }
         [JsonIgnore]
         public List<Card> deck { get; set; }
-        public List<User> friends { get; set; }
+        public List<Guid> friends { get; set; }
 
         public User(string username, string password) {
             this.id = Guid.NewGuid();
-            if (username.IndexOfAny(new char[] { ',', ';', '/', '\\', '\'', '"' }) != -1) {
-                throw new ArgumentException("Username is not allowed to contain following characters: , ; / \\ \' \"");
+            if (username.IndexOfAny(new char[] { ';', '/', '\\', '\'', '"' }) != -1) {
+                throw new ArgumentException("Username is not allowed to contain following characters: ; / \\ \' \"");
             }
-            if (password.IndexOfAny(new char[] { ',', ';', '/', '\\', '\'', '"' }) != -1) {
-                throw new ArgumentException("Password is not allowed to contain following characters: , ; / \\ \' \"");
+            if (password.IndexOfAny(new char[] { ';', '/', '\\', '\'', '"' }) != -1) {
+                throw new ArgumentException("Password is not allowed to contain following characters: ; / \\ \' \"");
             }
             this.username = username;
             this.password = password;
@@ -45,7 +45,7 @@ namespace MTCG.src {
             this.elo = 100;
             this.stack = new List<Card>();
             this.deck = new List<Card>();
-            this.friends = new List<User>();
+            this.friends = new List<Guid>();
         }
 
         public override string ToString() {
@@ -53,7 +53,7 @@ namespace MTCG.src {
                     $"coins:{coins},gamesPlayed:{gamesPlayed},gamesWon:{gamesWon},gamesLost:{gamesLost},elo:{elo},friends:[";
 
             int i = 0;
-            foreach (User friend in friends) {
+            foreach (Guid friend in friends) {
                 res += friend.ToString();
                 res += i != (friends.Count - 1) ? ";" : "";
                 i++;
@@ -63,16 +63,6 @@ namespace MTCG.src {
         }
 
         public void setUserData(string name, string bio, string image) {
-            if (name.IndexOfAny(new char[] { ',', ';', '/', '\\', '\'', '"' }) != -1) {
-                throw new ArgumentException("Name is not allowed to contain following characters: , ; / \\ \' \"");
-            }
-            if (bio.IndexOfAny(new char[] { ',', ';', '/', '\\', '\'', '"' }) != -1) {
-                throw new ArgumentException("Bio is not allowed to contain following characters: , ; / \\ \' \"");
-            }
-            if (image.IndexOfAny(new char[] { ',', ';', '/', '\\', '\'', '"' }) != -1) {
-                throw new ArgumentException("Image is not allowed to contain following characters: , ; / \\ \' \"");
-            }
-
             this.name = name;
             this.bio = bio;
             this.image = image;
@@ -88,29 +78,7 @@ namespace MTCG.src {
                 return null;
             }
         }
-
-        public void addCards(List<Card> newCards, bool toStack, bool toDeck) {
-            if (toStack) {
-                List<Guid> ids = stack.Select(c1 => c1.id).Intersect(newCards.Select(c2 => c2.id)).ToList();
-                List<Card> intersectingStackCards = stack.Where(x => ids.Contains(x.id)).ToList();
-
-                if (intersectingStackCards.Count() != 0) {
-                    throw new ArgumentException($"Cards with ids {String.Join(", ", ids.ToArray())} are already in the stack!");
-                }
-                stack.AddRange(newCards);
-            }
-
-            if (toDeck) {
-                List<Guid> ids = deck.Select(c1 => c1.id).Intersect(newCards.Select(c2 => c2.id)).ToList();
-                List<Card> intersectingDeckCards = deck.Where(x => ids.Contains(x.id)).ToList();
-
-                if (intersectingDeckCards.Count() != 0) {
-                    throw new ArgumentException($"Cards with ids {String.Join(", ", ids.ToArray())} are already in the deck!");
-                }
-                deck.AddRange(newCards);
-            }
-        }
-
+        
         public void configureDeck(List<Guid> guids) {
             List<Card> res = new List<Card>();
 
@@ -139,15 +107,16 @@ namespace MTCG.src {
             } else if (deck.Count < 4) {
                 //add strongest remaining cards from stack to deck
                 List<Card> sortedList = stack.OrderByDescending(c => c.damage).ToList().Take(4 - deck.Count()).ToList();
-                addCards(sortedList, false, true);
+                deck.AddRange(sortedList);
             }
         }
 
         public void addFriend(User other) {
-            if (this.friends.Contains(other)) {
+            if (this.friends.Contains(other.id)) {
                 throw new ArgumentException($"User {other.username} is already your friend!");
             } else {
-                this.friends.Add(other);
+                this.friends.Add(other.id);
+                other.friends.Add(this.id);
             }
         }
 
