@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -63,6 +64,40 @@ namespace MTCG.src {
                 return deck[cardIndex];
             } else {
                 return null;
+            }
+        }
+
+        public void addCards(List<Card> newCards, bool toStack, bool toDeck) {
+            if (toStack) {
+                List<Guid> ids = stack.Select(c1 => c1.id).Intersect(newCards.Select(c2 => c2.id)).ToList();
+                List<Card> intersectingStackCards = stack.Where(x => ids.Contains(x.id)).ToList();
+
+                if (intersectingStackCards.Count() != 0) {
+                    throw new ArgumentException($"Cards with ids {String.Join(", ", ids.ToArray())} are already in the stack!");
+                }
+                stack.AddRange(newCards);
+            }
+
+            if (toDeck) {
+                List<Guid> ids = deck.Select(c1 => c1.id).Intersect(newCards.Select(c2 => c2.id)).ToList();
+                List<Card> intersectingDeckCards = deck.Where(x => ids.Contains(x.id)).ToList();
+
+                if (intersectingDeckCards.Count() != 0) {
+                    throw new ArgumentException($"Cards with ids {String.Join(", ", ids.ToArray())} are already in the deck!");
+                }
+                deck.AddRange(newCards);
+            }
+        }
+
+        public void configureDeckAfterBattle() {
+            if (deck.Count > 4) {
+                //deck should only consist of the 4 strongest cards
+                List<Card> sortedList = deck.OrderByDescending(c => c.damage).ToList().Take(4).ToList();
+                deck = sortedList;
+            } else if (deck.Count < 4) {
+                //add strongest remaining cards from stack to deck
+                List<Card> sortedList = stack.OrderByDescending(c => c.damage).ToList().Take(4 - deck.Count()).ToList();
+                addCards(sortedList, false, true);
             }
         }
         
