@@ -98,6 +98,16 @@ namespace MTCG {
 
             Console.WriteLine(u1.deck.Count);
             Console.WriteLine(u2.deck.Count);
+
+            Console.WriteLine(u1.stackToString(true));
+            Console.WriteLine(u1.deckToString(true));
+            Console.WriteLine(u1.getUserStats(true));
+            Console.WriteLine(u1.getUserData(true));
+            Console.WriteLine();
+            Console.WriteLine(u1.stackToString(false));
+            Console.WriteLine(u1.deckToString(false));
+            Console.WriteLine(u1.getUserStats(false));
+            Console.WriteLine(u1.getUserData(false));
             Console.Read();
         }
     }
