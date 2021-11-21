@@ -28,10 +28,16 @@ namespace MTCG.src {
 
         public User(string username, string password) {
             this.id = Guid.NewGuid();
+            if (username.IndexOfAny(new char[] { ',', ';', '/', '\\', '\'', '"' }) != -1) {
+                throw new ArgumentException("Username is not allowed to contain following characters: , ; / \\ \' \"");
+            }
+            if (password.IndexOfAny(new char[] { ',', ';', '/', '\\', '\'', '"' }) != -1) {
+                throw new ArgumentException("Password is not allowed to contain following characters: , ; / \\ \' \"");
+            }
             this.username = username;
             this.password = password;
 
-            this.bio = "Hier könnte ihre Biografie stehen!";
+            this.bio = "Hier könnte deine Biografie stehen!";
             this.coins = 20;
             this.gamesPlayed = 0;
             this.gamesWon = 0;
@@ -54,6 +60,22 @@ namespace MTCG.src {
             }
             res += "]";
             return res;
+        }
+
+        public void setUserData(string name, string bio, string image) {
+            if (name.IndexOfAny(new char[] { ',', ';', '/', '\\', '\'', '"' }) != -1) {
+                throw new ArgumentException("Name is not allowed to contain following characters: , ; / \\ \' \"");
+            }
+            if (bio.IndexOfAny(new char[] { ',', ';', '/', '\\', '\'', '"' }) != -1) {
+                throw new ArgumentException("Bio is not allowed to contain following characters: , ; / \\ \' \"");
+            }
+            if (image.IndexOfAny(new char[] { ',', ';', '/', '\\', '\'', '"' }) != -1) {
+                throw new ArgumentException("Image is not allowed to contain following characters: , ; / \\ \' \"");
+            }
+
+            this.name = name;
+            this.bio = bio;
+            this.image = image;
         }
 
         public Card getCardFromDeck() {
@@ -88,19 +110,7 @@ namespace MTCG.src {
                 deck.AddRange(newCards);
             }
         }
-        
-        public void configureDeckAfterBattle() {
-            if (deck.Count > 4) {
-                //deck should only consist of the 4 strongest cards
-                List<Card> sortedList = deck.OrderByDescending(c => c.damage).ToList().Take(4).ToList();
-                deck = sortedList;
-            } else if (deck.Count < 4) {
-                //add strongest remaining cards from stack to deck
-                List<Card> sortedList = stack.OrderByDescending(c => c.damage).ToList().Take(4 - deck.Count()).ToList();
-                addCards(sortedList, false, true);
-            }
-        }
-        
+
         public void configureDeck(List<Guid> guids) {
             List<Card> res = new List<Card>();
 
@@ -119,6 +129,26 @@ namespace MTCG.src {
             }
 
             deck = res;
+        }
+
+        public void configureDeckAfterBattle() {
+            if (deck.Count > 4) {
+                //deck should only consist of the 4 strongest cards
+                List<Card> sortedList = deck.OrderByDescending(c => c.damage).ToList().Take(4).ToList();
+                deck = sortedList;
+            } else if (deck.Count < 4) {
+                //add strongest remaining cards from stack to deck
+                List<Card> sortedList = stack.OrderByDescending(c => c.damage).ToList().Take(4 - deck.Count()).ToList();
+                addCards(sortedList, false, true);
+            }
+        }
+
+        public void addFriend(User other) {
+            if (this.friends.Contains(other)) {
+                throw new ArgumentException($"User {other.username} is already your friend!");
+            } else {
+                this.friends.Add(other);
+            }
         }
 
         public string getUserData(bool isJson) {

@@ -4,7 +4,7 @@ using NUnit.Framework;
 
 using MTCG.src;
 
-namespace MTCG_Test {
+namespace MTCG.Test {
     public class TestCard {
         [Test]
         public void testConstructor_name() {

@@ -5,7 +5,7 @@ using NUnit.Framework;
 
 using MTCG.src;
 
-namespace MTCG_Test {
+namespace MTCG.Test {
     public class TestPackage {
         [Test]
         public void testConstructor() {
