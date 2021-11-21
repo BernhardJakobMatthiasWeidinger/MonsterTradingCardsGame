@@ -53,7 +53,7 @@ namespace MTCG.src {
             return res;
         }
 
-        public string compareCards(int round) {
+        private string compareCards(int round) {
             //Round 1: PlayerA: FireSpell (10 Damage) vs PlayerB: WaterSpell (20 Damage) => 10 VS 20 -> 05 VS 40 => WaterSpell wins
             Card card1 = user1.getCardFromDeck();
             Card card2 = user2.getCardFromDeck();
