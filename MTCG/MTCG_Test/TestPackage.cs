@@ -6,9 +6,9 @@ using NUnit.Framework;
 using MTCG.src;
 
 namespace MTCG_Test {
-    public class PackageTest {
+    public class TestPackage {
         [Test]
-        public void CheckConstructor() {
+        public void testConstructor() {
             //arrange
             MonsterCard m1 = new MonsterCard(Guid.NewGuid(), "WaterDragon", 25.0);
             MonsterCard m2 = new MonsterCard(Guid.NewGuid(), "FireDragon", 25.0);
@@ -38,7 +38,7 @@ namespace MTCG_Test {
         }
 
         [Test]
-        public void checkAcquirePackage() {
+        public void testAcquirePackage() {
             //arrange
             MonsterCard m1 = new MonsterCard(Guid.NewGuid(), "WaterDragon", 25.0);
             MonsterCard m2 = new MonsterCard(Guid.NewGuid(), "FireDragon", 25.0);

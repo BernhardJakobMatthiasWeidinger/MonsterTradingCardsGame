@@ -5,9 +5,9 @@ using NUnit.Framework;
 using MTCG.src;
 
 namespace MTCG_Test {
-    public class CardTest {
+    public class TestCard {
         [Test]
-        public void CheckSpellName() {
+        public void testConstructor_name() {
             //arrange
             //act
             SpellCard s1 = new SpellCard(Guid.NewGuid(), "RegularSpell", 0.0);
@@ -25,7 +25,7 @@ namespace MTCG_Test {
         }
 
         [Test]
-        public void CheckDamage() {
+        public void testConstructor_damage() {
             //arrange
             //act
             MonsterCard m1 = new MonsterCard(Guid.NewGuid(), "WaterDragon", 25.0);
@@ -41,7 +41,7 @@ namespace MTCG_Test {
         }
 
         [Test]
-        public void CheckElementType() {
+        public void testConstructor_elementType() {
             //arrange
             //act
             MonsterCard m1 = new MonsterCard(Guid.NewGuid(), "WaterDragon", 25.0);
@@ -63,7 +63,7 @@ namespace MTCG_Test {
         }
 
         [Test]
-        public void CheckMonsterType() {
+        public void testConstructor_monsterType() {
             //arrange
             //act
             MonsterCard m1 = new MonsterCard(Guid.NewGuid(), "WaterDragon", 25.0);
@@ -87,7 +87,7 @@ namespace MTCG_Test {
         }
 
         [Test]
-        public void CheckToString() {
+        public void testToString() {
             //arrange
             //act
             MonsterCard m1 = new MonsterCard(Guid.NewGuid(), "WaterDragon", 25.0);
