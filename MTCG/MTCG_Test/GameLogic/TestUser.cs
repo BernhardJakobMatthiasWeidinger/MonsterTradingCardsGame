@@ -6,7 +6,7 @@ using System.Text;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace MTCG.GameLogic.Test {
+namespace MTCG.Test.GameLogic {
     public class TestUser {
         [Test]
         public void testConstructor() {

@@ -18,9 +18,9 @@ namespace MTCG.GameLogic {
                 card1.name.ToLower().Contains("dragon") && card2.name.ToLower().Contains("goblin")) {
                 res = new Tuple<double, double>(calcDamage1, 0);
             } else if (card1.name.ToLower().Contains("knight") && card2.name.ToLower().Contains("waterspell")) {
-                res = new Tuple<double, double>(calcDamage1, 9999);
+                res = new Tuple<double, double>(0, 9999);
             } else if (card1.name.ToLower().Contains("waterspell") && card2.name.ToLower().Contains("knight")) {
-                res = new Tuple<double, double>(9999, calcDamage2);
+                res = new Tuple<double, double>(9999, 0);
             } 
 
             return res;
@@ -47,19 +47,20 @@ namespace MTCG.GameLogic {
         }
 
         public static string compareAllRules(string user1, string user2, Card card1, Card card2, ref double calc1, ref double calc2) {
-            string res = $"{user1}: {card1.name} ({card1.damage} Damage) vs {user2}: {card2.name} ({card2.damage} Damage) ";
+            string res = $"{user1}: {card1.name} ({card1.damage} Damage) vs {user2}: {card2.name} ({card2.damage} Damage)";
 
             Tuple<double, double> calcValues = CardRules.compareUniqueRule(card1, card2, calc1, calc2);
             if (calcValues.Item1 != calc1 || calcValues.Item2 != calc2) {
-                res += $"=> {calc1} VS {calc2} -> {calcValues.Item1} VS {calcValues.Item2} ";
+                res += $" => {calc1} VS {calc2} -> {calcValues.Item1} VS {calcValues.Item2}";
                 calc1 = calcValues.Item1;
                 calc2 = calcValues.Item2;
-            }
-            calcValues = CardRules.compareElementType(card1, card2, calc1, calc2);
-            if (calcValues.Item1 != calc1 || calcValues.Item2 != calc2) {
-                res += $"=> {calc1} VS {calc2} -> {calcValues.Item1} VS {calcValues.Item2} ";
-                calc1 = calcValues.Item1;
-                calc2 = calcValues.Item2;
+            } else {
+                calcValues = CardRules.compareElementType(card1, card2, calc1, calc2);
+                if (calcValues.Item1 != calc1 || calcValues.Item2 != calc2) {
+                    res += $" => {calc1} VS {calc2} -> {calcValues.Item1} VS {calcValues.Item2}";
+                    calc1 = calcValues.Item1;
+                    calc2 = calcValues.Item2;
+                }
             }
 
             return res;

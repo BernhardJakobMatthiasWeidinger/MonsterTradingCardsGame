@@ -4,7 +4,7 @@ using NUnit.Framework;
 
 using MTCG.GameLogic;
 
-namespace MTCG.GameLogic.Test {
+namespace MTCG.Test.GameLogic {
     public class TestCard {
         [Test]
         public void testConstructor_name() {

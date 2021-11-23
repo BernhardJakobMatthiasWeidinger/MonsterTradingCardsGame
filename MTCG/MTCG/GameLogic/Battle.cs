@@ -72,7 +72,7 @@ namespace MTCG.GameLogic {
                 giveCard(user2, user1, card1);
             }
 
-            return res + $"=> {winner}";
+            return res + $" => {winner}";
         }
         
         private void giveCard(User winner, User loser, Card cardToGive) {
