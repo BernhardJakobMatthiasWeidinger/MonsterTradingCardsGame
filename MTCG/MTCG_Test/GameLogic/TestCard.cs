@@ -7,21 +7,32 @@ using MTCG.GameLogic;
 namespace MTCG.Test.GameLogic {
     public class TestCard {
         [Test]
-        public void testConstructor_name() {
+        [TestCase("RegularSpell")]
+        [TestCase("FireSpell")]
+        [TestCase("WaterSpell")]
+        public void testConstructor_nameNoException(string name) {
             //arrange
             //act
-            SpellCard s1 = new SpellCard(Guid.NewGuid(), "RegularSpell", 0.0);
-            SpellCard s2 = new SpellCard(Guid.NewGuid(), "FireSpell", 12.0);
-            SpellCard s3 = new SpellCard(Guid.NewGuid(), "WaterSpell", 15.0);
-            ArgumentException ex1 = Assert.Throws<ArgumentException>(delegate { new SpellCard(Guid.NewGuid(), "FireSomething", 12.0); });
-            ArgumentException ex2 = Assert.Throws<ArgumentException>(delegate { new SpellCard(Guid.NewGuid(), "SomethingSpell", 12.0); });
+            SpellCard s1 = new SpellCard(Guid.NewGuid(), name, 15.0);
 
             //assert
-            Assert.AreEqual(s1.name, "RegularSpell");
-            Assert.AreEqual(s2.name, "FireSpell");
-            Assert.AreEqual(s3.name, "WaterSpell");
-            Assert.That(ex1.Message, Is.EqualTo("Spell card has to end with 'Spell'."));
-            Assert.That(ex2.Message, Is.EqualTo("Spell card has to begin with 'Regular', 'Fire' or 'Water'."));
+            Assert.AreEqual(name, s1.name);
+        }
+
+        [Test]
+        public void testConstructor_nameThrowsExceptionWrongPrefix() {
+            //arrange
+            //act & assert
+            ArgumentException ex = Assert.Throws<ArgumentException>(delegate { new SpellCard(Guid.NewGuid(), "SomethingSpell", 12.0); });
+            Assert.That(ex.Message, Is.EqualTo("Spell card has to begin with 'Regular', 'Fire' or 'Water'."));
+        }
+
+        [Test]
+        public void testConstructor_nameThrowsExceptionWrongPostfix() {
+            //arrange
+            //act & assert
+            ArgumentException ex = Assert.Throws<ArgumentException>(delegate { new SpellCard(Guid.NewGuid(), "FireSomething", 12.0); });
+            Assert.That(ex.Message, Is.EqualTo("Spell card has to end with 'Spell'."));
         }
 
         [Test]
@@ -41,63 +52,78 @@ namespace MTCG.Test.GameLogic {
         }
 
         [Test]
-        public void testConstructor_elementType() {
+        [TestCase("RegularSpell", ElementType.normal)]
+        [TestCase("FireSpell", ElementType.fire)]
+        [TestCase("WaterSpell", ElementType.water)]
+        public void testConstructor_elementTypeSpell(string name, ElementType elementType) {
             //arrange
             //act
-            MonsterCard m1 = new MonsterCard(Guid.NewGuid(), "WaterDragon", 25.0);
-            MonsterCard m2 = new MonsterCard(Guid.NewGuid(), "FireElf", 12.0);
-            MonsterCard m3 = new MonsterCard(Guid.NewGuid(), "FireGoblin", 25.0);
-            MonsterCard m4 = new MonsterCard(Guid.NewGuid(), "WaterKnight", 25.0);
-            MonsterCard m5 = new MonsterCard(Guid.NewGuid(), "Kraken", 25.0);
-            MonsterCard m6 = new MonsterCard(Guid.NewGuid(), "Ork", 10.0);
-            MonsterCard m7 = new MonsterCard(Guid.NewGuid(), "FireWizard", 25.0);
+            SpellCard m1 = new SpellCard(Guid.NewGuid(), name, 25.0);
 
             //assert
-            Assert.AreEqual(m1.elementType, ElementType.water);
-            Assert.AreEqual(m2.elementType, ElementType.fire);
-            Assert.AreEqual(m3.elementType, ElementType.fire);
-            Assert.AreEqual(m4.elementType, ElementType.water);
-            Assert.AreEqual(m5.elementType, ElementType.normal);
-            Assert.AreEqual(m6.elementType, ElementType.normal);
-            Assert.AreEqual(m7.elementType, ElementType.fire);
+            Assert.AreEqual(elementType, m1.elementType);
         }
 
         [Test]
-        public void testConstructor_monsterType() {
+        [TestCase("Ork", ElementType.normal)]
+        [TestCase("FireOrk", ElementType.fire)]
+        [TestCase("WaterOrk", ElementType.water)]
+        public void testConstructor_elementTypeMonster(string name, ElementType elementType) {
             //arrange
             //act
-            MonsterCard m1 = new MonsterCard(Guid.NewGuid(), "WaterDragon", 25.0);
-            MonsterCard m2 = new MonsterCard(Guid.NewGuid(), "FireElf", 12.0);
-            MonsterCard m3 = new MonsterCard(Guid.NewGuid(), "FireGoblin", 25.0);
-            MonsterCard m4 = new MonsterCard(Guid.NewGuid(), "WaterKnight", 25.0);
-            MonsterCard m5 = new MonsterCard(Guid.NewGuid(), "Kraken", 25.0);
-            MonsterCard m6 = new MonsterCard(Guid.NewGuid(), "Ork", 10.0);
-            MonsterCard m7 = new MonsterCard(Guid.NewGuid(), "FireWizard", 25.0);
-            ArgumentException ex = Assert.Throws<ArgumentException>(delegate { new MonsterCard(Guid.NewGuid(), "FireUnicorn", 10.0); });
+            MonsterCard m1 = new MonsterCard(Guid.NewGuid(), name, 25.0);
 
             //assert
-            Assert.AreEqual(m1.monsterType, MonsterType.dragon);
-            Assert.AreEqual(m2.monsterType, MonsterType.elf);
-            Assert.AreEqual(m3.monsterType, MonsterType.goblin);
-            Assert.AreEqual(m4.monsterType, MonsterType.knight);
-            Assert.AreEqual(m5.monsterType, MonsterType.kraken);
-            Assert.AreEqual(m6.monsterType, MonsterType.ork);
-            Assert.AreEqual(m7.monsterType, MonsterType.wizard);
+            Assert.AreEqual(elementType, m1.elementType);
+        }
+
+        [Test]
+        [TestCase("WaterDragon", MonsterType.dragon)]
+        [TestCase("FireElf", MonsterType.elf)]
+        [TestCase("FireGoblin", MonsterType.goblin)]
+        [TestCase("WaterKnight", MonsterType.knight)]
+        [TestCase("Kraken", MonsterType.kraken)]
+        [TestCase("Ork", MonsterType.ork)]
+        [TestCase("FireWizard", MonsterType.wizard)]
+        public void testConstructor_monsterType(string name, MonsterType monsterType) {
+            //arrange
+            //act
+            MonsterCard m1 = new MonsterCard(Guid.NewGuid(), name, 25.0);
+
+            //assert
+            Assert.AreEqual(monsterType, m1.monsterType);
+        }
+
+        [Test]
+        public void testConstructor_monsterTypeThrowsException() {
+            //arrange
+            //act & assert
+            ArgumentException ex = Assert.Throws<ArgumentException>(delegate { new MonsterCard(Guid.NewGuid(), "FireUnicorn", 10.0); });
             Assert.That(ex.Message, Is.EqualTo("Requested value 'unicorn' was not found."));
         }
 
         [Test]
-        public void testToString() {
+        [TestCase("WaterDragon", 25.0)]
+        [TestCase("Elf", 12.0)]
+        public void testToString_monster(string name, double damage) {
             //arrange
             //act
-            MonsterCard m1 = new MonsterCard(Guid.NewGuid(), "WaterDragon", 25.0);
-            MonsterCard m2 = new MonsterCard(Guid.NewGuid(), "Elf", 12.0);
-            SpellCard s1 = new SpellCard(Guid.NewGuid(), "FireSpell", 12.0);
+            MonsterCard m1 = new MonsterCard(Guid.NewGuid(), name, damage);
 
             //assert
-            Assert.AreEqual(m1.ToString(), $"id:{m1.id},name:WaterDragon,damage:25,elementType:water,monsterType:dragon");
-            Assert.AreEqual(m2.ToString(), $"id:{m2.id},name:Elf,damage:12,elementType:normal,monsterType:elf");
-            Assert.AreEqual(s1.ToString(), $"id:{s1.id},name:FireSpell,damage:12,elementType:fire");
+            Assert.AreEqual($"id:{m1.id},name:{name},damage:{damage},elementType:{m1.elementType},monsterType:{m1.monsterType}" , m1.ToString());
+        }
+
+        [Test]
+        [TestCase("WaterSpell", 25.0)]
+        [TestCase("FireSpell", 12.0)]
+        public void testToString_spell(string name, double damage) {
+            //arrange
+            //act
+            SpellCard s1 = new SpellCard(Guid.NewGuid(), name, damage);
+
+            //assert
+            Assert.AreEqual($"id:{s1.id},name:{name},damage:{damage},elementType:{s1.elementType}", s1.ToString());
         }
     }
 }
