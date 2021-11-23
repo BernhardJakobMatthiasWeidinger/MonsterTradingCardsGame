@@ -32,7 +32,7 @@ namespace MTCG.Test.GameLogic {
             Package p1 = new Package(new List<Card> { m1, m2, m3, s1, s2 });
 
             //assert
-            Assert.AreEqual(p1.cards.Count, 5);
+            Assert.AreEqual(5, p1.cards.Count);
         }
 
         [Test]
@@ -62,8 +62,8 @@ namespace MTCG.Test.GameLogic {
             p1.aquirePackage(u1);
 
             //assert
-            Assert.AreEqual(u1.stack.Count, 5);
-            Assert.AreEqual(u1.coins, 15);
+            Assert.AreEqual(5, u1.stack.Count);
+            Assert.AreEqual(15, u1.coins);
         }
 
         [Test]

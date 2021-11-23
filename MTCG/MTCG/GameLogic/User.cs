@@ -106,8 +106,9 @@ namespace MTCG.GameLogic {
                 deck = sortedList;
             } else if (deck.Count < 4) {
                 //add strongest remaining cards from stack to deck
-                List<Card> sortedList = stack.OrderByDescending(c => c.damage).ToList().Take(4 - deck.Count()).ToList();
-                deck.AddRange(sortedList);
+                List<Card> sortedList = stack.OrderByDescending(c => c.damage).ToList().Take(4).ToList();
+                List<Card> notInDeck = sortedList.Except(deck).ToList();
+                deck.AddRange(notInDeck);
             }
         }
 

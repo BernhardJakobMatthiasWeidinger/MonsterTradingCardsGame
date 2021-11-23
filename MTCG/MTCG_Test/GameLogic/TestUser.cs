@@ -8,104 +8,108 @@ using Newtonsoft.Json.Linq;
 
 namespace MTCG.Test.GameLogic {
     public class TestUser {
+        private User u1;
+        private User u2;
+        private MonsterCard m1;
+        private MonsterCard m2;
+        private MonsterCard m3;
+        private MonsterCard m4;
+        private MonsterCard m5;
+        private MonsterCard m6;
+
+        [SetUp]
+        public void Init() {
+            u1 = new User("maxi", "testUserPassword");
+            u2 = new User("mini", "testUserPassword");
+
+            m1 = new MonsterCard(Guid.NewGuid(), "WaterDragon", 99.0);
+            m2 = new MonsterCard(Guid.NewGuid(), "FireDragon", 99.0);
+            m3 = new MonsterCard(Guid.NewGuid(), "Dragon", 99.0);
+            m4 = new MonsterCard(Guid.NewGuid(), "WaterGoblin", 99.0);
+            m5 = new MonsterCard(Guid.NewGuid(), "FireGoblin", 25.0);
+            m6 = new MonsterCard(Guid.NewGuid(), "WaterDragon", 25.0);
+        }
+
         [Test]
         public void testConstructor() {
             //arrange
             //act
-            User u1 = new User("testUser!", "testUserPassword");
-
             //assert
-            Assert.AreEqual(u1.username, "testUser!");
-            Assert.AreEqual(u1.password, "testUserPassword");
-            Assert.AreEqual(u1.name, null);
-            Assert.AreEqual(u1.bio, "Hier könnte deine Biografie stehen!");
-            Assert.AreEqual(u1.coins, 20);
-            Assert.AreEqual(u1.gamesPlayed, 0);
-            Assert.AreEqual(u1.gamesWon, 0);
-            Assert.AreEqual(u1.gamesLost, 0);
-            Assert.AreEqual(u1.elo, 100);
+            Assert.AreEqual("maxi", u1.username);
+            Assert.AreEqual("testUserPassword", u1.password);
+            Assert.AreEqual(null, u1.name);
+            Assert.AreEqual("Hier könnte deine Biografie stehen!", u1.bio);
+            Assert.AreEqual(20, u1.coins);
+            Assert.AreEqual(0, u1.gamesPlayed);
+            Assert.AreEqual(0, u1.gamesWon);
+            Assert.AreEqual(0, u1.gamesLost);
+            Assert.AreEqual(100, u1.elo);
         }
 
         [Test]
-        public void testConstructor_throwException() {
+        [TestCase("test;User")]
+        [TestCase("test/User")]
+        [TestCase("test\\User")]
+        [TestCase("test\'User")]
+        [TestCase("test\"User")]
+        public void testConstructor_throwExceptionInvalidUsername(string username) {
             //arrange
-            //act
-            ArgumentException ex1 = Assert.Throws<ArgumentException>(delegate { new User("test;User", "testUserPassword"); });
-            ArgumentException ex2 = Assert.Throws<ArgumentException>(delegate { new User("test/User", "testUserPassword"); });
-            ArgumentException ex3 = Assert.Throws<ArgumentException>(delegate { new User("test\\User", "testUserPassword"); });
-            ArgumentException ex4 = Assert.Throws<ArgumentException>(delegate { new User("test\'User", "testUserPassword"); });
-            ArgumentException ex5 = Assert.Throws<ArgumentException>(delegate { new User("test\"User", "testUserPassword"); });
-            
-            ArgumentException ex6 = Assert.Throws<ArgumentException>(delegate { new User("testUser", "test;User/Password"); });
-            ArgumentException ex7 = Assert.Throws<ArgumentException>(delegate { new User("testUser", "test/User\\Password"); });
-            ArgumentException ex8 = Assert.Throws<ArgumentException>(delegate { new User("testUser", "test\\User\'Password"); });
-            ArgumentException ex9 = Assert.Throws<ArgumentException>(delegate { new User("testUser", "test\'User\"Password"); });
-            ArgumentException ex10 = Assert.Throws<ArgumentException>(delegate { new User("testUser", "test\"User;Password"); });
-
-            //assert
-            Assert.That(ex1.Message, Is.EqualTo("Username is not allowed to contain following characters: ; / \\ \' \""));
-            Assert.That(ex2.Message, Is.EqualTo("Username is not allowed to contain following characters: ; / \\ \' \""));
-            Assert.That(ex3.Message, Is.EqualTo("Username is not allowed to contain following characters: ; / \\ \' \""));
-            Assert.That(ex4.Message, Is.EqualTo("Username is not allowed to contain following characters: ; / \\ \' \""));
-            Assert.That(ex5.Message, Is.EqualTo("Username is not allowed to contain following characters: ; / \\ \' \""));
-            Assert.That(ex6.Message, Is.EqualTo("Password is not allowed to contain following characters: ; / \\ \' \""));
-            Assert.That(ex7.Message, Is.EqualTo("Password is not allowed to contain following characters: ; / \\ \' \""));
-            Assert.That(ex8.Message, Is.EqualTo("Password is not allowed to contain following characters: ; / \\ \' \""));
-            Assert.That(ex9.Message, Is.EqualTo("Password is not allowed to contain following characters: ; / \\ \' \""));
-            Assert.That(ex10.Message, Is.EqualTo("Password is not allowed to contain following characters: ; / \\ \' \""));
+            //act & assert
+            ArgumentException ex = Assert.Throws<ArgumentException>(delegate { new User(username, "testUserPassword"); });
+            Assert.That(ex.Message, Is.EqualTo("Username is not allowed to contain following characters: ; / \\ \' \""));
         }
 
         [Test]
-        public void testToString() {
+        [TestCase("test;User/Password")]
+        [TestCase("test/User\\Password")]
+        [TestCase("test\\User\'Password")]
+        [TestCase("test\'User\"Password")]
+        [TestCase("test\"User;Password")]
+        public void testConstructor_throwExceptionInvalidPassword(string password) {
             //arrange
-            User u1 = new User("testUser1", "testUserPassword");
-            User u2 = new User("testUser2", "testUserPassword");
-            User u3 = new User("testUser3", "testUserPassword");
-
             //act
-            u2.setUserData("Max Mustermann", "20yo, Austria, Gemini xxxxDDDD", ":O");
-            u2.gamesPlayed++;
-            u2.gamesWon++;
-            u2.elo += 3;
-            u2.addFriend(u3);
+            ArgumentException ex = Assert.Throws<ArgumentException>(delegate { new User("testUser", password); });
 
             //assert
-            Assert.AreEqual(u1.ToString(), $"id:{u1.id},username:testUser1,name:,bio:Hier könnte deine Biografie stehen!,image:," +
-                    $"coins:20,gamesPlayed:0,gamesWon:0,gamesLost:0,elo:100,friends:[]");
-            Assert.AreEqual(u2.ToString(), $"id:{u2.id},username:testUser2,name:Max Mustermann,bio:20yo, Austria, Gemini xxxxDDDD,image::O," +
-                    $"coins:20,gamesPlayed:1,gamesWon:1,gamesLost:0,elo:103,friends:[{u3.id}]");
-            Assert.AreEqual(u3.ToString(), $"id:{u3.id},username:testUser3,name:,bio:Hier könnte deine Biografie stehen!,image:," +
-                    $"coins:20,gamesPlayed:0,gamesWon:0,gamesLost:0,elo:100,friends:[{u2.id}]");
+            Assert.That(ex.Message, Is.EqualTo("Password is not allowed to contain following characters: ; / \\ \' \""));
         }
 
         [Test]
-        public void testSetUserData() {
+        [TestCase("testUser", "Max Mustermann", "20yo, Austria, Gemini xxxxDDDD", ":O")]
+        [TestCase("mininii", "Mini Mustermann", "Ich war schon immer sehr interessiert an Monster Trading Games.", ":3")]
+        public void testToString(string username, string name, string bio, string image) {
             //arrange
-            User u1 = new User("testUser", "testUserPassword");
+            u1 = new User(username, "testUserPassword");
+            u1.setUserData(name, bio, image);
 
             //act
-            u1.setUserData("Max Muster\"mann", "20yo; Austria/ Gemini xxxxDDDD", "\"O");
+            string userData = u1.ToString();
 
             //assert
-            Assert.AreEqual(u1.name, "Max Muster\"mann");
-            Assert.AreEqual(u1.bio, "20yo; Austria/ Gemini xxxxDDDD");
-            Assert.AreEqual(u1.image, "\"O");
+            Assert.AreEqual($"id:{u1.id},username:{u1.username},name:{u1.name},bio:{u1.bio},image:{u1.image}," +
+                    $"coins:20,gamesPlayed:0,gamesWon:0,gamesLost:0,elo:100,friends:[]", u1.ToString());
+        }
+
+        [Test]
+        [TestCase("Max Mustermann", "20yo, Austria, Gemini xxxxDDDD", ":O")]
+        [TestCase("Mini Mustermann", "Ich war schon immer sehr interessiert an Monster Trading Games.", ":3")]
+        public void testSetUserData(string name, string bio, string image) {
+            //arrange
+            u1 = new User("testUser", "testUserPassword");
+
+            //act
+            u1.setUserData(name, bio, image);
+
+            //assert
+            Assert.AreEqual(name, u1.name);
+            Assert.AreEqual(bio, u1.bio);
+            Assert.AreEqual(image, u1.image);
         }
 
         [Test]
         public void testGetCardFromDeck() {
             //arrange
-            User u1 = new User("testUser", "testUserPassword");
-            User u2 = new User("testUser", "testUserPassword");
-
-            MonsterCard m1 = new MonsterCard(Guid.NewGuid(), "WaterDragon", 25.0);
-            MonsterCard m2 = new MonsterCard(Guid.NewGuid(), "FireDragon", 25.0);
-            MonsterCard m3 = new MonsterCard(Guid.NewGuid(), "Dragon", 25.0);
-            MonsterCard m4 = new MonsterCard(Guid.NewGuid(), "WaterGoblin", 25.0);
-            MonsterCard m5 = new MonsterCard(Guid.NewGuid(), "FireGoblin", 25.0);
-
-            Package p1 = new Package(new List<Card> { m1, m2, m3, m4, m5 });
-            p1.aquirePackage(u1);
+            u1.stack.AddRange(new List<Card> { m1, m2, m3, m4, m5 });
             u1.configureDeck(new List<Guid> { m1.id, m2.id, m3.id, m4.id });
 
             //act
@@ -113,157 +117,168 @@ namespace MTCG.Test.GameLogic {
             Card card2 = u2.getCardFromDeck();
 
             //assert
-            Assert.AreEqual(u1.deck.Contains(card1), true);
-            Assert.AreEqual(card2, null);
+            Assert.AreEqual(true, u1.deck.Contains(card1));
+            Assert.AreEqual(null, card2);
         }
 
         [Test]
         public void testConfigureDeck() {
             //arrange
-            User u1 = new User("testUser", "testUserPassword");
-
-            MonsterCard m1 = new MonsterCard(Guid.NewGuid(), "WaterDragon", 25.0);
-            MonsterCard m2 = new MonsterCard(Guid.NewGuid(), "FireDragon", 25.0);
-            MonsterCard m3 = new MonsterCard(Guid.NewGuid(), "Dragon", 25.0);
-            MonsterCard m4 = new MonsterCard(Guid.NewGuid(), "WaterGoblin", 25.0);
-            MonsterCard m5 = new MonsterCard(Guid.NewGuid(), "FireGoblin", 25.0);
-
+            int before = u1.deck.Count;
             u1.stack.AddRange(new List<Card> { m1, m2, m3, m4 });
 
             //act
             u1.configureDeck(new List<Guid> { m1.id, m2.id, m3.id, m4.id });
-            ArgumentException ex1 = Assert.Throws<ArgumentException>(delegate { u1.configureDeck(new List<Guid> { m1.id, m2.id, m3.id, m4.id, m5.id }); });
-            ArgumentException ex2 = Assert.Throws<ArgumentException>(delegate { u1.configureDeck(new List<Guid> { m1.id, m2.id, m3.id }); });
-            ArgumentException ex3 = Assert.Throws<ArgumentException>(delegate { u1.configureDeck(new List<Guid> { m1.id, m2.id, m3.id, m5.id }); });
 
             //assert
+            Assert.AreEqual(4, u1.deck.Count);
+            Assert.AreEqual(0, before);
+            Assert.AreEqual(true, u1.deck.Contains(m1));
+            Assert.AreEqual(false, u1.deck.Contains(m5));
+        }
+
+        [Test]
+        public void testConfigureDeck_throwsExceptionTooManyCards() {
+            //arrange
+            u1.stack.AddRange(new List<Card> { m1, m2, m3, m4 });
+
+            //act & assert
+            ArgumentException ex1 = Assert.Throws<ArgumentException>(delegate { u1.configureDeck(new List<Guid> { m1.id, m2.id, m3.id, m4.id, m5.id }); });
             Assert.That(ex1.Message, Is.EqualTo($"A deck should be provided with 4 cards, cards given: 5"));
+        }
+
+        [Test]
+        public void testConfigureDeck_throwsExceptionTooFewCards() {
+            //arrange
+            u1.stack.AddRange(new List<Card> { m1, m2, m3, m4 });
+
+            //act & assert
+            ArgumentException ex2 = Assert.Throws<ArgumentException>(delegate { u1.configureDeck(new List<Guid> { m1.id, m2.id, m3.id }); });
             Assert.That(ex2.Message, Is.EqualTo($"A deck should be provided with 4 cards, cards given: 3"));
+        }
+
+        [Test]
+        public void testConfigureDeck_throwsExceptionInvalidCard() {
+            //arrange
+            u1.stack.AddRange(new List<Card> { m1, m2, m3, m4 });
+
+            //act & assert
+            ArgumentException ex3 = Assert.Throws<ArgumentException>(delegate { u1.configureDeck(new List<Guid> { m1.id, m2.id, m3.id, m5.id }); });
             Assert.That(ex3.Message, Is.EqualTo($"Card with id {m5.id} was not found in stack!"));
         }
 
         [Test]
-        public void testConfigureDeckAfterBattle() {
+        [TestCase(3)]
+        [TestCase(4)]
+        [TestCase(5)]
+        public void testConfigureDeckAfterBattle(int countCards) {
             //arrange
-            User u1 = new User("testUser", "testUserPassword");
-            User u2 = new User("maxi", "supersecretpassword1");
-
-            MonsterCard m1 = new MonsterCard(Guid.NewGuid(), "WaterDragon", 999.0);
-            MonsterCard m2 = new MonsterCard(Guid.NewGuid(), "FireDragon", 999.0);
-            MonsterCard m3 = new MonsterCard(Guid.NewGuid(), "Dragon", 999.0);
-            MonsterCard m4 = new MonsterCard(Guid.NewGuid(), "WaterGoblin", 999.0);
-
-            MonsterCard m5 = new MonsterCard(Guid.NewGuid(), "FireGoblin", 25.0);
-            MonsterCard m6 = new MonsterCard(Guid.NewGuid(), "WaterDragon", 25.0);
-            MonsterCard m7 = new MonsterCard(Guid.NewGuid(), "FireDragon", 25.0);
-            MonsterCard m8 = new MonsterCard(Guid.NewGuid(), "Dragon", 25.0);
-
-            u1.stack.AddRange(new List<Card> { m1, m2, m3, m4 });
-            u2.stack.AddRange(new List<Card> { m5, m6, m7, m8 });
-
-            u1.configureDeck(new List<Guid> { m1.id, m2.id, m3.id, m4.id });
-            u2.configureDeck(new List<Guid> { m5.id, m6.id, m7.id, m8.id });
-
-            Battle b1 = new Battle(Guid.NewGuid(), u1);
+            u1.stack.AddRange(new List<Card> { m1, m2, m3, m4, m5 });
+            u1.deck.AddRange(u1.stack.GetRange(0, countCards));
 
             //act
-            b1.play(u2);
+            u1.configureDeckAfterBattle();
 
             //assert
-            Assert.AreEqual(u1.stack.Count, 8);
-            Assert.AreEqual(u1.deck.Count, 4);
-            Assert.AreEqual(u1.deck, new List<Card> { m1, m2, m3, m4});
-
-            Assert.AreEqual(u2.stack.Count, 0);
-            Assert.AreEqual(u2.deck.Count, 0);
+            Assert.AreEqual(5, u1.stack.Count);
+            Assert.AreEqual(4, u1.deck.Count);
+            Assert.AreEqual(new List<Card> { m1, m2, m3, m4 }, u1.deck);
         }
 
         [Test]
         public void testAddFriend() {
             //arrange
-            User u1 = new User("testUser", "testUserPassword");
-            User u2 = new User("maxi", "supersecretpassword1");
-            User u3 = new User("mini", "supersecretpassword1");
+            User u3 = new User("otto", "supersecretpassword1");
 
             //act
             u1.addFriend(u2);
             u2.addFriend(u3);
-            ArgumentException ex1 = Assert.Throws<ArgumentException>(delegate { u2.addFriend(u1); });
 
             //assert
-            Assert.AreEqual(u1.friends.Count, 1);
-            Assert.AreEqual(u2.friends.Count, 2);
-            Assert.AreEqual(u3.friends.Count, 1);
+            Assert.AreEqual(1, u1.friends.Count);
+            Assert.AreEqual(2, u2.friends.Count);
+            Assert.AreEqual(1, u3.friends.Count);
 
-            Assert.AreEqual(u1.friends, new List<Guid> { u2.id });
-            Assert.AreEqual(u2.friends, new List<Guid> { u1.id, u3.id });
-            Assert.AreEqual(u3.friends, new List<Guid> { u2.id });
-
-            Assert.That(ex1.Message, Is.EqualTo($"User testUser is already your friend!"));
+            Assert.AreEqual(new List<Guid> { u2.id }, u1.friends);
+            Assert.AreEqual(new List<Guid> { u1.id, u3.id }, u2.friends);
+            Assert.AreEqual(new List<Guid> { u2.id }, u3.friends);
         }
 
         [Test]
-        public void testGetUserData() {
+        public void testAddFriend_throwsExceptionAlreadyBefriended() {
             //arrange
-            User u1 = new User("testUser", "testUserPassword");
+            //act
+            u1.addFriend(u2);
 
+            //assert
+            ArgumentException ex1 = Assert.Throws<ArgumentException>(delegate { u2.addFriend(u1); });
+            Assert.That(ex1.Message, Is.EqualTo($"User maxi is already your friend!"));
+        }
+
+        [Test]
+        public void testGetUserData_plain() {
+            //arrange
             //act
             string dataPlain = u1.getUserData(false);
-            string dataJson = u1.getUserData(true);
-
-            JObject newU1 = (JObject)JsonConvert.DeserializeObject(dataJson);
 
             //assert
             Assert.AreEqual(dataPlain, u1.ToString());
-            Assert.AreEqual(u1.id.ToString(), newU1.GetValue("id").ToString());
-            Assert.AreEqual("testUser", newU1.GetValue("username").ToString());
-            Assert.AreEqual("", newU1.GetValue("name").ToString());
-            Assert.AreEqual("Hier könnte deine Biografie stehen!", newU1.GetValue("bio").ToString());
-            Assert.AreEqual("", newU1.GetValue("image").ToString());
-            Assert.AreEqual("20", newU1.GetValue("coins").ToString());
-            Assert.AreEqual("0", newU1.GetValue("gamesPlayed").ToString());
-            Assert.AreEqual("0", newU1.GetValue("gamesWon").ToString());
-            Assert.AreEqual("0", newU1.GetValue("gamesLost").ToString());
-            Assert.AreEqual("100", newU1.GetValue("elo").ToString());
         }
 
         [Test]
-        public void testGetUserStats() {
+        [TestCase("maxi", "username")]
+        [TestCase("", "name")]
+        [TestCase("Hier könnte deine Biografie stehen!", "bio")]
+        [TestCase("", "image")]
+        [TestCase("20", "coins")]
+        [TestCase("0", "gamesPlayed")]
+        [TestCase("0", "gamesWon")]
+        [TestCase("0", "gamesLost")]
+        [TestCase("100", "elo")]
+        public void testGetUserData_json(string value, string key) {
             //arrange
-            User u1 = new User("testUser", "testUserPassword");
-
             //act
-            string dataPlain = u1.getUserStats(false);
-            string dataJson = u1.getUserStats(true);
-
+            string dataJson = u1.getUserData(true);
             JObject newU1 = (JObject)JsonConvert.DeserializeObject(dataJson);
 
             //assert
-            Assert.AreEqual(dataPlain, $"gamesPlayed:{u1.gamesPlayed},gamesWon:{u1.gamesWon},gamesLost:{u1.gamesWon},elo:{u1.elo}");
-            Assert.AreEqual(null, newU1.GetValue("coins"));
-            Assert.AreEqual("0", newU1.GetValue("gamesPlayed").ToString());
-            Assert.AreEqual("0", newU1.GetValue("gamesWon").ToString());
-            Assert.AreEqual("0", newU1.GetValue("gamesLost").ToString());
-            Assert.AreEqual("100", newU1.GetValue("elo").ToString());
+            Assert.AreEqual(value, newU1.GetValue(key).ToString());
         }
 
         [Test]
-        public void testDeckToString() {
+        public void testGetUserStats_plain() {
             //arrange
-            User u1 = new User("testUser", "testUserPassword");
+            //act
+            string dataPlain = u1.getUserStats(false);
 
-            MonsterCard m1 = new MonsterCard(Guid.NewGuid(), "WaterDragon", 25.0);
-            MonsterCard m2 = new MonsterCard(Guid.NewGuid(), "FireDragon", 25.0);
-            MonsterCard m3 = new MonsterCard(Guid.NewGuid(), "Dragon", 25.0);
-            MonsterCard m4 = new MonsterCard(Guid.NewGuid(), "WaterGoblin", 25.0);
-            MonsterCard m5 = new MonsterCard(Guid.NewGuid(), "FireGoblin", 25.0);
+            //assert
+            Assert.AreEqual($"gamesPlayed:{u1.gamesPlayed},gamesWon:{u1.gamesWon},gamesLost:{u1.gamesWon},elo:{u1.elo}", dataPlain);
+        }
 
+        [Test]
+        [TestCase(null, "username")]
+        [TestCase("0", "gamesPlayed")]
+        [TestCase("0", "gamesWon")]
+        [TestCase("0", "gamesLost")]
+        [TestCase("100", "elo")]
+        public void testGetUserStats_json(string value, string key) {
+            //arrange
+            //act
+            string dataJson = u1.getUserStats(true);
+            JObject newU1 = (JObject)JsonConvert.DeserializeObject(dataJson);
+
+            //assert
+            Assert.AreEqual(value, newU1.GetValue(key)?.ToString());
+        }
+
+        [Test]
+        public void testDeckToString_plain() {
+            //arrange
             u1.stack.AddRange(new List<Card> { m1, m2, m3, m4, m5 });
             u1.configureDeck(new List<Guid> { m1.id, m2.id, m3.id, m4.id });
 
             //act
             string dataPlain = u1.deckToString(false);
-            string dataJson = u1.deckToString(true);
 
             int i = 0;
             string dataPlainRes = "";
@@ -272,30 +287,36 @@ namespace MTCG.Test.GameLogic {
                 dataPlainRes += i != (u1.deck.Count - 1) ? ";" : "";
                 i++;
             }
-
-            JArray u1Deck = (JArray)((JObject)JsonConvert.DeserializeObject(dataJson)).GetValue("deck");
-            JObject m1Json = (JObject)JsonConvert.DeserializeObject(u1Deck[0].ToString());
             
             //assert
             Assert.AreEqual(dataPlain, dataPlainRes);
+        }
+
+        [Test]
+        public void testDeckToString_json() {
+            //arrange
+            u1.stack.AddRange(new List<Card> { m1, m2, m3, m4, m5 });
+            u1.configureDeck(new List<Guid> { m1.id, m2.id, m3.id, m4.id });
+
+            //act
+            string dataJson = u1.deckToString(true);
+
+            JArray u1Deck = (JArray)((JObject)JsonConvert.DeserializeObject(dataJson)).GetValue("deck");
+            JObject m1Json = (JObject)JsonConvert.DeserializeObject(u1Deck[0].ToString());
+
+            //assert
             Assert.AreEqual(m1.id.ToString(), m1Json.GetValue("id").ToString());
             Assert.AreEqual(m1.name, m1Json.GetValue("name").ToString());
             Assert.AreEqual(m1.damage.ToString(), m1Json.GetValue("damage").ToString());
         }
 
         [Test]
-        public void testStackToString() {
+        public void testStackToString_plain() {
             //arrange
-            User u1 = new User("testUser", "testUserPassword");
-
-            MonsterCard m1 = new MonsterCard(Guid.NewGuid(), "WaterDragon", 25.0);
-            MonsterCard m2 = new MonsterCard(Guid.NewGuid(), "FireDragon", 25.0);
-
             u1.stack.AddRange(new List<Card> { m1, m2 });
 
             //act
             string dataPlain = u1.stackToString(false);
-            string dataJson = u1.stackToString(true);
 
             int i = 0;
             string dataPlainRes = "";
@@ -305,11 +326,22 @@ namespace MTCG.Test.GameLogic {
                 i++;
             }
 
+            //assert
+            Assert.AreEqual(dataPlain, dataPlainRes);
+        }
+
+        [Test]
+        public void testStackToString_json() {
+            //arrange
+            u1.stack.AddRange(new List<Card> { m1, m2 });
+
+            //act
+            string dataJson = u1.stackToString(true);
+
             JArray u1Stack = (JArray)((JObject)JsonConvert.DeserializeObject(dataJson)).GetValue("stack");
             JObject m1Json = (JObject)JsonConvert.DeserializeObject(u1Stack[0].ToString());
 
             //assert
-            Assert.AreEqual(dataPlain, dataPlainRes);
             Assert.AreEqual(m1.id.ToString(), m1Json.GetValue("id").ToString());
             Assert.AreEqual(m1.name, m1Json.GetValue("name").ToString());
             Assert.AreEqual(m1.damage.ToString(), m1Json.GetValue("damage").ToString());

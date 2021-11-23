@@ -31,8 +31,8 @@ namespace MTCG.Test.GameLogic {
             Battle b1 = new Battle(Guid.NewGuid(), u1);
 
             //assert
-            Assert.AreEqual(b1.user1, u1);
-            Assert.AreEqual(b1.user2, null);
+            Assert.AreEqual(u1, b1.user1);
+            Assert.AreEqual(null, b1.user2);
         }
 
         [Test]
@@ -63,18 +63,18 @@ namespace MTCG.Test.GameLogic {
 
             //assert
             Assert.GreaterOrEqual(u1.stack.Count, 5);
-            Assert.AreEqual(u1.deck.Count, 4);
-            Assert.AreEqual(u1.gamesPlayed, 1);
-            Assert.AreEqual(u1.gamesWon, 1);
-            Assert.AreEqual(u1.gamesLost, 0);
-            Assert.AreEqual(u1.elo, 103);
+            Assert.AreEqual(4, u1.deck.Count);
+            Assert.AreEqual(1, u1.gamesPlayed);
+            Assert.AreEqual(1, u1.gamesWon);
+            Assert.AreEqual(0, u1.gamesLost);
+            Assert.AreEqual(103, u1.elo);
 
             Assert.LessOrEqual(u2.stack.Count, 3);
-            Assert.AreEqual(u2.deck.Count, 0);
-            Assert.AreEqual(u2.gamesPlayed, 1);
-            Assert.AreEqual(u2.gamesWon, 0);
-            Assert.AreEqual(u2.gamesLost, 1);
-            Assert.AreEqual(u2.elo, 95);
+            Assert.AreEqual(0, u2.deck.Count);
+            Assert.AreEqual(1, u2.gamesPlayed);
+            Assert.AreEqual(0, u2.gamesWon);
+            Assert.AreEqual(1, u2.gamesLost);
+            Assert.AreEqual(95, u2.elo);
         }
     }
 }
