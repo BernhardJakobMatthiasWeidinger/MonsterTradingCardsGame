@@ -61,58 +61,25 @@ namespace MTCG.GameLogic {
             double calc1 = card1.damage;
             double calc2 = card2.damage;
             
-            string res = $"Round {round}: {user1.username}: {card1.name} ({card1.damage} Damage) vs {user2.username}: {card2.name} ({card2.damage} Damage) ";
-            if (card1.name.ToLower().Contains("goblin") && card2.name.ToLower().Contains("dragon") ||
-                card1.name.ToLower().Contains("ork") && card2.name.ToLower().Contains("wizard") ||
-                card1.name.ToLower().Contains("spell") && card2.name.ToLower().Contains("kraken") ||
-                card1.name.ToLower().Contains("dragon") && card2.name.ToLower().Contains("fireelf")) {
-                calc1 = 0;
-                res += $"=> {card1.damage} VS {card2.damage} -> {calc1} VS {calc2} ";
-            } else if (card1.name.ToLower().Contains("wizard") && card2.name.ToLower().Contains("ork") ||
-                card1.name.ToLower().Contains("kraken") && card2.name.ToLower().Contains("spell") ||
-                card1.name.ToLower().Contains("fireelf") && card2.name.ToLower().Contains("dragon") ||
-                card1.name.ToLower().Contains("dragon") && card2.name.ToLower().Contains("goblin")) {
-                calc2 = 0;
-                res += $"=> {card1.damage} VS {card2.damage} -> {calc1} VS {calc2} ";
-            } else if (card1.name.ToLower().Contains("knight") && card2.name.ToLower().Contains("waterspell")) {
-                calc2 = 9999;
-                res += $"=> {card1.damage} VS {card2.damage} -> {calc1} VS {calc2} ";
-            } else if (card1.name.ToLower().Contains("waterspell") && card2.name.ToLower().Contains("knight")) {
-                calc1 = 9999;
-                res += $"=> {card1.damage} VS {card2.damage} -> {calc1} VS {calc2} ";
-            } else if (card1.GetType().Name == "SpellCard" || card2.GetType().Name == "SpellCard") {
-                //if card1 has disadvantage type
-                if (card1.elementType == ElementType.fire && card2.elementType == ElementType.water ||
-                    card1.elementType == ElementType.water && card2.elementType == ElementType.normal ||
-                    card1.elementType == ElementType.normal && card2.elementType == ElementType.fire) {
-                    calc1 /= 2;
-                    calc2 *= 2;
-                    res += $"=> {card1.damage} VS {card2.damage} -> {calc1} VS {calc2} ";
-                } else if (card1.elementType == ElementType.fire && card2.elementType == ElementType.normal ||
-                    card1.elementType == ElementType.water && card2.elementType == ElementType.fire ||
-                    card1.elementType == ElementType.normal && card2.elementType == ElementType.water) {
-                    calc1 *= 2;
-                    calc2 /= 2;
-                    res += $"=> {card1.damage} VS {card2.damage} -> {calc1} VS {calc2} ";
-                }
-            } 
+            string res = $"Round {round}: " + CardRules.compareAllRules(user1.username, user2.username, card1, card2, ref calc1, ref calc2);
 
             string winner = "Draw";
             if (calc1 > calc2) {
                 winner = $"{card1.name} wins";
-                user2.deck.Remove(card2);
-                user2.stack.Remove(card2);
-                user1.stack.Add(card2);
-                user1.deck.Add(card2);
+                giveCard(user1, user2, card2);
             } else if (calc1 < calc2) {
                 winner = $"{card2.name} wins";
-                user1.deck.Remove(card1);
-                user1.stack.Remove(card1);
-                user2.stack.Add(card1);
-                user2.deck.Add(card1);
+                giveCard(user2, user1, card1);
             }
 
             return res + $"=> {winner}";
+        }
+        
+        private void giveCard(User winner, User loser, Card cardToGive) {
+            loser.deck.Remove(cardToGive);
+            loser.stack.Remove(cardToGive);
+            winner.stack.Add(cardToGive);
+            winner.deck.Add(cardToGive);
         }
     }
 }
