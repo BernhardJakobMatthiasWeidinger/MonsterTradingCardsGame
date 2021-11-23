@@ -6,49 +6,47 @@ using System.Text;
 
 namespace MTCG.Test.GameLogic {
     public class TestBattle {
+        private User u1;
+        private MonsterCard m1;
+        private MonsterCard m2;
+        private MonsterCard m3;
+        private MonsterCard m4;
+
+        [SetUp]
+        public void Init() {
+            u1 = new User("testUser", "testUserPassword");
+            m1 = new MonsterCard(Guid.NewGuid(), "WaterDragon", 999.0);
+            m2 = new MonsterCard(Guid.NewGuid(), "FireDragon", 999.0);
+            m3 = new MonsterCard(Guid.NewGuid(), "Dragon", 999.0);
+            m4 = new MonsterCard(Guid.NewGuid(), "WaterGoblin", 999.0);
+        }
+
         [Test]
         public void testConstructor() {
             //arrange
-            User u1 = new User("testUser", "testUserPassword");
-            User u2 = new User("maxi", "supersecretpassword1");
-
-            MonsterCard m1 = new MonsterCard(Guid.NewGuid(), "WaterDragon", 999.0);
-            MonsterCard m2 = new MonsterCard(Guid.NewGuid(), "FireDragon", 999.0);
-            MonsterCard m3 = new MonsterCard(Guid.NewGuid(), "Dragon", 999.0);
-            MonsterCard m4 = new MonsterCard(Guid.NewGuid(), "WaterGoblin", 999.0);
-
-            MonsterCard m5 = new MonsterCard(Guid.NewGuid(), "FireGoblin", 25.0);
-            MonsterCard m6 = new MonsterCard(Guid.NewGuid(), "WaterDragon", 25.0);
-            MonsterCard m7 = new MonsterCard(Guid.NewGuid(), "FireDragon", 25.0);
-
             u1.stack.AddRange(new List<Card> { m1, m2, m3, m4});
             u1.configureDeck(new List<Guid> { m1.id, m2.id, m3.id, m4.id });
 
-            u2.stack.AddRange(new List<Card> { m5, m6, m7 });
-            u2.deck.AddRange(new List<Card> { m5, m6, m7 });
-
             //act
-            Guid b1Id = Guid.NewGuid();
-            Battle b1 = new Battle(b1Id, u1);
-            ArgumentException ex1 = Assert.Throws<ArgumentException>(delegate { new Battle(Guid.NewGuid(), u2); });
+            Battle b1 = new Battle(Guid.NewGuid(), u1);
 
             //assert
             Assert.AreEqual(b1.user1, u1);
             Assert.AreEqual(b1.user2, null);
-            Assert.AreEqual(b1.id, b1Id);
-            Assert.That(ex1.Message, Is.EqualTo("A deck should consist of 4 cards, cards in deck: 3"));
+        }
+
+        [Test]
+        public void testConstructor_throwsException() {
+            //arrange
+            //act & assert
+            ArgumentException ex1 = Assert.Throws<ArgumentException>(delegate { new Battle(Guid.NewGuid(), u1); });
+            Assert.That(ex1.Message, Is.EqualTo("A deck should consist of 4 cards, cards in deck: 0"));
         }
 
         [Test]
         public void testPlay() {
             //arrange
-            User u1 = new User("testUser", "testUserPassword");
             User u2 = new User("maxi", "supersecretpassword1");
-
-            MonsterCard m1 = new MonsterCard(Guid.NewGuid(), "WaterDragon", 999.0);
-            MonsterCard m2 = new MonsterCard(Guid.NewGuid(), "FireDragon", 999.0);
-            MonsterCard m3 = new MonsterCard(Guid.NewGuid(), "Dragon", 999.0);
-            MonsterCard m4 = new MonsterCard(Guid.NewGuid(), "WaterGoblin", 999.0);
             MonsterCard m5 = new MonsterCard(Guid.NewGuid(), "FireGoblin", 25.0);
             MonsterCard m6 = new MonsterCard(Guid.NewGuid(), "WaterDragon", 25.0);
             MonsterCard m7 = new MonsterCard(Guid.NewGuid(), "FireDragon", 25.0);
