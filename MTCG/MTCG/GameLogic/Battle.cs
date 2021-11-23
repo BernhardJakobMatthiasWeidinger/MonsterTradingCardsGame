@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace MTCG.src {
+namespace MTCG.GameLogic {
     public class Battle {
         public Guid id { get; private set; }
         public User user1 { get; private set; }

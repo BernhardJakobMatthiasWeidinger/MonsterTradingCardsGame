@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace MTCG.src {
+namespace MTCG.GameLogic {
     public enum ElementType {
         fire,
         water,

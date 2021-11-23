@@ -1,4 +1,4 @@
-﻿using MTCG.src;
+﻿using MTCG.GameLogic;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
@@ -6,7 +6,7 @@ using System.Text;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace MTCG.Test {
+namespace MTCG.GameLogic.Test {
     public class TestUser {
         [Test]
         public void testConstructor() {

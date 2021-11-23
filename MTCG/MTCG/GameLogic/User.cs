@@ -5,7 +5,7 @@ using System.Text;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace MTCG.src {
+namespace MTCG.GameLogic {
     public class User {
         public Guid id { get; private set; }
         public string username { get; private set; }

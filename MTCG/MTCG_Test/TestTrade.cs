@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using NUnit;
 using NUnit.Framework;
 
-using MTCG.src;
+using MTCG.GameLogic;
 
-namespace MTCG.Test {
+namespace MTCG.GameLogic.Test {
     public class TestTrade {
         [Test]
         public void testConstructor() {

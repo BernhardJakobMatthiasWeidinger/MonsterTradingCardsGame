@@ -2,9 +2,9 @@ using System;
 using NUnit;
 using NUnit.Framework;
 
-using MTCG.src;
+using MTCG.GameLogic;
 
-namespace MTCG.Test {
+namespace MTCG.GameLogic.Test {
     public class TestCard {
         [Test]
         public void testConstructor_name() {

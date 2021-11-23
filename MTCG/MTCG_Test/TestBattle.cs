@@ -1,10 +1,10 @@
-﻿using MTCG.src;
+﻿using MTCG.GameLogic;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace MTCG.Test {
+namespace MTCG.GameLogic.Test {
     public class TestBattle {
         [Test]
         public void testConstructor() {
