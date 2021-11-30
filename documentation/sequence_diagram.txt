@@ -1,0 +1,51 @@
+@startuml
+actor client1
+actor client2
+
+server -> database: request data at server start
+database --> server: send data
+client1 -> server: start battle
+client2 -> server: joins battle
+loop 100 times OR one client has no cards left in deck
+    server -> server: get one random card from each deck
+    server -> server: write card names and damages to round log
+
+    group calculate damage
+        alt rule between 2 cards occurs
+            server -> server: set damage
+            note right
+            card1:goblin, card2:dragon => damage card1:0
+            card1:ork, card2:wizard => damage card1:0
+            card1:spell, card2:kraken=> damage card1:0
+            card1:dragon, card2:fireelf => damage card1:0
+            card1:waterspell, card2:knight => damage card1:9999
+            (all rules vice versa)
+            end note
+            server -> server: add calculation to round log
+        else one or both cards are spell cards
+            server -> server: set damage
+            note right
+            card1:water, card2:fire => damage card1*=2, damage card2/=2
+            card1:fire, card2:normal => damage card1*=2, damage card2/=2
+            card1:normal, card2:water => damage card1*=2, damage card2/=2
+            (all rules vice versa)
+            end note
+            server -> server: add calculation to round log
+        else no rule or element difference or only monster cards
+            server -> server: damage stays the same
+        end
+    end
+
+    server -> server: add winner to round log
+    note right
+    player with higher calculated card damage wins
+    end note
+    server -> server: add round log to battle log
+end
+
+server -> server: calculate new user stats
+server -> database: update user stats
+server -> database: update user decks/stacks
+server --> client1: send battle log
+server --> client2: send battle log
+@enduml
