@@ -27,24 +27,15 @@ namespace MTCG.GameLogic {
             string res = "";
             for (int i=1; i <= 100; ++i) {
                 res += compareCards(i) + "\n";
-
                 if (user1.deck.Count == 0 || user2.deck.Count == 0) {
                     break;
                 } 
             }
 
-            user1.gamesPlayed++;
-            user2.gamesPlayed++;
             if (user1.deck.Count > user2.deck.Count) {
-                user1.gamesWon++;
-                user1.elo += 3;
-                user2.gamesLost++;
-                user2.elo -= 5;
+                calculateStatsAfterBattle(user1, user2);
             } else if (user1.deck.Count < user2.deck.Count) {
-                user2.gamesWon++;
-                user2.elo += 3;
-                user1.gamesLost++;
-                user1.elo -= 5;
+                calculateStatsAfterBattle(user2, user1);
             } 
 
             user1.configureDeckAfterBattle();
@@ -61,7 +52,7 @@ namespace MTCG.GameLogic {
             double calc1 = card1.damage;
             double calc2 = card2.damage;
             
-            string res = $"Round {round}: " + CardRules.compareAllRules(user1.username, user2.username, card1, card2, ref calc1, ref calc2);
+            string res = $"Round {round}: " + RuleSet.compareAllRules(user1.username, user2.username, card1, card2, ref calc1, ref calc2);
 
             string winner = "Draw";
             if (calc1 > calc2) {
@@ -73,6 +64,15 @@ namespace MTCG.GameLogic {
             }
 
             return res + $" => {winner}";
+        }
+
+        private void calculateStatsAfterBattle(User winner, User loser) {
+            winner.gamesPlayed++;
+            winner.gamesWon++;
+            winner.elo += 3;
+            loser.gamesPlayed++;
+            loser.gamesLost++;
+            loser.elo -= 5;
         }
         
         private void giveCard(User winner, User loser, Card cardToGive) {

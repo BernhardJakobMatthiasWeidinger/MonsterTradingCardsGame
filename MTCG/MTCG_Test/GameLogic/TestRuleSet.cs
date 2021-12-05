@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace MTCG.Test.GameLogic {
-    public class TestCardRules {
+    public class TestRuleSet {
         private Card setUpCard(string name, double damage) {
             Card card;
             if (name.ToLower().Contains("spell")) {
@@ -27,13 +27,13 @@ namespace MTCG.Test.GameLogic {
         [TestCase("FireDragon", 10.0, "WaterGoblin", 35.0, 10, 0)]
         [TestCase("Knight", 10.0, "WaterSpell", 35.0, 0, 9999.0)]
         [TestCase("WaterSpell", 10.0, "FireKnight", 35.0, 9999.0, 0)]
-        public void testCompareUniqueRule(string name1, double damage1, string name2, double damage2, double expected1, double expected2) {
+        public void testCompareSpecialRule(string name1, double damage1, string name2, double damage2, double expected1, double expected2) {
             //arrange
             Card card1 = setUpCard(name1, damage1);
             Card card2 = setUpCard(name2, damage2);
 
             //act
-            Tuple<double, double> calcDamages = CardRules.compareUniqueRule(card1, card2, card1.damage, card2.damage);
+            Tuple<double, double> calcDamages = RuleSet.compareSpecialRule(card1, card2, card1.damage, card2.damage);
 
             //assert
             Assert.AreEqual(expected1, calcDamages.Item1);
@@ -56,7 +56,7 @@ namespace MTCG.Test.GameLogic {
             Card card2 = setUpCard(name2, damage2);
 
             //act
-            Tuple<double, double> calcDamages = CardRules.compareElementType(card1, card2, card1.damage, card2.damage);
+            Tuple<double, double> calcDamages = RuleSet.compareElementType(card1, card2, card1.damage, card2.damage);
 
             //assert
             Assert.AreEqual(expected1, calcDamages.Item1);
@@ -76,7 +76,7 @@ namespace MTCG.Test.GameLogic {
             double before2 = card2.damage;
 
             //act
-            string damageLog = CardRules.compareAllRules(user1, user2, card1, card2, ref damage1, ref damage2);
+            string damageLog = RuleSet.compareAllRules(user1, user2, card1, card2, ref damage1, ref damage2);
 
             //assert
             Assert.AreEqual($"{user1}: {name1} ({before1} Damage) vs {user2}: {name2} ({before2} Damage)", damageLog);
@@ -96,7 +96,7 @@ namespace MTCG.Test.GameLogic {
             double before2 = damage2;
 
             //act
-            string damageLog = CardRules.compareAllRules(user1, user2, card1, card2, ref damage1, ref damage2);
+            string damageLog = RuleSet.compareAllRules(user1, user2, card1, card2, ref damage1, ref damage2);
 
             //assert
             Assert.AreEqual($"{user1}: {name1} ({before1} Damage) vs {user2}: {name2} ({before2} Damage) => {before1} VS {before2} -> {expected1} VS {expected2}", damageLog);

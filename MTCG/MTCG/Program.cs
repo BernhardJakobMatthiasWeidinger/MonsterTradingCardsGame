@@ -57,7 +57,7 @@ namespace MTCG {
             User u2 = new User("miniiii", "supersecretpassword2");
             p2.aquirePackage(u2);
             u2.configureDeck(new List<Guid> { m4.id, m5.id, s3.id, s4.id });
-
+            
             //Create Trade
             Console.WriteLine("\nCreate Trade:");
             try {
