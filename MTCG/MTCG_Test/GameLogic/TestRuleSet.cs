@@ -17,53 +17,6 @@ namespace MTCG.Test.GameLogic {
         }
 
         [Test]
-        [TestCase("Goblin", 10.0, "Dragon", 35.0, 0, 35.0)]
-        [TestCase("Ork", 10.0, "Wizard", 35.0, 0, 35.0)]
-        [TestCase("RegularSpell", 10.0, "Kraken", 35.0, 0, 35.0)]
-        [TestCase("Dragon", 10.0, "FireElf", 35.0, 0, 35.0)]
-        [TestCase("FireWizard", 10.0, "WaterOrk", 35.0, 10, 0)]
-        [TestCase("WaterKraken", 10.0, "FireSpell", 35.0, 10, 0)]
-        [TestCase("FireElf", 10.0, "WaterDragon", 35.0, 10, 0)]
-        [TestCase("FireDragon", 10.0, "WaterGoblin", 35.0, 10, 0)]
-        [TestCase("Knight", 10.0, "WaterSpell", 35.0, 0, 9999.0)]
-        [TestCase("WaterSpell", 10.0, "FireKnight", 35.0, 9999.0, 0)]
-        public void testCompareSpecialRule(string name1, double damage1, string name2, double damage2, double expected1, double expected2) {
-            //arrange
-            Card card1 = setUpCard(name1, damage1);
-            Card card2 = setUpCard(name2, damage2);
-
-            //act
-            Tuple<double, double> calcDamages = RuleSet.compareSpecialRule(card1, card2, card1.damage, card2.damage);
-
-            //assert
-            Assert.AreEqual(expected1, calcDamages.Item1);
-            Assert.AreEqual(expected2, calcDamages.Item2);
-        }
-
-        [Test]
-        [TestCase("RegularSpell", 10, "RegularSpell", 10, 10, 10)]
-        [TestCase("RegularSpell", 10, "WaterSpell", 10, 20, 5)]
-        [TestCase("RegularSpell", 10, "FireSpell", 10, 5, 20)]
-        [TestCase("WaterSpell", 10, "RegularSpell", 10, 5, 20)]
-        [TestCase("WaterSpell", 10, "WaterSpell", 10, 10, 10)]
-        [TestCase("WaterSpell", 10, "FireSpell", 10, 20, 5)]
-        [TestCase("FireSpell", 10, "RegularSpell", 10, 20, 5)]
-        [TestCase("FireSpell", 10, "WaterSpell", 10, 5, 20)]
-        [TestCase("FireSpell", 10, "FireSpell", 10, 10, 10)]
-        public void testCompareElementType(string name1, double damage1, string name2, double damage2, double expected1, double expected2) {
-            //arrange
-            Card card1 = setUpCard(name1, damage1);
-            Card card2 = setUpCard(name2, damage2);
-
-            //act
-            Tuple<double, double> calcDamages = RuleSet.compareElementType(card1, card2, card1.damage, card2.damage);
-
-            //assert
-            Assert.AreEqual(expected1, calcDamages.Item1);
-            Assert.AreEqual(expected2, calcDamages.Item2);
-        }
-
-        [Test]
         [TestCase("Maxi", "Mini", "RegularSpell", 10, "RegularSpell", 10, 10, 10)]
         [TestCase("Maxi", "Mini", "FireSpell", 10, "FireOrk", 10, 10, 10)]
         [TestCase("Maxi", "Mini", "WaterDragon", 10, "Wizard", 10, 10, 10)]

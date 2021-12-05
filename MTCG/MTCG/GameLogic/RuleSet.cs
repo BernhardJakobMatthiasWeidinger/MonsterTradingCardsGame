@@ -18,17 +18,7 @@ namespace MTCG.GameLogic {
             new SpecialRule("fireelf", "dragon", null, 0),
         };
 
-        public static Tuple<double, double> compareSpecialRule(Card card1, Card card2, double calcDamage1, double calcDamage2) {
-            foreach (SpecialRule sr in specialRules) {
-                if (sr.checkRule(card1, card2, ref calcDamage1, ref calcDamage2)) {
-                    break;
-                }
-            }
-
-            return new Tuple<double, double>(calcDamage1, calcDamage2);
-        }
-
-        public static Tuple<double, double> compareElementType(Card card1, Card card2, double calcDamage1, double calcDamage2) {
+        private static Tuple<double, double> compareElementType(Card card1, Card card2, double calcDamage1, double calcDamage2) {
             if (card1.GetType().Name == "SpellCard" || card2.GetType().Name == "SpellCard") {
                 foreach (ElementRule er in elementRules) {
                     if (er.checkRule(card1, card2, ref calcDamage1, ref calcDamage2)) {
@@ -36,7 +26,15 @@ namespace MTCG.GameLogic {
                     }
                 }
             }
+            return new Tuple<double, double>(calcDamage1, calcDamage2);
+        }
 
+        private static Tuple<double, double> compareSpecialRule(Card card1, Card card2, double calcDamage1, double calcDamage2) {
+            foreach (SpecialRule sr in specialRules) {
+                if (sr.checkRule(card1, card2, ref calcDamage1, ref calcDamage2)) {
+                    break;
+                }
+            }
             return new Tuple<double, double>(calcDamage1, calcDamage2);
         }
 
