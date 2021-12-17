@@ -121,6 +121,15 @@ namespace MTCG.GameLogic {
             }
         }
 
+        public void removeFriend(User other) {
+            if (this.friends.Contains(other.id)) {
+                this.friends.Remove(other.id);
+                other.friends.Remove(this.id);
+            } else {
+                throw new ArgumentException($"User {other.username} is not your friend!");
+            }
+        }
+
         public string getUserData(bool isJson) {
             string res = "";
             if (isJson) {

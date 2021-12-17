@@ -216,6 +216,32 @@ namespace MTCG.Test.GameLogic {
         }
 
         [Test]
+        public void testRemoveFriend() {
+            //arrange
+            User u3 = new User("otto", "supersecretpassword1");
+            u1.addFriend(u2);
+            u2.addFriend(u3);
+
+            //act
+            u2.removeFriend(u1);
+
+            //assert
+            Assert.AreEqual(new List<Guid> { }, u1.friends);
+            Assert.AreEqual(new List<Guid> { u3.id }, u2.friends);
+            Assert.AreEqual(new List<Guid> { u2.id }, u3.friends);
+        }
+
+        [Test]
+        public void testRemoveFriend_throwsExceptionNotBefriended() {
+            //arrange
+            User u3 = new User("otto", "supersecretpassword1");
+
+            //act & assert
+            ArgumentException ex1 = Assert.Throws<ArgumentException>(delegate { u1.removeFriend(u3); });
+            Assert.That(ex1.Message, Is.EqualTo($"User otto is not your friend!"));
+        }
+
+        [Test]
         public void testGetUserData_plain() {
             //arrange
             //act
