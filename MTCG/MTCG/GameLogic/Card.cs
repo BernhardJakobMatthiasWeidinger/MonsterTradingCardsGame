@@ -4,16 +4,16 @@ using System.Text;
 
 namespace MTCG.GameLogic {
     public abstract class Card {
-        public Guid id { get; private set; }
-        public string name { get; private set; }
-        public double damage { get; private set; }
-        public ElementType elementType { get; private set; }
+        public Guid Id { get; private set; }
+        public string Name { get; private set; }
+        public double Damage { get; private set; }
+        public ElementType ElementType { get; private set; }
 
         public Card(Guid id, string name, double damage) {
-            this.id = id;
-            this.name = name;
-            this.damage = damage;
-            this.elementType = ElementType.normal;
+            this.Id = id;
+            this.Name = name;
+            this.Damage = damage;
+            this.ElementType = ElementType.normal;
             
             if (damage < 0) {
                 throw new ArgumentException("Damage has to be positive.");
@@ -21,42 +21,42 @@ namespace MTCG.GameLogic {
 
             if (name.Length >= 7) {
                 if (name.Substring(0, 4).ToLower() == "fire") {
-                    this.elementType = ElementType.fire;
+                    this.ElementType = ElementType.fire;
                 } else if (name.Substring(0, 5).ToLower() == "water") {
-                    this.elementType = ElementType.water;
+                    this.ElementType = ElementType.water;
                 } else if (name.Substring(0, 7).ToLower() == "regular") {
-                    this.elementType = ElementType.normal;
+                    this.ElementType = ElementType.normal;
                 }
             }
         }
 
         public override string ToString() {
-            return $"id:{this.id},name:{this.name},damage:{this.damage},elementType:{this.elementType}";
+            return $"id:{this.Id},name:{this.Name},damage:{this.Damage},elementType:{this.ElementType}";
         }
     }
 
     public class MonsterCard : Card {
-        public MonsterType monsterType { get; private set; }
+        public MonsterType MonsterType { get; private set; }
 
         public MonsterCard(Guid id, string name, double damage) : base(id, name, damage) {
             int idx = 0;
-            if (elementType == ElementType.fire) {
+            if (ElementType == ElementType.fire) {
                 idx = 4;
-            } else if (elementType == ElementType.water) {
+            } else if (ElementType == ElementType.water) {
                 idx = 5;
             }
 
-            monsterType = (MonsterType)System.Enum.Parse(typeof(MonsterType), name.Substring(idx).ToLower());
+            MonsterType = (MonsterType)System.Enum.Parse(typeof(MonsterType), name.Substring(idx).ToLower());
         }
 
         public override string ToString() {
-            return base.ToString() + $",monsterType:{this.monsterType}";
+            return base.ToString() + $",monsterType:{this.MonsterType}";
         }
     }
 
     public class SpellCard : Card {
         public SpellCard(Guid id, string name, double damage) : base(id, name, damage) {
-            if (this.elementType == ElementType.normal && name.Substring(0, 7).ToLower() != "regular") {
+            if (this.ElementType == ElementType.normal && name.Substring(0, 7).ToLower() != "regular") {
                 throw new ArgumentException("Spell card has to begin with 'Regular', 'Fire' or 'Water'.");
             }
 

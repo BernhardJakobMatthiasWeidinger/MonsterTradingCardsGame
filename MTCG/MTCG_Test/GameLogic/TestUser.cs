@@ -35,15 +35,15 @@ namespace MTCG.Test.GameLogic {
             //arrange
             //act
             //assert
-            Assert.AreEqual("maxi", u1.username);
-            Assert.AreEqual("testUserPassword", u1.password);
-            Assert.AreEqual(null, u1.name);
-            Assert.AreEqual("Hier könnte deine Biografie stehen!", u1.bio);
-            Assert.AreEqual(20, u1.coins);
-            Assert.AreEqual(0, u1.gamesPlayed);
-            Assert.AreEqual(0, u1.gamesWon);
-            Assert.AreEqual(0, u1.gamesLost);
-            Assert.AreEqual(100, u1.elo);
+            Assert.AreEqual("maxi", u1.Username);
+            Assert.AreEqual("testUserPassword", u1.Password);
+            Assert.AreEqual(null, u1.Name);
+            Assert.AreEqual("Hier könnte deine Biografie stehen!", u1.Bio);
+            Assert.AreEqual(20, u1.Coins);
+            Assert.AreEqual(0, u1.GamesPlayed);
+            Assert.AreEqual(0, u1.GamesWon);
+            Assert.AreEqual(0, u1.GamesLost);
+            Assert.AreEqual(100, u1.Elo);
         }
 
         [Test]
@@ -80,13 +80,13 @@ namespace MTCG.Test.GameLogic {
         public void testToString(string username, string name, string bio, string image) {
             //arrange
             u1 = new User(username, "testUserPassword");
-            u1.setUserData(name, bio, image);
+            u1.SetUserData(name, bio, image);
 
             //act
             string userData = u1.ToString();
 
             //assert
-            Assert.AreEqual($"id:{u1.id},username:{u1.username},name:{u1.name},bio:{u1.bio},image:{u1.image}," +
+            Assert.AreEqual($"id:{u1.Id},username:{u1.Username},name:{u1.Name},bio:{u1.Bio},image:{u1.Image}," +
                     $"coins:20,gamesPlayed:0,gamesWon:0,gamesLost:0,elo:100,friends:[]", u1.ToString());
         }
 
@@ -98,73 +98,73 @@ namespace MTCG.Test.GameLogic {
             u1 = new User("testUser", "testUserPassword");
 
             //act
-            u1.setUserData(name, bio, image);
+            u1.SetUserData(name, bio, image);
 
             //assert
-            Assert.AreEqual(name, u1.name);
-            Assert.AreEqual(bio, u1.bio);
-            Assert.AreEqual(image, u1.image);
+            Assert.AreEqual(name, u1.Name);
+            Assert.AreEqual(bio, u1.Bio);
+            Assert.AreEqual(image, u1.Image);
         }
 
         [Test]
         public void testGetCardFromDeck() {
             //arrange
-            u1.stack.AddRange(new List<Card> { m1, m2, m3, m4, m5 });
-            u1.configureDeck(new List<Guid> { m1.id, m2.id, m3.id, m4.id });
+            u1.Stack.AddRange(new List<Card> { m1, m2, m3, m4, m5 });
+            u1.ConfigureDeck(new List<Guid> { m1.Id, m2.Id, m3.Id, m4.Id });
 
             //act
-            Card card1 = u1.getCardFromDeck();
-            Card card2 = u2.getCardFromDeck();
+            Card card1 = u1.GetCardFromDeck();
+            Card card2 = u2.GetCardFromDeck();
 
             //assert
-            Assert.AreEqual(true, u1.deck.Contains(card1));
+            Assert.AreEqual(true, u1.Deck.Contains(card1));
             Assert.AreEqual(null, card2);
         }
 
         [Test]
         public void testConfigureDeck() {
             //arrange
-            int before = u1.deck.Count;
-            u1.stack.AddRange(new List<Card> { m1, m2, m3, m4 });
+            int before = u1.Deck.Count;
+            u1.Stack.AddRange(new List<Card> { m1, m2, m3, m4 });
 
             //act
-            u1.configureDeck(new List<Guid> { m1.id, m2.id, m3.id, m4.id });
+            u1.ConfigureDeck(new List<Guid> { m1.Id, m2.Id, m3.Id, m4.Id });
 
             //assert
-            Assert.AreEqual(4, u1.deck.Count);
+            Assert.AreEqual(4, u1.Deck.Count);
             Assert.AreEqual(0, before);
-            Assert.AreEqual(true, u1.deck.Contains(m1));
-            Assert.AreEqual(false, u1.deck.Contains(m5));
+            Assert.AreEqual(true, u1.Deck.Contains(m1));
+            Assert.AreEqual(false, u1.Deck.Contains(m5));
         }
 
         [Test]
         public void testConfigureDeck_throwsExceptionTooManyCards() {
             //arrange
-            u1.stack.AddRange(new List<Card> { m1, m2, m3, m4 });
+            u1.Stack.AddRange(new List<Card> { m1, m2, m3, m4 });
 
             //act & assert
-            ArgumentException ex1 = Assert.Throws<ArgumentException>(delegate { u1.configureDeck(new List<Guid> { m1.id, m2.id, m3.id, m4.id, m5.id }); });
+            ArgumentException ex1 = Assert.Throws<ArgumentException>(delegate { u1.ConfigureDeck(new List<Guid> { m1.Id, m2.Id, m3.Id, m4.Id, m5.Id }); });
             Assert.That(ex1.Message, Is.EqualTo($"A deck should be provided with 4 cards, cards given: 5"));
         }
 
         [Test]
         public void testConfigureDeck_throwsExceptionTooFewCards() {
             //arrange
-            u1.stack.AddRange(new List<Card> { m1, m2, m3, m4 });
+            u1.Stack.AddRange(new List<Card> { m1, m2, m3, m4 });
 
             //act & assert
-            ArgumentException ex2 = Assert.Throws<ArgumentException>(delegate { u1.configureDeck(new List<Guid> { m1.id, m2.id, m3.id }); });
+            ArgumentException ex2 = Assert.Throws<ArgumentException>(delegate { u1.ConfigureDeck(new List<Guid> { m1.Id, m2.Id, m3.Id }); });
             Assert.That(ex2.Message, Is.EqualTo($"A deck should be provided with 4 cards, cards given: 3"));
         }
 
         [Test]
         public void testConfigureDeck_throwsExceptionInvalidCard() {
             //arrange
-            u1.stack.AddRange(new List<Card> { m1, m2, m3, m4 });
+            u1.Stack.AddRange(new List<Card> { m1, m2, m3, m4 });
 
             //act & assert
-            ArgumentException ex3 = Assert.Throws<ArgumentException>(delegate { u1.configureDeck(new List<Guid> { m1.id, m2.id, m3.id, m5.id }); });
-            Assert.That(ex3.Message, Is.EqualTo($"Card with id {m5.id} was not found in stack!"));
+            ArgumentException ex3 = Assert.Throws<ArgumentException>(delegate { u1.ConfigureDeck(new List<Guid> { m1.Id, m2.Id, m3.Id, m5.Id }); });
+            Assert.That(ex3.Message, Is.EqualTo($"Card with id {m5.Id} was not found in stack!"));
         }
 
         [Test]
@@ -173,16 +173,16 @@ namespace MTCG.Test.GameLogic {
         [TestCase(5)]
         public void testConfigureDeckAfterBattle(int countCards) {
             //arrange
-            u1.stack.AddRange(new List<Card> { m1, m2, m3, m4, m5 });
-            u1.deck.AddRange(u1.stack.GetRange(0, countCards));
+            u1.Stack.AddRange(new List<Card> { m1, m2, m3, m4, m5 });
+            u1.Deck.AddRange(u1.Stack.GetRange(0, countCards));
 
             //act
-            u1.configureDeckAfterBattle();
+            u1.ConfigureDeckAfterBattle();
 
             //assert
-            Assert.AreEqual(5, u1.stack.Count);
-            Assert.AreEqual(4, u1.deck.Count);
-            Assert.AreEqual(new List<Card> { m1, m2, m3, m4 }, u1.deck);
+            Assert.AreEqual(5, u1.Stack.Count);
+            Assert.AreEqual(4, u1.Deck.Count);
+            Assert.AreEqual(new List<Card> { m1, m2, m3, m4 }, u1.Deck);
         }
 
         [Test]
@@ -191,27 +191,27 @@ namespace MTCG.Test.GameLogic {
             User u3 = new User("otto", "supersecretpassword1");
 
             //act
-            u1.addFriend(u2);
-            u2.addFriend(u3);
+            u1.AddFriend(u2);
+            u2.AddFriend(u3);
 
             //assert
-            Assert.AreEqual(1, u1.friends.Count);
-            Assert.AreEqual(2, u2.friends.Count);
-            Assert.AreEqual(1, u3.friends.Count);
+            Assert.AreEqual(1, u1.Friends.Count);
+            Assert.AreEqual(2, u2.Friends.Count);
+            Assert.AreEqual(1, u3.Friends.Count);
 
-            Assert.AreEqual(new List<Guid> { u2.id }, u1.friends);
-            Assert.AreEqual(new List<Guid> { u1.id, u3.id }, u2.friends);
-            Assert.AreEqual(new List<Guid> { u2.id }, u3.friends);
+            Assert.AreEqual(new List<Guid> { u2.Id }, u1.Friends);
+            Assert.AreEqual(new List<Guid> { u1.Id, u3.Id }, u2.Friends);
+            Assert.AreEqual(new List<Guid> { u2.Id }, u3.Friends);
         }
 
         [Test]
         public void testAddFriend_throwsExceptionAlreadyBefriended() {
             //arrange
             //act
-            u1.addFriend(u2);
+            u1.AddFriend(u2);
 
             //assert
-            ArgumentException ex1 = Assert.Throws<ArgumentException>(delegate { u2.addFriend(u1); });
+            ArgumentException ex1 = Assert.Throws<ArgumentException>(delegate { u2.AddFriend(u1); });
             Assert.That(ex1.Message, Is.EqualTo($"User maxi is already your friend!"));
         }
 
@@ -219,16 +219,16 @@ namespace MTCG.Test.GameLogic {
         public void testRemoveFriend() {
             //arrange
             User u3 = new User("otto", "supersecretpassword1");
-            u1.addFriend(u2);
-            u2.addFriend(u3);
+            u1.AddFriend(u2);
+            u2.AddFriend(u3);
 
             //act
-            u2.removeFriend(u1);
+            u2.RemoveFriend(u1);
 
             //assert
-            Assert.AreEqual(new List<Guid> { }, u1.friends);
-            Assert.AreEqual(new List<Guid> { u3.id }, u2.friends);
-            Assert.AreEqual(new List<Guid> { u2.id }, u3.friends);
+            Assert.AreEqual(new List<Guid> { }, u1.Friends);
+            Assert.AreEqual(new List<Guid> { u3.Id }, u2.Friends);
+            Assert.AreEqual(new List<Guid> { u2.Id }, u3.Friends);
         }
 
         [Test]
@@ -237,7 +237,7 @@ namespace MTCG.Test.GameLogic {
             User u3 = new User("otto", "supersecretpassword1");
 
             //act & assert
-            ArgumentException ex1 = Assert.Throws<ArgumentException>(delegate { u1.removeFriend(u3); });
+            ArgumentException ex1 = Assert.Throws<ArgumentException>(delegate { u1.RemoveFriend(u3); });
             Assert.That(ex1.Message, Is.EqualTo($"User otto is not your friend!"));
         }
 
@@ -245,26 +245,26 @@ namespace MTCG.Test.GameLogic {
         public void testGetUserData_plain() {
             //arrange
             //act
-            string dataPlain = u1.getUserData(false);
+            string dataPlain = u1.GetUserData(false);
 
             //assert
             Assert.AreEqual(dataPlain, u1.ToString());
         }
 
         [Test]
-        [TestCase("maxi", "username")]
-        [TestCase("", "name")]
-        [TestCase("Hier könnte deine Biografie stehen!", "bio")]
-        [TestCase("", "image")]
-        [TestCase("20", "coins")]
-        [TestCase("0", "gamesPlayed")]
-        [TestCase("0", "gamesWon")]
-        [TestCase("0", "gamesLost")]
-        [TestCase("100", "elo")]
+        [TestCase("maxi", "Username")]
+        [TestCase("", "Name")]
+        [TestCase("Hier könnte deine Biografie stehen!", "Bio")]
+        [TestCase("", "Image")]
+        [TestCase("20", "Coins")]
+        [TestCase("0", "GamesPlayed")]
+        [TestCase("0", "GamesWon")]
+        [TestCase("0", "GamesLost")]
+        [TestCase("100", "Elo")]
         public void testGetUserData_json(string value, string key) {
             //arrange
             //act
-            string dataJson = u1.getUserData(true);
+            string dataJson = u1.GetUserData(true);
             JObject newU1 = (JObject)JsonConvert.DeserializeObject(dataJson);
 
             //assert
@@ -275,10 +275,10 @@ namespace MTCG.Test.GameLogic {
         public void testGetUserStats_plain() {
             //arrange
             //act
-            string dataPlain = u1.getUserStats(false);
+            string dataPlain = u1.GetUserStats(false);
 
             //assert
-            Assert.AreEqual($"gamesPlayed:{u1.gamesPlayed},gamesWon:{u1.gamesWon},gamesLost:{u1.gamesWon},elo:{u1.elo}", dataPlain);
+            Assert.AreEqual($"gamesPlayed:{u1.GamesPlayed},gamesWon:{u1.GamesWon},gamesLost:{u1.GamesWon},elo:{u1.Elo}", dataPlain);
         }
 
         [Test]
@@ -290,7 +290,7 @@ namespace MTCG.Test.GameLogic {
         public void testGetUserStats_json(string value, string key) {
             //arrange
             //act
-            string dataJson = u1.getUserStats(true);
+            string dataJson = u1.GetUserStats(true);
             JObject newU1 = (JObject)JsonConvert.DeserializeObject(dataJson);
 
             //assert
@@ -300,17 +300,17 @@ namespace MTCG.Test.GameLogic {
         [Test]
         public void testDeckToString_plain() {
             //arrange
-            u1.stack.AddRange(new List<Card> { m1, m2, m3, m4, m5 });
-            u1.configureDeck(new List<Guid> { m1.id, m2.id, m3.id, m4.id });
+            u1.Stack.AddRange(new List<Card> { m1, m2, m3, m4, m5 });
+            u1.ConfigureDeck(new List<Guid> { m1.Id, m2.Id, m3.Id, m4.Id });
 
             //act
-            string dataPlain = u1.deckToString(false);
+            string dataPlain = u1.DeckToString(false);
 
             int i = 0;
             string dataPlainRes = "";
-            foreach (Card card in u1.deck) {
+            foreach (Card card in u1.Deck) {
                 dataPlainRes += card.ToString();
-                dataPlainRes += i != (u1.deck.Count - 1) ? ";" : "";
+                dataPlainRes += i != (u1.Deck.Count - 1) ? ";" : "";
                 i++;
             }
             
@@ -321,34 +321,34 @@ namespace MTCG.Test.GameLogic {
         [Test]
         public void testDeckToString_json() {
             //arrange
-            u1.stack.AddRange(new List<Card> { m1, m2, m3, m4, m5 });
-            u1.configureDeck(new List<Guid> { m1.id, m2.id, m3.id, m4.id });
+            u1.Stack.AddRange(new List<Card> { m1, m2, m3, m4, m5 });
+            u1.ConfigureDeck(new List<Guid> { m1.Id, m2.Id, m3.Id, m4.Id });
 
             //act
-            string dataJson = u1.deckToString(true);
+            string dataJson = u1.DeckToString(true);
 
-            JArray u1Deck = (JArray)((JObject)JsonConvert.DeserializeObject(dataJson)).GetValue("deck");
+            JArray u1Deck = (JArray)((JObject)JsonConvert.DeserializeObject(dataJson)).GetValue("Deck");
             JObject m1Json = (JObject)JsonConvert.DeserializeObject(u1Deck[0].ToString());
 
             //assert
-            Assert.AreEqual(m1.id.ToString(), m1Json.GetValue("id").ToString());
-            Assert.AreEqual(m1.name, m1Json.GetValue("name").ToString());
-            Assert.AreEqual(m1.damage.ToString(), m1Json.GetValue("damage").ToString());
+            Assert.AreEqual(m1.Id.ToString(), m1Json.GetValue("Id").ToString());
+            Assert.AreEqual(m1.Name, m1Json.GetValue("Name").ToString());
+            Assert.AreEqual(m1.Damage.ToString(), m1Json.GetValue("Damage").ToString());
         }
 
         [Test]
         public void testStackToString_plain() {
             //arrange
-            u1.stack.AddRange(new List<Card> { m1, m2 });
+            u1.Stack.AddRange(new List<Card> { m1, m2 });
 
             //act
-            string dataPlain = u1.stackToString(false);
+            string dataPlain = u1.StackToString(false);
 
             int i = 0;
             string dataPlainRes = "";
-            foreach (Card card in u1.stack) {
+            foreach (Card card in u1.Stack) {
                 dataPlainRes += card.ToString();
-                dataPlainRes += i != (u1.stack.Count - 1) ? ";" : "";
+                dataPlainRes += i != (u1.Stack.Count - 1) ? ";" : "";
                 i++;
             }
 
@@ -359,18 +359,18 @@ namespace MTCG.Test.GameLogic {
         [Test]
         public void testStackToString_json() {
             //arrange
-            u1.stack.AddRange(new List<Card> { m1, m2 });
+            u1.Stack.AddRange(new List<Card> { m1, m2 });
 
             //act
-            string dataJson = u1.stackToString(true);
+            string dataJson = u1.StackToString(true);
 
-            JArray u1Stack = (JArray)((JObject)JsonConvert.DeserializeObject(dataJson)).GetValue("stack");
+            JArray u1Stack = (JArray)((JObject)JsonConvert.DeserializeObject(dataJson)).GetValue("Stack");
             JObject m1Json = (JObject)JsonConvert.DeserializeObject(u1Stack[0].ToString());
 
             //assert
-            Assert.AreEqual(m1.id.ToString(), m1Json.GetValue("id").ToString());
-            Assert.AreEqual(m1.name, m1Json.GetValue("name").ToString());
-            Assert.AreEqual(m1.damage.ToString(), m1Json.GetValue("damage").ToString());
+            Assert.AreEqual(m1.Id.ToString(), m1Json.GetValue("Id").ToString());
+            Assert.AreEqual(m1.Name, m1Json.GetValue("Name").ToString());
+            Assert.AreEqual(m1.Damage.ToString(), m1Json.GetValue("Damage").ToString());
         }
     }
 }

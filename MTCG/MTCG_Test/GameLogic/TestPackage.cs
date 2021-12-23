@@ -32,7 +32,7 @@ namespace MTCG.Test.GameLogic {
             Package p1 = new Package(new List<Card> { m1, m2, m3, s1, s2 });
 
             //assert
-            Assert.AreEqual(5, p1.cards.Count);
+            Assert.AreEqual(5, p1.Cards.Count);
         }
 
         [Test]
@@ -59,23 +59,23 @@ namespace MTCG.Test.GameLogic {
             Package p1 = new Package(new List<Card> { m1, m2, m3, s1, s2 });
 
             //act
-            p1.aquirePackage(u1);
+            p1.AquirePackage(u1);
 
             //assert
-            Assert.AreEqual(5, u1.stack.Count);
-            Assert.AreEqual(15, u1.coins);
+            Assert.AreEqual(5, u1.Stack.Count);
+            Assert.AreEqual(15, u1.Coins);
         }
 
         [Test]
         public void testAcquirePackage_throwsException() {
             //arrange
             User u1 = new User("maxi", "musterpassword1");
-            u1.coins = 3;
+            u1.Coins = 3;
 
             Package p1 = new Package(new List<Card> { m1, m2, m3, s1, s2 });
 
             //act & assert
-            ArgumentException ex = Assert.Throws<ArgumentException>(delegate { p1.aquirePackage(u1); });
+            ArgumentException ex = Assert.Throws<ArgumentException>(delegate { p1.AquirePackage(u1); });
             Assert.That(ex.Message, Is.EqualTo($"User maxi has an insufficent amount of coins (3), coins needed: 5"));
         }
     }

@@ -16,7 +16,7 @@ namespace MTCG.Test.GameLogic {
             SpellCard s1 = new SpellCard(Guid.NewGuid(), name, 15.0);
 
             //assert
-            Assert.AreEqual(name, s1.name);
+            Assert.AreEqual(name, s1.Name);
         }
 
         [Test]
@@ -45,9 +45,9 @@ namespace MTCG.Test.GameLogic {
             ArgumentException ex = Assert.Throws<ArgumentException>(delegate { new SpellCard(Guid.NewGuid(), "FireSpell", -12.0);  });
 
             //assert
-            Assert.AreEqual(m1.damage, 25.0);
-            Assert.AreEqual(s1.damage, 12.0);
-            Assert.AreEqual(s2.damage, 0.0);
+            Assert.AreEqual(m1.Damage, 25.0);
+            Assert.AreEqual(s1.Damage, 12.0);
+            Assert.AreEqual(s2.Damage, 0.0);
             Assert.That(ex.Message, Is.EqualTo("Damage has to be positive."));
         }
 
@@ -61,7 +61,7 @@ namespace MTCG.Test.GameLogic {
             SpellCard m1 = new SpellCard(Guid.NewGuid(), name, 25.0);
 
             //assert
-            Assert.AreEqual(elementType, m1.elementType);
+            Assert.AreEqual(elementType, m1.ElementType);
         }
 
         [Test]
@@ -74,7 +74,7 @@ namespace MTCG.Test.GameLogic {
             MonsterCard m1 = new MonsterCard(Guid.NewGuid(), name, 25.0);
 
             //assert
-            Assert.AreEqual(elementType, m1.elementType);
+            Assert.AreEqual(elementType, m1.ElementType);
         }
 
         [Test]
@@ -91,7 +91,7 @@ namespace MTCG.Test.GameLogic {
             MonsterCard m1 = new MonsterCard(Guid.NewGuid(), name, 25.0);
 
             //assert
-            Assert.AreEqual(monsterType, m1.monsterType);
+            Assert.AreEqual(monsterType, m1.MonsterType);
         }
 
         [Test]
@@ -111,7 +111,7 @@ namespace MTCG.Test.GameLogic {
             MonsterCard m1 = new MonsterCard(Guid.NewGuid(), name, damage);
 
             //assert
-            Assert.AreEqual($"id:{m1.id},name:{name},damage:{damage},elementType:{m1.elementType},monsterType:{m1.monsterType}" , m1.ToString());
+            Assert.AreEqual($"id:{m1.Id},name:{name},damage:{damage},elementType:{m1.ElementType},monsterType:{m1.MonsterType}" , m1.ToString());
         }
 
         [Test]
@@ -123,7 +123,7 @@ namespace MTCG.Test.GameLogic {
             SpellCard s1 = new SpellCard(Guid.NewGuid(), name, damage);
 
             //assert
-            Assert.AreEqual($"id:{s1.id},name:{name},damage:{damage},elementType:{s1.elementType}", s1.ToString());
+            Assert.AreEqual($"id:{s1.Id},name:{name},damage:{damage},elementType:{s1.ElementType}", s1.ToString());
         }
     }
 }

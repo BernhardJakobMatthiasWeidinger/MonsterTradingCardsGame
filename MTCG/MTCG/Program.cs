@@ -44,24 +44,24 @@ namespace MTCG {
             //Create user1
             Console.WriteLine("\nCreate User 1 and add cards to stack and deck:");
             User u1 = new User("maxiiii", "supersecretpassword1");
-            p1.aquirePackage(u1);
+            p1.AquirePackage(u1);
             try {
-                u1.configureDeck(new List<Guid> { m1.id, m2.id, m3.id, s1.id, s2.id });
+                u1.ConfigureDeck(new List<Guid> { m1.Id, m2.Id, m3.Id, s1.Id, s2.Id });
             } catch (ArgumentException e) {
                 Console.WriteLine(e.Message);
             }
             try {
-                u1.configureDeck(new List<Guid> { m1.id, m2.id, m3.id, s3.id });
+                u1.ConfigureDeck(new List<Guid> { m1.Id, m2.Id, m3.Id, s3.Id });
             } catch (ArgumentException e) {
                 Console.WriteLine(e.Message);
             }
 
-            u1.configureDeck(new List<Guid> { m1.id, m2.id, m3.id, s1.id });
+            u1.ConfigureDeck(new List<Guid> { m1.Id, m2.Id, m3.Id, s1.Id });
 
             //Create user2
             User u2 = new User("miniiii", "supersecretpassword2");
-            p2.aquirePackage(u2);
-            u2.configureDeck(new List<Guid> { m4.id, m5.id, s3.id, s4.id });
+            p2.AquirePackage(u2);
+            u2.ConfigureDeck(new List<Guid> { m4.Id, m5.Id, s3.Id, s4.Id });
             
             //Create Trade
             Console.WriteLine("\nCreate Trade:");
@@ -92,32 +92,32 @@ namespace MTCG {
             }
 
             Console.WriteLine("Before Trade:");
-            Console.WriteLine("User1 has card s5 in stack: " + u1.stack.Contains(s5));
-            Console.WriteLine("User2 has card s2 in stack: " + u2.stack.Contains(s2));
+            Console.WriteLine("User1 has card s5 in stack: " + u1.Stack.Contains(s5));
+            Console.WriteLine("User2 has card s2 in stack: " + u2.Stack.Contains(s2));
             t1.TradeCard(u2, s5);
             Console.WriteLine("After Trade:");
-            Console.WriteLine("User1 has card s5 in stack: " + u1.stack.Contains(s5));
-            Console.WriteLine("User2 has card s2 in stack: " + u2.stack.Contains(s2));
+            Console.WriteLine("User1 has card s5 in stack: " + u1.Stack.Contains(s5));
+            Console.WriteLine("User2 has card s2 in stack: " + u2.Stack.Contains(s2));
 
             Console.WriteLine("\nBattle:");
             Battle b1 = new Battle(Guid.NewGuid(), u1);
-            Console.WriteLine(b1.play(u2));
+            Console.WriteLine(b1.Play(u2));
 
-            u1.addFriend(u2);
+            u1.AddFriend(u2);
 
-            Console.WriteLine(u1.stackToString(true));
-            Console.WriteLine(u1.deckToString(true));
-            Console.WriteLine(u1.getUserStats(true));
-            Console.WriteLine(u1.getUserData(true));
+            Console.WriteLine(u1.StackToString(true));
+            Console.WriteLine(u1.DeckToString(true));
+            Console.WriteLine(u1.GetUserStats(true));
+            Console.WriteLine(u1.GetUserData(true));
             Console.WriteLine();
-            Console.WriteLine(u1.stackToString(false));
-            Console.WriteLine(u1.deckToString(false));
-            Console.WriteLine(u1.getUserStats(false));
-            Console.WriteLine(u1.getUserData(false));
+            Console.WriteLine(u1.StackToString(false));
+            Console.WriteLine(u1.DeckToString(false));
+            Console.WriteLine(u1.GetUserStats(false));
+            Console.WriteLine(u1.GetUserData(false));
 
             Console.WriteLine();
 
-            JArray u1Deck = (JArray)((JObject)JsonConvert.DeserializeObject(u1.deckToString(true))).GetValue("deck");
+            JArray u1Deck = (JArray)((JObject)JsonConvert.DeserializeObject(u1.DeckToString(true))).GetValue("deck");
             JObject firstCard = (JObject)JsonConvert.DeserializeObject(u1Deck[0].ToString());
             
             Console.WriteLine(firstCard.GetValue("id"));

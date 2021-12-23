@@ -7,79 +7,79 @@ using Newtonsoft.Json.Linq;
 
 namespace MTCG.GameLogic {
     public class User {
-        public Guid id { get; private set; }
-        public string username { get; private set; }
+        public Guid Id { get; private set; }
+        public string Username { get; private set; }
         [JsonIgnore]
-        public string password { get; private set; }
+        public string Password { get; private set; }
 
-        public string name { get; set; }
-        public string bio { get; set; }
-        public string image { get; set; }
-        public int coins { get; set; }
-        public int gamesPlayed { get; set; }
-        public int gamesWon { get; set; }
-        public int gamesLost { get; set; }
-        public int elo { get; set; }
+        public string Name { get; set; }
+        public string Bio { get; set; }
+        public string Image { get; set; }
+        public int Coins { get; set; }
+        public int GamesPlayed { get; set; }
+        public int GamesWon { get; set; }
+        public int GamesLost { get; set; }
+        public int Elo { get; set; }
         [JsonIgnore]
-        public List<Card> stack { get; set; }
+        public List<Card> Stack { get; set; }
         [JsonIgnore]
-        public List<Card> deck { get; set; }
-        public List<Guid> friends { get; set; }
+        public List<Card> Deck { get; set; }
+        public List<Guid> Friends { get; set; }
 
         public User(string username, string password) {
-            this.id = Guid.NewGuid();
+            this.Id = Guid.NewGuid();
             if (username.IndexOfAny(new char[] { ';', '/', '\\', '\'', '"' }) != -1) {
                 throw new ArgumentException("Username is not allowed to contain following characters: ; / \\ \' \"");
             }
             if (password.IndexOfAny(new char[] { ';', '/', '\\', '\'', '"' }) != -1) {
                 throw new ArgumentException("Password is not allowed to contain following characters: ; / \\ \' \"");
             }
-            this.username = username;
-            this.password = password;
+            this.Username = username;
+            this.Password = password;
 
-            this.bio = "Hier könnte deine Biografie stehen!";
-            this.coins = 20;
-            this.gamesPlayed = 0;
-            this.gamesWon = 0;
-            this.gamesLost = 0;
-            this.elo = 100;
-            this.stack = new List<Card>();
-            this.deck = new List<Card>();
-            this.friends = new List<Guid>();
+            this.Bio = "Hier könnte deine Biografie stehen!";
+            this.Coins = 20;
+            this.GamesPlayed = 0;
+            this.GamesWon = 0;
+            this.GamesLost = 0;
+            this.Elo = 100;
+            this.Stack = new List<Card>();
+            this.Deck = new List<Card>();
+            this.Friends = new List<Guid>();
         }
 
         public override string ToString() {
-            string res = $"id:{id},username:{username},name:{name},bio:{bio},image:{image}," +
-                    $"coins:{coins},gamesPlayed:{gamesPlayed},gamesWon:{gamesWon},gamesLost:{gamesLost},elo:{elo},friends:[";
+            string res = $"id:{Id},username:{Username},name:{Name},bio:{Bio},image:{Image}," +
+                    $"coins:{Coins},gamesPlayed:{GamesPlayed},gamesWon:{GamesWon},gamesLost:{GamesLost},elo:{Elo},friends:[";
 
             int i = 0;
-            foreach (Guid friend in friends) {
+            foreach (Guid friend in Friends) {
                 res += friend.ToString();
-                res += i != (friends.Count - 1) ? ";" : "";
+                res += i != (Friends.Count - 1) ? ";" : "";
                 i++;
             }
             res += "]";
             return res;
         }
 
-        public void setUserData(string name, string bio, string image) {
-            this.name = name;
-            this.bio = bio;
-            this.image = image;
+        public void SetUserData(string name, string bio, string image) {
+            this.Name = name;
+            this.Bio = bio;
+            this.Image = image;
         }
 
-        public Card getCardFromDeck() {
-            if (deck.Count > 0) {
+        public Card GetCardFromDeck() {
+            if (Deck.Count > 0) {
                 Random rnd = new Random();
-                int cardIndex = rnd.Next(0, deck.Count);
+                int cardIndex = rnd.Next(0, Deck.Count);
 
-                return deck[cardIndex];
+                return Deck[cardIndex];
             } else {
                 return null;
             }
         }
         
-        public void configureDeck(List<Guid> guids) {
+        public void ConfigureDeck(List<Guid> guids) {
             List<Card> res = new List<Card>();
 
             if (guids.Count != 4) {
@@ -88,7 +88,7 @@ namespace MTCG.GameLogic {
             }
 
             foreach (Guid guid in guids) {
-                Card card = stack.Find(c => c.id == guid);
+                Card card = Stack.Find(c => c.Id == guid);
                 if (card != null) {
                     res.Add(card);
                 } else {
@@ -96,41 +96,41 @@ namespace MTCG.GameLogic {
                 }
             }
 
-            deck = res;
+            Deck = res;
         }
 
-        public void configureDeckAfterBattle() {
-            if (deck.Count > 4) {
+        public void ConfigureDeckAfterBattle() {
+            if (Deck.Count > 4) {
                 //deck should only consist of the 4 strongest cards
-                List<Card> sortedList = deck.OrderByDescending(c => c.damage).ToList().Take(4).ToList();
-                deck = sortedList;
-            } else if (deck.Count < 4) {
+                List<Card> sortedList = Deck.OrderByDescending(c => c.Damage).ToList().Take(4).ToList();
+                Deck = sortedList;
+            } else if (Deck.Count < 4) {
                 //add strongest remaining cards from stack to deck
-                List<Card> sortedList = stack.OrderByDescending(c => c.damage).ToList().Take(4).ToList();
-                List<Card> notInDeck = sortedList.Except(deck).ToList();
-                deck.AddRange(notInDeck);
+                List<Card> sortedList = Stack.OrderByDescending(c => c.Damage).ToList().Take(4).ToList();
+                List<Card> notInDeck = sortedList.Except(Deck).ToList();
+                Deck.AddRange(notInDeck);
             }
         }
 
-        public void addFriend(User other) {
-            if (this.friends.Contains(other.id)) {
-                throw new ArgumentException($"User {other.username} is already your friend!");
+        public void AddFriend(User other) {
+            if (this.Friends.Contains(other.Id)) {
+                throw new ArgumentException($"User {other.Username} is already your friend!");
             } else {
-                this.friends.Add(other.id);
-                other.friends.Add(this.id);
+                this.Friends.Add(other.Id);
+                other.Friends.Add(this.Id);
             }
         }
 
-        public void removeFriend(User other) {
-            if (this.friends.Contains(other.id)) {
-                this.friends.Remove(other.id);
-                other.friends.Remove(this.id);
+        public void RemoveFriend(User other) {
+            if (this.Friends.Contains(other.Id)) {
+                this.Friends.Remove(other.Id);
+                other.Friends.Remove(this.Id);
             } else {
-                throw new ArgumentException($"User {other.username} is not your friend!");
+                throw new ArgumentException($"User {other.Username} is not your friend!");
             }
         }
 
-        public string getUserData(bool isJson) {
+        public string GetUserData(bool isJson) {
             string res = "";
             if (isJson) {
                 res = JsonConvert.SerializeObject(this);
@@ -140,57 +140,57 @@ namespace MTCG.GameLogic {
             return res;
         }
 
-        public string getUserStats(bool isJson) {
+        public string GetUserStats(bool isJson) {
             string res = "";
             if (isJson) {
                 JObject o = new JObject();
-                o["gamesPlayed"] = gamesPlayed;
-                o["gamesWon"] = gamesWon;
-                o["gamesLost"] = gamesLost;
-                o["elo"] = elo;
+                o["gamesPlayed"] = GamesPlayed;
+                o["gamesWon"] = GamesWon;
+                o["gamesLost"] = GamesLost;
+                o["elo"] = Elo;
                 res = o.ToString();
             } else {
-                res += $"gamesPlayed:{gamesPlayed},gamesWon:{gamesWon},gamesLost:{gamesWon},elo:{elo}";
+                res += $"gamesPlayed:{GamesPlayed},gamesWon:{GamesWon},gamesLost:{GamesWon},elo:{Elo}";
             }
             return res;
         }
 
-        public string deckToString(bool isJson) {
+        public string DeckToString(bool isJson) {
             string res = "";
             if (isJson) {
                 JArray array = new JArray();
-                foreach (Card card in deck) {
+                foreach (Card card in Deck) {
                     array.Add(JsonConvert.SerializeObject(card));
                 }
                 JObject o = new JObject();
-                o["deck"] = array;
+                o["Deck"] = array;
                 res = o.ToString();
             } else {
                 int i = 0;
-                foreach (Card card in deck) {
+                foreach (Card card in Deck) {
                     res += card.ToString();
-                    res += i != (deck.Count - 1) ? ";" : "";
+                    res += i != (Deck.Count - 1) ? ";" : "";
                     i++;
                 }
             }
             return res;
         }
 
-        public string stackToString(bool isJson) {
+        public string StackToString(bool isJson) {
             string res = "";
             if (isJson) {
                 JArray array = new JArray();
-                foreach (Card card in stack) {
+                foreach (Card card in Stack) {
                     array.Add(JsonConvert.SerializeObject(card));
                 }
                 JObject o = new JObject();
-                o["stack"] = array;
+                o["Stack"] = array;
                 res = o.ToString();
             } else {
                 int i = 0;
-                foreach (Card card in stack) {
+                foreach (Card card in Stack) {
                     res += card.ToString();
-                    res += i != (stack.Count - 1) ? ";" : "";
+                    res += i != (Stack.Count - 1) ? ";" : "";
                     i++;
                 }
             }

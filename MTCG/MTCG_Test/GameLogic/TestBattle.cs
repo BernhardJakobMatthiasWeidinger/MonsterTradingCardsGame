@@ -24,15 +24,15 @@ namespace MTCG.Test.GameLogic {
         [Test]
         public void testConstructor() {
             //arrange
-            u1.stack.AddRange(new List<Card> { m1, m2, m3, m4});
-            u1.configureDeck(new List<Guid> { m1.id, m2.id, m3.id, m4.id });
+            u1.Stack.AddRange(new List<Card> { m1, m2, m3, m4});
+            u1.ConfigureDeck(new List<Guid> { m1.Id, m2.Id, m3.Id, m4.Id });
 
             //act
             Battle b1 = new Battle(Guid.NewGuid(), u1);
 
             //assert
-            Assert.AreEqual(u1, b1.user1);
-            Assert.AreEqual(null, b1.user2);
+            Assert.AreEqual(u1, b1.User1);
+            Assert.AreEqual(null, b1.User2);
         }
 
         [Test]
@@ -52,29 +52,29 @@ namespace MTCG.Test.GameLogic {
             MonsterCard m7 = new MonsterCard(Guid.NewGuid(), "FireDragon", 25.0);
             MonsterCard m8 = new MonsterCard(Guid.NewGuid(), "FireDragon", 25.0);
 
-            u1.stack.AddRange(new List<Card> { m1, m2, m3, m4 });
-            u1.configureDeck(new List<Guid> { m1.id, m2.id, m3.id, m4.id });
-            u2.stack.AddRange(new List<Card> { m5, m6, m7, m8 });
-            u2.configureDeck(new List<Guid> { m5.id, m6.id, m7.id, m8.id });
+            u1.Stack.AddRange(new List<Card> { m1, m2, m3, m4 });
+            u1.ConfigureDeck(new List<Guid> { m1.Id, m2.Id, m3.Id, m4.Id });
+            u2.Stack.AddRange(new List<Card> { m5, m6, m7, m8 });
+            u2.ConfigureDeck(new List<Guid> { m5.Id, m6.Id, m7.Id, m8.Id });
 
             //act
             Battle b1 = new Battle(Guid.NewGuid(), u1);
-            b1.play(u2);
+            b1.Play(u2);
 
             //assert
-            Assert.GreaterOrEqual(u1.stack.Count, 5);
-            Assert.AreEqual(4, u1.deck.Count);
-            Assert.AreEqual(1, u1.gamesPlayed);
-            Assert.AreEqual(1, u1.gamesWon);
-            Assert.AreEqual(0, u1.gamesLost);
-            Assert.AreEqual(103, u1.elo);
+            Assert.GreaterOrEqual(u1.Stack.Count, 5);
+            Assert.AreEqual(4, u1.Deck.Count);
+            Assert.AreEqual(1, u1.GamesPlayed);
+            Assert.AreEqual(1, u1.GamesWon);
+            Assert.AreEqual(0, u1.GamesLost);
+            Assert.AreEqual(103, u1.Elo);
 
-            Assert.LessOrEqual(u2.stack.Count, 3);
-            Assert.AreEqual(0, u2.deck.Count);
-            Assert.AreEqual(1, u2.gamesPlayed);
-            Assert.AreEqual(0, u2.gamesWon);
-            Assert.AreEqual(1, u2.gamesLost);
-            Assert.AreEqual(95, u2.elo);
+            Assert.LessOrEqual(u2.Stack.Count, 3);
+            Assert.AreEqual(0, u2.Deck.Count);
+            Assert.AreEqual(1, u2.GamesPlayed);
+            Assert.AreEqual(0, u2.GamesWon);
+            Assert.AreEqual(1, u2.GamesLost);
+            Assert.AreEqual(95, u2.Elo);
         }
     }
 }

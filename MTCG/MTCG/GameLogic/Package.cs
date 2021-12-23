@@ -4,24 +4,24 @@ using System.Text;
 
 namespace MTCG.GameLogic {
     public class Package {
-        public Guid id { get; private set; }
-        public List<Card> cards { get; private set; }
+        public Guid Id { get; private set; }
+        public List<Card> Cards { get; private set; }
 
         public Package(List<Card> cards) {
             if (cards.Count != 5) {
                 throw new ArgumentException($"A package should be provided with 5 cards, " +
                     $"cards given: {cards.Count}");
             } else {
-                this.cards = cards;
+                this.Cards = cards;
             }
         }
 
-        public void aquirePackage(User user) {
-            if (user.coins >= 5) {
-                user.coins -= 5;
-                user.stack.AddRange(cards);
+        public void AquirePackage(User user) {
+            if (user.Coins >= 5) {
+                user.Coins -= 5;
+                user.Stack.AddRange(Cards);
             } else {
-                throw new ArgumentException($"User {user.username} has an insufficent amount of coins ({user.coins}), coins needed: 5");
+                throw new ArgumentException($"User {user.Username} has an insufficent amount of coins ({user.Coins}), coins needed: 5");
             }
         }
     }

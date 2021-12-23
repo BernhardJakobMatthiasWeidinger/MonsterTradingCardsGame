@@ -25,11 +25,11 @@ namespace MTCG.Test.GameLogic {
             Card card1 = setUpCard(name1, damage1);
             Card card2 = setUpCard(name2, damage2);
 
-            double before1 = card1.damage;
-            double before2 = card2.damage;
+            double before1 = card1.Damage;
+            double before2 = card2.Damage;
 
             //act
-            string damageLog = RuleSet.compareAllRules(user1, user2, card1, card2, ref damage1, ref damage2);
+            string damageLog = RuleSet.CompareAllRules(user1, user2, card1, card2, ref damage1, ref damage2);
 
             //assert
             Assert.AreEqual($"{user1}: {name1} ({before1} Damage) vs {user2}: {name2} ({before2} Damage)", damageLog);
@@ -49,7 +49,7 @@ namespace MTCG.Test.GameLogic {
             double before2 = damage2;
 
             //act
-            string damageLog = RuleSet.compareAllRules(user1, user2, card1, card2, ref damage1, ref damage2);
+            string damageLog = RuleSet.CompareAllRules(user1, user2, card1, card2, ref damage1, ref damage2);
 
             //assert
             Assert.AreEqual($"{user1}: {name1} ({before1} Damage) vs {user2}: {name2} ({before2} Damage) => {before1} VS {before2} -> {expected1} VS {expected2}", damageLog);

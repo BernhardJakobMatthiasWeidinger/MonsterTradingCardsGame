@@ -4,82 +4,82 @@ using System.Text;
 
 namespace MTCG.GameLogic {
     public class Battle {
-        public Guid id { get; private set; }
-        public User user1 { get; private set; }
-        public User user2 { get; private set; }
+        public Guid Id { get; private set; }
+        public User User1 { get; private set; }
+        public User User2 { get; private set; }
 
         public Battle(Guid id, User user1) {
-            if (user1.deck.Count != 4) {
+            if (user1.Deck.Count != 4) {
                 throw new ArgumentException($"A deck should consist of 4 cards, " +
-                    $"cards in deck: {user1.deck.Count}");
+                    $"cards in deck: {user1.Deck.Count}");
             }
-            this.id = id;
-            this.user1 = user1;
+            this.Id = id;
+            this.User1 = user1;
         }
 
-        public string play(User user2) {
-            if (user2.deck.Count != 4) {
+        public string Play(User user2) {
+            if (user2.Deck.Count != 4) {
                 throw new ArgumentException($"A deck should consist of 4 cards, " +
-                    $"cards in deck: {user2.deck.Count}");
+                    $"cards in deck: {user2.Deck.Count}");
             }
-            this.user2 = user2;
+            this.User2 = user2;
 
             string res = "";
             for (int i=1; i <= 100; ++i) {
-                res += compareCards(i) + "\n";
-                if (user1.deck.Count == 0 || user2.deck.Count == 0) {
+                res += CompareCards(i) + "\n";
+                if (User1.Deck.Count == 0 || User2.Deck.Count == 0) {
                     break;
                 } 
             }
 
-            if (user1.deck.Count > user2.deck.Count) {
-                calculateStatsAfterBattle(user1, user2);
-            } else if (user1.deck.Count < user2.deck.Count) {
-                calculateStatsAfterBattle(user2, user1);
-            } 
+            if (User1.Deck.Count > User2.Deck.Count) {
+                CalculateStatsAfterBattle(User1, User2);
+            } else if (User1.Deck.Count < User2.Deck.Count) {
+                CalculateStatsAfterBattle(User2, User1);
+            }
 
-            user1.configureDeckAfterBattle();
-            user2.configureDeckAfterBattle();
+            User1.ConfigureDeckAfterBattle();
+            User2.ConfigureDeckAfterBattle();
 
             return res;
         }
 
-        private string compareCards(int round) {
+        private string CompareCards(int round) {
             //Round 1: PlayerA: FireSpell (10 Damage) vs PlayerB: WaterSpell (20 Damage) => 10 VS 20 -> 05 VS 40 => WaterSpell wins
-            Card card1 = user1.getCardFromDeck();
-            Card card2 = user2.getCardFromDeck();
+            Card card1 = User1.GetCardFromDeck();
+            Card card2 = User2.GetCardFromDeck();
 
-            double calc1 = card1.damage;
-            double calc2 = card2.damage;
+            double calc1 = card1.Damage;
+            double calc2 = card2.Damage;
             
-            string res = $"Round {round}: " + RuleSet.compareAllRules(user1.username, user2.username, card1, card2, ref calc1, ref calc2);
+            string res = $"Round {round}: " + RuleSet.CompareAllRules(User1.Username, User2.Username, card1, card2, ref calc1, ref calc2);
 
             string winner = "Draw";
             if (calc1 > calc2) {
-                winner = $"{card1.name} wins";
-                giveCard(user1, user2, card2);
+                winner = $"{card1.Name} wins";
+                GiveCard(User1, User2, card2);
             } else if (calc1 < calc2) {
-                winner = $"{card2.name} wins";
-                giveCard(user2, user1, card1);
+                winner = $"{card2.Name} wins";
+                GiveCard(User2, User1, card1);
             }
 
             return res + $" => {winner}";
         }
 
-        private void calculateStatsAfterBattle(User winner, User loser) {
-            winner.gamesPlayed++;
-            winner.gamesWon++;
-            winner.elo += 3;
-            loser.gamesPlayed++;
-            loser.gamesLost++;
-            loser.elo -= 5;
+        private void CalculateStatsAfterBattle(User winner, User loser) {
+            winner.GamesPlayed++;
+            winner.GamesWon++;
+            winner.Elo += 3;
+            loser.GamesPlayed++;
+            loser.GamesLost++;
+            loser.Elo -= 5;
         }
         
-        private void giveCard(User winner, User loser, Card cardToGive) {
-            loser.deck.Remove(cardToGive);
-            loser.stack.Remove(cardToGive);
-            winner.stack.Add(cardToGive);
-            winner.deck.Add(cardToGive);
+        private void GiveCard(User winner, User loser, Card cardToGive) {
+            loser.Deck.Remove(cardToGive);
+            loser.Stack.Remove(cardToGive);
+            winner.Stack.Add(cardToGive);
+            winner.Deck.Add(cardToGive);
         }
     }
 }

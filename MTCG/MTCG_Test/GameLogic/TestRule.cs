@@ -46,10 +46,10 @@ namespace MTCG.Test.GameLogic {
             SpecialRule sr = new SpecialRule(name1, name2, damage1, damage2);
 
             //assert
-            Assert.AreEqual(name1.ToLower(), sr.cardName1);
-            Assert.AreEqual(name2.ToLower(), sr.cardName2);
-            Assert.AreEqual(damage1, sr.damage1);
-            Assert.AreEqual(damage2, sr.damage2);
+            Assert.AreEqual(name1.ToLower(), sr.CardName1);
+            Assert.AreEqual(name2.ToLower(), sr.CardName2);
+            Assert.AreEqual(damage1, sr.Damage1);
+            Assert.AreEqual(damage2, sr.Damage2);
         }
 
         [Test]
@@ -73,10 +73,10 @@ namespace MTCG.Test.GameLogic {
             ElementRule er = new ElementRule(element1, element2, multiplier1, multiplier2);
 
             //assert
-            Assert.AreEqual(element1, er.element1);
-            Assert.AreEqual(element2, er.element2);
-            Assert.AreEqual(multiplier1, er.multiplier1);
-            Assert.AreEqual(multiplier2, er.multiplier2);
+            Assert.AreEqual(element1, er.Element1);
+            Assert.AreEqual(element2, er.Element2);
+            Assert.AreEqual(multiplier1, er.Multiplier1);
+            Assert.AreEqual(multiplier2, er.Multiplier2);
         }
 
         [Test]
@@ -106,7 +106,7 @@ namespace MTCG.Test.GameLogic {
             Card card2 = setUpCard(name2, damage2);
 
             //act
-            specialRules[idx].checkRule(card1, card2, ref damage1, ref damage2);
+            specialRules[idx].CheckRule(card1, card2, ref damage1, ref damage2);
 
             //assert
             Assert.AreEqual(expected1, damage1);
@@ -129,7 +129,7 @@ namespace MTCG.Test.GameLogic {
             Card card2 = setUpCard(name2, damage2);
 
             //act
-            elementRules[idx].checkRule(card1, card2, ref damage1, ref damage2);
+            elementRules[idx].CheckRule(card1, card2, ref damage1, ref damage2);
 
             //assert
             Assert.AreEqual(expected1, damage1);

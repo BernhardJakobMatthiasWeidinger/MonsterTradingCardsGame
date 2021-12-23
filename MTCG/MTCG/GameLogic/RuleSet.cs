@@ -18,10 +18,10 @@ namespace MTCG.GameLogic {
             new SpecialRule("fireelf", "dragon", null, 0),
         };
 
-        private static Tuple<double, double> compareElementType(Card card1, Card card2, double calcDamage1, double calcDamage2) {
+        private static Tuple<double, double> CompareElementType(Card card1, Card card2, double calcDamage1, double calcDamage2) {
             if (card1.GetType().Name == "SpellCard" || card2.GetType().Name == "SpellCard") {
                 foreach (ElementRule er in elementRules) {
-                    if (er.checkRule(card1, card2, ref calcDamage1, ref calcDamage2)) {
+                    if (er.CheckRule(card1, card2, ref calcDamage1, ref calcDamage2)) {
                         break;
                     }
                 }
@@ -29,25 +29,25 @@ namespace MTCG.GameLogic {
             return new Tuple<double, double>(calcDamage1, calcDamage2);
         }
 
-        private static Tuple<double, double> compareSpecialRule(Card card1, Card card2, double calcDamage1, double calcDamage2) {
+        private static Tuple<double, double> CompareSpecialRule(Card card1, Card card2, double calcDamage1, double calcDamage2) {
             foreach (SpecialRule sr in specialRules) {
-                if (sr.checkRule(card1, card2, ref calcDamage1, ref calcDamage2)) {
+                if (sr.CheckRule(card1, card2, ref calcDamage1, ref calcDamage2)) {
                     break;
                 }
             }
             return new Tuple<double, double>(calcDamage1, calcDamage2);
         }
 
-        public static string compareAllRules(string user1, string user2, Card card1, Card card2, ref double calc1, ref double calc2) {
-            string res = $"{user1}: {card1.name} ({card1.damage} Damage) vs {user2}: {card2.name} ({card2.damage} Damage)";
+        public static string CompareAllRules(string user1, string user2, Card card1, Card card2, ref double calc1, ref double calc2) {
+            string res = $"{user1}: {card1.Name} ({card1.Damage} Damage) vs {user2}: {card2.Name} ({card2.Damage} Damage)";
 
-            Tuple<double, double> calcValues = RuleSet.compareSpecialRule(card1, card2, calc1, calc2);
+            Tuple<double, double> calcValues = RuleSet.CompareSpecialRule(card1, card2, calc1, calc2);
             if (calcValues.Item1 != calc1 || calcValues.Item2 != calc2) {
                 res += $" => {calc1} VS {calc2} -> {calcValues.Item1} VS {calcValues.Item2}";
                 calc1 = calcValues.Item1;
                 calc2 = calcValues.Item2;
             } else {
-                calcValues = RuleSet.compareElementType(card1, card2, calc1, calc2);
+                calcValues = RuleSet.CompareElementType(card1, card2, calc1, calc2);
                 if (calcValues.Item1 != calc1 || calcValues.Item2 != calc2) {
                     res += $" => {calc1} VS {calc2} -> {calcValues.Item1} VS {calcValues.Item2}";
                     calc1 = calcValues.Item1;

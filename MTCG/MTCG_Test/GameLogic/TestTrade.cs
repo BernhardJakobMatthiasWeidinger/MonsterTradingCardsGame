@@ -32,12 +32,12 @@ namespace MTCG.Test.GameLogic {
             m9 = new MonsterCard(Guid.NewGuid(), "WaterKraken", 10.0);
 
             u1 = new User("maxi", "maxiPW");
-            u1.stack.AddRange(new List<Card> { m1, m2, m3, m4, m5 });
-            u1.deck.AddRange(new List<Card> { m1, m2, m3, m4 });
+            u1.Stack.AddRange(new List<Card> { m1, m2, m3, m4, m5 });
+            u1.Deck.AddRange(new List<Card> { m1, m2, m3, m4 });
 
             u2 = new User("mini", "miniPW");
-            u2.stack.AddRange(new List<Card> { m6, m7, m8, m9 });
-            u2.deck.AddRange(new List<Card> { m6, m7, m8, m9 });
+            u2.Stack.AddRange(new List<Card> { m6, m7, m8, m9 });
+            u2.Deck.AddRange(new List<Card> { m6, m7, m8, m9 });
         }
         [Test]
         public void testConstructor() {
@@ -46,11 +46,11 @@ namespace MTCG.Test.GameLogic {
             Trade t1 = new Trade(Guid.NewGuid(), m5, u1, CardType.monster, ElementType.water, 20.0);
 
             //assert
-            Assert.AreEqual(m5, t1.cardToTrade);
-            Assert.AreEqual(u1, t1.user);
-            Assert.AreEqual(CardType.monster, t1.cardType);
-            Assert.AreEqual(ElementType.water, t1.elementType);
-            Assert.AreEqual(20.0, t1.minimumDamage);
+            Assert.AreEqual(m5, t1.CardToTrade);
+            Assert.AreEqual(u1, t1.U1);
+            Assert.AreEqual(CardType.monster, t1.CardType);
+            Assert.AreEqual(ElementType.water, t1.ElementType);
+            Assert.AreEqual(20.0, t1.MinimumDamage);
         }
 
         [Test]
@@ -75,8 +75,8 @@ namespace MTCG.Test.GameLogic {
             MonsterCard m_1 = new MonsterCard(Guid.NewGuid(), "WaterWizard", 30.0);
             MonsterCard m_2 = new MonsterCard(Guid.NewGuid(), "WaterWizard", 30.0);
 
-            u1.stack.Add(m_1);
-            u2.stack.Add(m_2);
+            u1.Stack.Add(m_1);
+            u2.Stack.Add(m_2);
 
             Trade t1 = new Trade(Guid.NewGuid(), m_1, u1, CardType.monster, ElementType.water, 20.0);
 
@@ -84,8 +84,8 @@ namespace MTCG.Test.GameLogic {
             t1.TradeCard(u2, m_2);
 
             //assert
-            Assert.Contains(m_2, u1.stack);
-            Assert.Contains(m_1, u2.stack);
+            Assert.Contains(m_2, u1.Stack);
+            Assert.Contains(m_1, u2.Stack);
         }
 
         [Test]
@@ -123,7 +123,7 @@ namespace MTCG.Test.GameLogic {
             //arrange
             Trade t1 = new Trade(Guid.NewGuid(), m5, u1, CardType.monster, ElementType.water, 20.0);
             SpellCard s1 = new SpellCard(Guid.NewGuid(), "FireSpell", 30.0);
-            u2.stack.Add(s1);
+            u2.Stack.Add(s1);
 
             //act & assert
             ArgumentException ex4 = Assert.Throws<ArgumentException>(delegate { t1.TradeCard(u2, s1); });
@@ -135,7 +135,7 @@ namespace MTCG.Test.GameLogic {
             //arrange
             Trade t1 = new Trade(Guid.NewGuid(), m5, u1, CardType.monster, ElementType.water, 20.0);
             MonsterCard m = new MonsterCard(Guid.NewGuid(), "FireWizard", 30.0);
-            u2.stack.Add(m);
+            u2.Stack.Add(m);
 
             //act & assert
             ArgumentException ex = Assert.Throws<ArgumentException>(delegate { t1.TradeCard(u2, m); });
@@ -147,7 +147,7 @@ namespace MTCG.Test.GameLogic {
             //arrange
             Trade t1 = new Trade(Guid.NewGuid(), m5, u1, CardType.monster, ElementType.water, 20.0);
             MonsterCard m = new MonsterCard(Guid.NewGuid(), "WaterWizard", 10.0);
-            u2.stack.Add(m);
+            u2.Stack.Add(m);
 
             //act & assert
             ArgumentException ex = Assert.Throws<ArgumentException>(delegate { t1.TradeCard(u2, m); });
