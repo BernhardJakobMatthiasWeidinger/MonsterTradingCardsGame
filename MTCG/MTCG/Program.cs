@@ -4,9 +4,14 @@ using MTCG.GameLogic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
+using SWE1HttpServer.Core.Request;
+using SWE1HttpServer.Core.Routing;
+using SWE1HttpServer.Core.Server;
+
 namespace MTCG {
     class Program {
         static void Main(string[] args) {
+
             //Create cards
             Console.WriteLine("Create Cards:");
             try {
