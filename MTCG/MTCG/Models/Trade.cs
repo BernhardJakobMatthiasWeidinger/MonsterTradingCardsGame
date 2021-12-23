@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace MTCG.GameLogic {
+namespace MTCG.Models {
     public class Trade {
         public Guid Id { get; private set; }
         public Card CardToTrade { get; private set; }

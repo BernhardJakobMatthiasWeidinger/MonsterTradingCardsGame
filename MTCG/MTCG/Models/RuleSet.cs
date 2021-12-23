@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace MTCG.GameLogic {
+namespace MTCG.Models {
     public class RuleSet {
         private static List<ElementRule> elementRules = new List<ElementRule> {
             new ElementRule(ElementType.fire, ElementType.normal, 2, 0.5),

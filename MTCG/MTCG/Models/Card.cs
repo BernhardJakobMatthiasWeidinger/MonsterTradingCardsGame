@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace MTCG.GameLogic {
+namespace MTCG.Models {
     public abstract class Card {
         public Guid Id { get; private set; }
         public string Name { get; private set; }

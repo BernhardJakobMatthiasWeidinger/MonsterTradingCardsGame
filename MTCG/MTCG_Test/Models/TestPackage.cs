@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using NUnit;
 using NUnit.Framework;
 
-using MTCG.GameLogic;
+using MTCG.Models;
 
-namespace MTCG.Test.GameLogic {
+namespace MTCG.Test.Models {
     public class TestPackage {
         private MonsterCard m1;
         private MonsterCard m2;

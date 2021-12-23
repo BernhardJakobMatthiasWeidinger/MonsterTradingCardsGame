@@ -7,12 +7,17 @@
 
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="Npgsql" Version="6.0.2" />
   </ItemGroup>
 
   <ItemGroup>
     <Reference Include="SWE1HttpServer.Core">
       <HintPath>libs\SWE1HttpServer.Core.dll</HintPath>
     </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="RouteCommands\" />
   </ItemGroup>
 
 </Project>

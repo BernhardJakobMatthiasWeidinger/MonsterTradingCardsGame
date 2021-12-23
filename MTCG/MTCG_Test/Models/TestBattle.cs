@@ -1,10 +1,10 @@
-﻿using MTCG.GameLogic;
+﻿using MTCG.Models;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace MTCG.Test.GameLogic {
+namespace MTCG.Test.Models {
     public class TestBattle {
         private User u1;
         private MonsterCard m1;

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace MTCG.GameLogic {
+namespace MTCG.Models {
     public interface IRule {
         bool CheckRule(Card card1, Card card2, ref double calcDamage1, ref double calcDamage2);
     }

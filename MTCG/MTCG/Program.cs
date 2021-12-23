@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using MTCG.GameLogic;
+using MTCG.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -12,11 +12,17 @@ namespace MTCG {
     class Program {
         static void Main(string[] args) {
 
+        }
+
+        void testing() {
             //Create cards
             Console.WriteLine("Create Cards:");
-            try {
+            try
+            {
                 MonsterCard m0 = new MonsterCard(Guid.NewGuid(), "Unicorn", 10.0);
-            } catch (ArgumentException e) {
+            }
+            catch (ArgumentException e)
+            {
                 Console.WriteLine(e.Message);
             }
 
@@ -33,9 +39,12 @@ namespace MTCG {
 
             //Create packages
             Console.WriteLine("\nCreate Packages:");
-            try {
+            try
+            {
                 Package p0 = new Package(new List<Card> { m1, m2, s1, s2 });
-            } catch (ArgumentException e) {
+            }
+            catch (ArgumentException e)
+            {
                 Console.WriteLine(e.Message);
             }
             Package p1 = new Package(new List<Card> { m1, m2, m3, s1, s2 });
@@ -45,14 +54,20 @@ namespace MTCG {
             Console.WriteLine("\nCreate User 1 and add cards to stack and deck:");
             User u1 = new User("maxiiii", "supersecretpassword1");
             p1.AquirePackage(u1);
-            try {
+            try
+            {
                 u1.ConfigureDeck(new List<Guid> { m1.Id, m2.Id, m3.Id, s1.Id, s2.Id });
-            } catch (ArgumentException e) {
+            }
+            catch (ArgumentException e)
+            {
                 Console.WriteLine(e.Message);
             }
-            try {
+            try
+            {
                 u1.ConfigureDeck(new List<Guid> { m1.Id, m2.Id, m3.Id, s3.Id });
-            } catch (ArgumentException e) {
+            }
+            catch (ArgumentException e)
+            {
                 Console.WriteLine(e.Message);
             }
 
@@ -62,17 +77,23 @@ namespace MTCG {
             User u2 = new User("miniiii", "supersecretpassword2");
             p2.AquirePackage(u2);
             u2.ConfigureDeck(new List<Guid> { m4.Id, m5.Id, s3.Id, s4.Id });
-            
+
             //Create Trade
             Console.WriteLine("\nCreate Trade:");
-            try {
+            try
+            {
                 Trade tfail1 = new Trade(Guid.NewGuid(), s4, u1, CardType.spell, ElementType.fire, 15.0);
-            } catch (ArgumentException e) {
+            }
+            catch (ArgumentException e)
+            {
                 Console.WriteLine(e.Message);
             }
-            try {
+            try
+            {
                 Trade tfail2 = new Trade(Guid.NewGuid(), s1, u1, CardType.spell, ElementType.fire, 15.0);
-            } catch (ArgumentException e) {
+            }
+            catch (ArgumentException e)
+            {
                 Console.WriteLine(e.Message);
             }
 
@@ -80,14 +101,20 @@ namespace MTCG {
 
             //Trade with user2
             Console.WriteLine("\nTrade with user2:");
-            try {
+            try
+            {
                 t1.TradeCard(u1, s5);
-            } catch (ArgumentException e) {
+            }
+            catch (ArgumentException e)
+            {
                 Console.WriteLine(e.Message);
             }
-            try {
+            try
+            {
                 t1.TradeCard(u2, s4);
-            } catch (ArgumentException e) {
+            }
+            catch (ArgumentException e)
+            {
                 Console.WriteLine(e.Message);
             }
 
@@ -117,10 +144,10 @@ namespace MTCG {
 
             Console.WriteLine();
 
-            JArray u1Deck = (JArray)((JObject)JsonConvert.DeserializeObject(u1.DeckToString(true))).GetValue("deck");
+            JArray u1Deck = (JArray)((JObject)JsonConvert.DeserializeObject(u1.DeckToString(true))).GetValue("Deck");
             JObject firstCard = (JObject)JsonConvert.DeserializeObject(u1Deck[0].ToString());
-            
-            Console.WriteLine(firstCard.GetValue("id"));
+
+            Console.WriteLine(firstCard.GetValue("Id"));
             Console.Read();
         }
     }

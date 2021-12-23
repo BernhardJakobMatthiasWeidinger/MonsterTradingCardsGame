@@ -1,10 +1,10 @@
-﻿using MTCG.GameLogic;
+﻿using MTCG.Models;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace MTCG.Test.GameLogic {
+namespace MTCG.Test.Models {
     public class TestRule {
         private static List<ElementRule> elementRules = new List<ElementRule> {
             new ElementRule(ElementType.fire, ElementType.normal, 2, 0.5),
