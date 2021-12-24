@@ -11,10 +11,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="RouteCommands\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\SWE1HttpServer.Core\SWE1HttpServer.Core.csproj" />
   </ItemGroup>
 

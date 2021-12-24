@@ -9,15 +9,40 @@ using SWE1HttpServer.Core.Server;
 
 using MTCG.Models;
 using MTCG.DAL;
+using MTCG.RouteCommands.Users;
+using System.Net;
 
 namespace MTCG {
     class Program {
         static void Main(string[] args) {
             if (DBConnection.Connect()) {
                 DBUserRepository userRepository = new DBUserRepository();
+                MTCGManager mtcgManager = new MTCGManager(userRepository);
+
+                var identityProvider = new MTCGIdentityProvider(userRepository);
+                var routeParser = new IdRouteParser();
+
+                var router = new Router(routeParser, identityProvider);
+                RegisterRoutes(router, mtcgManager);
+
+                var httpServer = new HttpServer(IPAddress.Any, 10001, router);
+                httpServer.Start();
             } else {
                 Console.WriteLine("Cannot connect to DB");
             }
+        }
+        private static void RegisterRoutes(Router router, MTCGManager mtcgManager) {
+            // public routes
+            router.AddRoute(HttpMethod.Post, "/users", (r, p) => new RegisterCommand(mtcgManager, getAttribute(r.Payload, "username"), getAttribute(r.Payload, "password")));
+            router.AddRoute(HttpMethod.Post, "/sessions", (r, p) => new LoginCommand(mtcgManager, getAttribute(r.Payload, "username"), getAttribute(r.Payload, "password")));
+
+            // protected routes
+            //router.AddProtectedRoute(HttpMethod.Put, "/messages/{id}", (r, p) => new UpdateMessageCommand(messageManager, int.Parse(p["id"]), r.Payload));
+        }
+
+        private static string getAttribute(string json, string attribute) {
+            JObject jobject = JObject.Parse(json);
+            return jobject.Value<string>(attribute);
         }
 
         void testing() {

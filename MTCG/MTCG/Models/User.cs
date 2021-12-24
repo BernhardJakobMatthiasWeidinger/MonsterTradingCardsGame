@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using SWE1HttpServer.Core.Authentication;
 
 namespace MTCG.Models {
-    public class User {
+    public class User : IIdentity {
         public Guid Id { get; private set; }
         public string Username { get; private set; }
         [JsonIgnore]

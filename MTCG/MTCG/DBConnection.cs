@@ -44,6 +44,7 @@ namespace MTCG {
 
                 users.Add(user);
             }
+            dr.DisposeAsync();
             return users;
         }
 
@@ -113,6 +114,7 @@ namespace MTCG {
                 }
                 cards.Add(new Tuple<Card, bool, Guid>(card, Boolean.Parse(dr[4].ToString()), Guid.Parse(dr[5].ToString())));
             }
+            dr.DisposeAsync();
             return cards;
         }
 
