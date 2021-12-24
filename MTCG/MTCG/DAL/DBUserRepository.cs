@@ -16,6 +16,7 @@ namespace MTCG.DAL {
         public bool InsertUser(User user) {
             if (GetUserByUsername(user.Username) == null) {
                 users.Add(user);
+                DBConnection.InsertUser(user);
                 return true;
             }
             return false;
@@ -25,6 +26,7 @@ namespace MTCG.DAL {
             User u1 = GetUserByUsername(username);
             if (u1 != null) {
                 users.Find(u => u == u1).SetUserData(name, bio, image);
+                DBConnection.UpdateUser(u1, GetUserByUsername(username));
                 return true;
             }
             return false;

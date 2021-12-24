@@ -1,11 +1,6 @@
-DROP TABLE if exists friends;
-DROP TABLE if exists trades;
-DROP TABLE if exists packages;
-DROP TABLE if exists cards;
-DROP TABLE if exists users;
-
 DROP DATABASE if exists mtcg;
 CREATE DATABASE mtcg;
+\connect mtcg;
 
 CREATE TABLE users (
     userId          varchar(50),

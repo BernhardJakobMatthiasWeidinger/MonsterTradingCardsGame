@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using MTCG.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -8,10 +7,19 @@ using SWE1HttpServer.Core.Request;
 using SWE1HttpServer.Core.Routing;
 using SWE1HttpServer.Core.Server;
 
+using MTCG.Models;
+using MTCG.DAL;
+
 namespace MTCG {
     class Program {
         static void Main(string[] args) {
+            if (DBConnection.Connect()) {
+                DBUserRepository userRepository = new DBUserRepository();
+                User u1 = new User("bernhard", "supersecretabc1");
+                userRepository.InsertUser(u1);
+            } else {
 
+            }
         }
 
         void testing() {
