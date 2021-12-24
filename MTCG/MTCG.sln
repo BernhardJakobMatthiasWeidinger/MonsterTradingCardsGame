@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MTCG", "MTCG\MTCG.csproj", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MTCG.Test", "MTCG_Test\MTCG.Test.csproj", "{B901444E-E5AE-4FEF-B43C-476142B6B369}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SWE1HttpServer.Core", "SWE1HttpServer.Core\SWE1HttpServer.Core.csproj", "{3D8ED18A-372A-41C6-AD3E-C0C595352343}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{B901444E-E5AE-4FEF-B43C-476142B6B369}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B901444E-E5AE-4FEF-B43C-476142B6B369}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B901444E-E5AE-4FEF-B43C-476142B6B369}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3D8ED18A-372A-41C6-AD3E-C0C595352343}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3D8ED18A-372A-41C6-AD3E-C0C595352343}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3D8ED18A-372A-41C6-AD3E-C0C595352343}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3D8ED18A-372A-41C6-AD3E-C0C595352343}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -11,13 +11,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="SWE1HttpServer.Core">
-      <HintPath>libs\SWE1HttpServer.Core.dll</HintPath>
-    </Reference>
+    <Folder Include="RouteCommands\" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="RouteCommands\" />
+    <ProjectReference Include="..\SWE1HttpServer.Core\SWE1HttpServer.Core.csproj" />
   </ItemGroup>
 
 </Project>
