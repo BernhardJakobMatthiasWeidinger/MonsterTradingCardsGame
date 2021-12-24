@@ -56,7 +56,7 @@ namespace MTCG {
             cmd.Parameters.AddWithValue("username", user.Username);
             cmd.Parameters.AddWithValue("password", user.Password);
             cmd.Parameters.AddWithValue("name", "");
-            cmd.Parameters.AddWithValue("bio", "");
+            cmd.Parameters.AddWithValue("bio", user.Bio);
             cmd.Parameters.AddWithValue("image", "");
             cmd.Parameters.AddWithValue("coins", user.Coins);
             cmd.Parameters.AddWithValue("gamesPlayed", user.GamesPlayed);
@@ -64,7 +64,6 @@ namespace MTCG {
             cmd.Parameters.AddWithValue("gamesLost", user.GamesLost);
             cmd.Parameters.AddWithValue("elo", user.Elo);
             cmd.ExecuteNonQuery();
-            cmd.Dispose();
         }
 
         public static void UpdateUser(User user) {
@@ -77,10 +76,10 @@ namespace MTCG {
                 "gamesWon = @gamesWon, " +
                 "gamesLost = @gamesLost, " +
                 "elo = @elo " +
-                "WHERE userId = @userId; ";
+                "WHERE userid = @userid; ";
 
             using var cmd = new NpgsqlCommand(sql, connection);
-            cmd.Parameters.AddWithValue("userId", user.Id);
+            cmd.Parameters.AddWithValue("userid", user.Id);
             cmd.Parameters.AddWithValue("name", user.Name);
             cmd.Parameters.AddWithValue("bio", user.Bio);
             cmd.Parameters.AddWithValue("image", user.Image);
@@ -89,6 +88,59 @@ namespace MTCG {
             cmd.Parameters.AddWithValue("gamesWon", user.GamesWon);
             cmd.Parameters.AddWithValue("gamesLost", user.GamesLost);
             cmd.Parameters.AddWithValue("elo", user.Elo);
+            cmd.ExecuteNonQuery();
+        }
+
+        public static List<Tuple<Card, bool, Guid>> SelectAllCards()
+        {
+            var sql = "select cardid, name, damage, ismonster, indeck, userid" +
+            " from cards;";
+
+            NpgsqlCommand cmd = new NpgsqlCommand(sql, connection);
+
+            // Execute the query and obtain a result set
+            NpgsqlDataReader dr = cmd.ExecuteReader();
+
+            //Card, isInDeck, UserId
+            List<Tuple<Card, bool, Guid>> cards = new List<Tuple<Card, bool, Guid>>();
+            // Output rows
+            while (dr.Read()) {
+                Card card;
+                if (Boolean.Parse(dr[3].ToString()) == false) {
+                    card = new SpellCard(Guid.Parse(dr[0].ToString()), dr[1].ToString(), Double.Parse(dr[2].ToString()));
+                } else {
+                    card = new MonsterCard(Guid.Parse(dr[0].ToString()), dr[1].ToString(), Double.Parse(dr[2].ToString()));
+                }
+                cards.Add(new Tuple<Card, bool, Guid>(card, Boolean.Parse(dr[4].ToString()), Guid.Parse(dr[5].ToString())));
+            }
+            return cards;
+        }
+
+        public static void InsertCard(Card card)
+        {
+            var sql = "insert into cards (cardid, name, damage, ismonster, indeck, userid)" +
+           " values(@cardid, @name, @damage, @ismonster, @indeck, @userid);";
+
+            NpgsqlCommand cmd = new NpgsqlCommand(sql, connection);
+            cmd.Parameters.AddWithValue("cardid", card.Id);
+            cmd.Parameters.AddWithValue("name", card.Name);
+            cmd.Parameters.AddWithValue("damage", card.Damage);
+            cmd.Parameters.AddWithValue("ismonster", card.GetType().Name == "MonsterCard" ? 1 : 0);
+            cmd.Parameters.AddWithValue("indeck", 0);
+            cmd.Parameters.AddWithValue("userid", "");
+            cmd.ExecuteNonQuery();
+        }
+
+        public static void UpdateCard(Card card, bool inDeck, Guid userId) {
+            var sql = "UPDATE cards SET " +
+                "indeck = @indeck, " +
+                "userid = @userid " +
+                "WHERE cardid = @cardid; ";
+
+            NpgsqlCommand cmd = new NpgsqlCommand(sql, connection);
+            cmd.Parameters.AddWithValue("cardid", card.Id);
+            cmd.Parameters.AddWithValue("indeck", inDeck);
+            cmd.Parameters.AddWithValue("userid", userId);
             cmd.ExecuteNonQuery();
         }
     }

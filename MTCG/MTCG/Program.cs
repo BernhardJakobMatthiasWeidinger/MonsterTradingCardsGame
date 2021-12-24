@@ -15,12 +15,8 @@ namespace MTCG {
         static void Main(string[] args) {
             if (DBConnection.Connect()) {
                 DBUserRepository userRepository = new DBUserRepository();
-                /*User u1 = new User("bernhard", "supersecretabc1");
-                User u2 = new User("mini", "hahhaahihihi");
-                userRepository.InsertUser(u1);
-                userRepository.InsertUser(u2);*/
             } else {
-
+                Console.WriteLine("Cannot connect to DB");
             }
         }
 
