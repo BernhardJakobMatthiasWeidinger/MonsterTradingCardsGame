@@ -14,7 +14,7 @@ namespace MTCG.Test.Models {
 
         [SetUp]
         public void Init() {
-            u1 = new User("testUser", "testUserPassword");
+            u1 = new User(Guid.NewGuid(), "testUser", "testUserPassword");
             m1 = new MonsterCard(Guid.NewGuid(), "WaterDragon", 999.0);
             m2 = new MonsterCard(Guid.NewGuid(), "FireDragon", 999.0);
             m3 = new MonsterCard(Guid.NewGuid(), "Dragon", 999.0);
@@ -46,7 +46,7 @@ namespace MTCG.Test.Models {
         [Test]
         public void testPlay() {
             //arrange
-            User u2 = new User("maxi", "supersecretpassword1");
+            User u2 = new User(Guid.NewGuid(), "maxi", "supersecretpassword1");
             MonsterCard m5 = new MonsterCard(Guid.NewGuid(), "FireGoblin", 25.0);
             MonsterCard m6 = new MonsterCard(Guid.NewGuid(), "WaterDragon", 25.0);
             MonsterCard m7 = new MonsterCard(Guid.NewGuid(), "FireDragon", 25.0);

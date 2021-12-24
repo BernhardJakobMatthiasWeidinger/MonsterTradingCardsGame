@@ -1,10 +1,15 @@
 ﻿using MTCG.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace MTCG.DAL {
     public class DBUserRepository : IUserRepository {
         private readonly List<User> users = new List<User>();
+
+        public DBUserRepository() {
+            users = DBConnection.SelectAllUsers();
+        }
         public User GetUserByAuthToken(string authToken) {
             return users.FirstOrDefault(user => user.Username + "-mtcgToken" == authToken);
         }
@@ -26,7 +31,7 @@ namespace MTCG.DAL {
             User u1 = GetUserByUsername(username);
             if (u1 != null) {
                 users.Find(u => u == u1).SetUserData(name, bio, image);
-                DBConnection.UpdateUser(u1, GetUserByUsername(username));
+                DBConnection.UpdateUser(GetUserByUsername(username));
                 return true;
             }
             return false;

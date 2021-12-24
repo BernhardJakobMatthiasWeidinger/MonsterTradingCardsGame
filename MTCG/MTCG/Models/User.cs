@@ -26,8 +26,8 @@ namespace MTCG.Models {
         public List<Card> Deck { get; set; }
         public List<Guid> Friends { get; set; }
 
-        public User(string username, string password) {
-            this.Id = Guid.NewGuid();
+        public User(Guid id, string username, string password) {
+            this.Id = id;
             if (username.IndexOfAny(new char[] { ';', '/', '\\', '\'', '"' }) != -1) {
                 throw new ArgumentException("Username is not allowed to contain following characters: ; / \\ \' \"");
             }

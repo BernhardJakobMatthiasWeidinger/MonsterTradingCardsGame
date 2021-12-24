@@ -55,7 +55,7 @@ namespace MTCG.Test.Models {
         [Test]
         public void testAcquirePackage() {
             //arrange
-            User u1 = new User("maxi", "musterpassword1");
+            User u1 = new User(Guid.NewGuid(), "maxi", "musterpassword1");
             Package p1 = new Package(new List<Card> { m1, m2, m3, s1, s2 });
 
             //act
@@ -69,7 +69,7 @@ namespace MTCG.Test.Models {
         [Test]
         public void testAcquirePackage_throwsException() {
             //arrange
-            User u1 = new User("maxi", "musterpassword1");
+            User u1 = new User(Guid.NewGuid(), "maxi", "musterpassword1");
             u1.Coins = 3;
 
             Package p1 = new Package(new List<Card> { m1, m2, m3, s1, s2 });

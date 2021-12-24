@@ -31,11 +31,11 @@ namespace MTCG.Test.Models {
             m8 = new MonsterCard(Guid.NewGuid(), "FireOrk", 25.0);
             m9 = new MonsterCard(Guid.NewGuid(), "WaterKraken", 10.0);
 
-            u1 = new User("maxi", "maxiPW");
+            u1 = new User(Guid.NewGuid(), "maxi", "maxiPW");
             u1.Stack.AddRange(new List<Card> { m1, m2, m3, m4, m5 });
             u1.Deck.AddRange(new List<Card> { m1, m2, m3, m4 });
 
-            u2 = new User("mini", "miniPW");
+            u2 = new User(Guid.NewGuid(), "mini", "miniPW");
             u2.Stack.AddRange(new List<Card> { m6, m7, m8, m9 });
             u2.Deck.AddRange(new List<Card> { m6, m7, m8, m9 });
         }

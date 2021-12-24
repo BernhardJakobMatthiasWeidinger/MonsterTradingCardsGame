@@ -15,8 +15,10 @@ namespace MTCG {
         static void Main(string[] args) {
             if (DBConnection.Connect()) {
                 DBUserRepository userRepository = new DBUserRepository();
-                User u1 = new User("bernhard", "supersecretabc1");
+                /*User u1 = new User("bernhard", "supersecretabc1");
+                User u2 = new User("mini", "hahhaahihihi");
                 userRepository.InsertUser(u1);
+                userRepository.InsertUser(u2);*/
             } else {
 
             }
@@ -60,7 +62,7 @@ namespace MTCG {
 
             //Create user1
             Console.WriteLine("\nCreate User 1 and add cards to stack and deck:");
-            User u1 = new User("maxiiii", "supersecretpassword1");
+            User u1 = new User(Guid.NewGuid(), "maxiiii", "supersecretpassword1");
             p1.AquirePackage(u1);
             try
             {
@@ -82,7 +84,7 @@ namespace MTCG {
             u1.ConfigureDeck(new List<Guid> { m1.Id, m2.Id, m3.Id, s1.Id });
 
             //Create user2
-            User u2 = new User("miniiii", "supersecretpassword2");
+            User u2 = new User(Guid.NewGuid(), "miniiii", "supersecretpassword2");
             p2.AquirePackage(u2);
             u2.ConfigureDeck(new List<Guid> { m4.Id, m5.Id, s3.Id, s4.Id });
 

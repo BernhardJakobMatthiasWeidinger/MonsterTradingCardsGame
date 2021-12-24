@@ -19,8 +19,8 @@ namespace MTCG.Test.Models {
 
         [SetUp]
         public void Init() {
-            u1 = new User("maxi", "testUserPassword");
-            u2 = new User("mini", "testUserPassword");
+            u1 = new User(Guid.NewGuid(), "maxi", "testUserPassword");
+            u2 = new User(Guid.NewGuid(), "mini", "testUserPassword");
 
             m1 = new MonsterCard(Guid.NewGuid(), "WaterDragon", 99.0);
             m2 = new MonsterCard(Guid.NewGuid(), "FireDragon", 99.0);
@@ -55,7 +55,7 @@ namespace MTCG.Test.Models {
         public void testConstructor_throwExceptionInvalidUsername(string username) {
             //arrange
             //act & assert
-            ArgumentException ex = Assert.Throws<ArgumentException>(delegate { new User(username, "testUserPassword"); });
+            ArgumentException ex = Assert.Throws<ArgumentException>(delegate { new User(Guid.NewGuid(), username, "testUserPassword"); });
             Assert.That(ex.Message, Is.EqualTo("Username is not allowed to contain following characters: ; / \\ \' \""));
         }
 
@@ -68,7 +68,7 @@ namespace MTCG.Test.Models {
         public void testConstructor_throwExceptionInvalidPassword(string password) {
             //arrange
             //act
-            ArgumentException ex = Assert.Throws<ArgumentException>(delegate { new User("testUser", password); });
+            ArgumentException ex = Assert.Throws<ArgumentException>(delegate { new User(Guid.NewGuid(), "testUser", password); });
 
             //assert
             Assert.That(ex.Message, Is.EqualTo("Password is not allowed to contain following characters: ; / \\ \' \""));
@@ -79,7 +79,7 @@ namespace MTCG.Test.Models {
         [TestCase("mininii", "Mini Mustermann", "Ich war schon immer sehr interessiert an Monster Trading Games.", ":3")]
         public void testToString(string username, string name, string bio, string image) {
             //arrange
-            u1 = new User(username, "testUserPassword");
+            u1 = new User(Guid.NewGuid(), username, "testUserPassword");
             u1.SetUserData(name, bio, image);
 
             //act
@@ -95,7 +95,7 @@ namespace MTCG.Test.Models {
         [TestCase("Mini Mustermann", "Ich war schon immer sehr interessiert an Monster Trading Games.", ":3")]
         public void testSetUserData(string name, string bio, string image) {
             //arrange
-            u1 = new User("testUser", "testUserPassword");
+            u1 = new User(Guid.NewGuid(), "testUser", "testUserPassword");
 
             //act
             u1.SetUserData(name, bio, image);
@@ -188,7 +188,7 @@ namespace MTCG.Test.Models {
         [Test]
         public void testAddFriend() {
             //arrange
-            User u3 = new User("otto", "supersecretpassword1");
+            User u3 = new User(Guid.NewGuid(), "otto", "supersecretpassword1");
 
             //act
             u1.AddFriend(u2);
@@ -218,7 +218,7 @@ namespace MTCG.Test.Models {
         [Test]
         public void testRemoveFriend() {
             //arrange
-            User u3 = new User("otto", "supersecretpassword1");
+            User u3 = new User(Guid.NewGuid(), "otto", "supersecretpassword1");
             u1.AddFriend(u2);
             u2.AddFriend(u3);
 
@@ -234,7 +234,7 @@ namespace MTCG.Test.Models {
         [Test]
         public void testRemoveFriend_throwsExceptionNotBefriended() {
             //arrange
-            User u3 = new User("otto", "supersecretpassword1");
+            User u3 = new User(Guid.NewGuid(), "otto", "supersecretpassword1");
 
             //act & assert
             ArgumentException ex1 = Assert.Throws<ArgumentException>(delegate { u1.RemoveFriend(u3); });
