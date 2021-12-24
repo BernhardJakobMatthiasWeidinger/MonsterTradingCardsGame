@@ -11,6 +11,7 @@ using MTCG.Models;
 using MTCG.DAL;
 using MTCG.RouteCommands.Users;
 using System.Net;
+using MTCG.RouteCommands.Cards;
 
 namespace MTCG {
     class Program {
@@ -37,7 +38,7 @@ namespace MTCG {
             router.AddRoute(HttpMethod.Post, "/sessions", (r, p) => new LoginCommand(mtcgManager, getAttribute(r.Payload, "username"), getAttribute(r.Payload, "password")));
 
             // protected routes
-            //router.AddProtectedRoute(HttpMethod.Put, "/messages/{id}", (r, p) => new UpdateMessageCommand(messageManager, int.Parse(p["id"]), r.Payload));
+            router.AddProtectedRoute(HttpMethod.Post, "/packages", (r, p) => new AddPackageCommand(mtcgManager, r.Payload));
         }
 
         private static string getAttribute(string json, string attribute) {
