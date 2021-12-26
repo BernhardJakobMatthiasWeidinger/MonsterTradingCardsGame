@@ -145,11 +145,12 @@ namespace MTCG.Models {
             string res = "";
             if (isJson) {
                 JObject o = new JObject();
+                o["username"] = Username;
                 o["gamesPlayed"] = GamesPlayed;
                 o["gamesWon"] = GamesWon;
                 o["gamesLost"] = GamesLost;
                 o["elo"] = Elo;
-                res = o.ToString();
+                res = JsonConvert.SerializeObject(o);
             } else {
                 res += $"gamesPlayed:{GamesPlayed},gamesWon:{GamesWon},gamesLost:{GamesWon},elo:{Elo}";
             }

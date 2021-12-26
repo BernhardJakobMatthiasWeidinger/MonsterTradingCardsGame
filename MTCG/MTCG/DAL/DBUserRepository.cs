@@ -1,4 +1,6 @@
 ﻿using MTCG.Models;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,6 +37,16 @@ namespace MTCG.DAL {
                 return true;
             }
             return false;
+        }
+
+        public string GetScoreboard() {
+            JArray jArray = new JArray();
+
+            users.Sort((x, y) => x.Elo - y.Elo);
+            foreach (User user in users.Where(u => u.Username != "admin")) {
+                jArray.Add(user.GetUserStats(true));
+            }
+            return JsonConvert.SerializeObject(jArray);
         }
 
         private User GetUserByUsername(string username) {

@@ -44,6 +44,10 @@ namespace MTCG {
             router.AddProtectedRoute(HttpMethod.Get, "/cards{id}", (r, p) => new GetStackCommand(mtcgManager, p["id"]));
             router.AddProtectedRoute(HttpMethod.Get, "/deck{id}", (r, p) => new GetDeckCommand(mtcgManager, p["id"]));
             router.AddProtectedRoute(HttpMethod.Put, "/deck", (r, p) => new ConfigureDeckCommand(mtcgManager, r.Payload));
+            router.AddProtectedRoute(HttpMethod.Get, "/users/{id}", (r, p) => new GetUserDataCommand(mtcgManager, p["id"]));
+            router.AddProtectedRoute(HttpMethod.Put, "/users/{id}", (r, p) => new SetUserDataCommand(mtcgManager, p["id"], r.Payload));
+            router.AddProtectedRoute(HttpMethod.Get, "/stats{id}", (r, p) => new GetUserStatsCommand(mtcgManager));
+            router.AddProtectedRoute(HttpMethod.Get, "/score{id}", (r, p) => new GetScoreboardCommand(mtcgManager));
         }
 
         private static string getAttribute(string json, string attribute) {

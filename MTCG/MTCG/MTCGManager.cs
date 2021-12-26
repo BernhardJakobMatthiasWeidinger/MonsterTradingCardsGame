@@ -45,5 +45,9 @@ namespace MTCG {
         public void ConfigureDeck(User user, List<Guid> cardIds) {
             dBCardRepository.ConfigureDeck(user, cardIds);
         }
+
+        public string GetScoreboard() {
+            return dBUserRepository.GetScoreboard();
+        }
     }
 }
