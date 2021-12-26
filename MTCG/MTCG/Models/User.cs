@@ -50,8 +50,8 @@ namespace MTCG.Models {
         }
 
         public override string ToString() {
-            string res = $"id:{Id},username:{Username},name:{Name},bio:{Bio},image:{Image}," +
-                    $"coins:{Coins},gamesPlayed:{GamesPlayed},gamesWon:{GamesWon},gamesLost:{GamesLost},elo:{Elo},friends:[";
+            string res = $"UserId:{Id},Username:{Username},Name:{Name},Bio:{Bio},Image:{Image}," +
+                    $"Coins:{Coins},GamesPlayed:{GamesPlayed},GamesWon:{GamesWon},GamesLost:{GamesLost},Elo:{Elo},Friends:[";
 
             int i = 0;
             foreach (Guid friend in Friends) {

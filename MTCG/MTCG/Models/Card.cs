@@ -50,7 +50,7 @@ namespace MTCG.Models {
         }
 
         public override string ToString() {
-            return base.ToString() + $",monsterType:{this.MonsterType}";
+            return base.ToString() + $",MonsterType:{this.MonsterType}";
         }
     }
 

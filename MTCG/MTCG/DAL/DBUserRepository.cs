@@ -63,5 +63,9 @@ namespace MTCG.DAL {
         public User GetUserById(Guid id) {
             return users.FirstOrDefault(u => u.Id == id);
         }
+
+        public List<User> GetAllUsers() {
+            return users;
+        }
     }
 }

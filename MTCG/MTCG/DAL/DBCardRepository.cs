@@ -11,7 +11,6 @@ namespace MTCG.DAL {
     public class DBCardRepository {
         private readonly List<Tuple<Card, bool, Guid?>> cards = new List<Tuple<Card, bool, Guid?>>();
         private readonly List<Package> packages = new List<Package>();
-        private readonly List<Trade> trades = new List<Trade>();
 
         public DBCardRepository() {
             cards = DBConnection.SelectAllCards();
@@ -100,6 +99,18 @@ namespace MTCG.DAL {
             }
 
             return deck;
+        }
+
+        public void AssignCardsAtStart(User user) {
+            foreach (var tuple in cards) {
+                if (tuple.Item3 == user.Id) {
+                    user.Stack.Add(tuple.Item1);
+
+                    if (tuple.Item2 == true) {
+                        user.Deck.Add(tuple.Item1);
+                    }
+                }
+            }
         }
 
         public void ConfigureDeck(User user, List<Guid> cardIds) {

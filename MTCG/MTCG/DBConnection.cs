@@ -170,7 +170,7 @@ namespace MTCG {
             }
 
             var sql = "insert into packages (packageid, cardid1, cardid2, cardid3, cardid4, cardid5)" +
-           " values(@packageid, @cardid1, @cardid2, @cardid3, @cardid4, @cardid5);";
+           " values (@packageid, @cardid1, @cardid2, @cardid3, @cardid4, @cardid5);";
 
             NpgsqlCommand cmd = new NpgsqlCommand(sql, connection);
             cmd.Parameters.AddWithValue("packageid", package.Id);
@@ -209,6 +209,20 @@ namespace MTCG {
             dr.DisposeAsync();
 
             return trades;
+        }
+
+        public static void InsertTrade(Trade trade) {
+            var sql = "insert into trades (tradeid, cardtype, elementtype, minimumdamage, userid, cardid)" +
+           " values (@tradeid, @cardtype, @elementtype, @minimumdamage, @userid, @cardid);";
+
+            NpgsqlCommand cmd = new NpgsqlCommand(sql, connection);
+            cmd.Parameters.AddWithValue("tradeid", trade.Id);
+            cmd.Parameters.AddWithValue("cardtype", trade.CardType.ToString());
+            cmd.Parameters.AddWithValue("elementtype", trade.ElementType.ToString());
+            cmd.Parameters.AddWithValue("minimumdamage", trade.MinimumDamage);
+            cmd.Parameters.AddWithValue("userid", trade.Provider.Id);
+            cmd.Parameters.AddWithValue("cardid", trade.CardToTrade.Id);
+            cmd.ExecuteNonQuery();
         }
     }
 }

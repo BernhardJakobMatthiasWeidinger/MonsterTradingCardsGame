@@ -43,14 +43,18 @@ namespace MTCG {
             // protected routes
             router.AddProtectedRoute(HttpMethod.Post, "/packages", (r, p) => new AddPackageCommand(mtcgManager, r.Payload));
             router.AddProtectedRoute(HttpMethod.Post, "/transactions/packages", (r, p) => new GetPackageCommand(mtcgManager));
+
             router.AddProtectedRoute(HttpMethod.Get, "/cards{id}", (r, p) => new GetStackCommand(mtcgManager, p["id"]));
             router.AddProtectedRoute(HttpMethod.Get, "/deck{id}", (r, p) => new GetDeckCommand(mtcgManager, p["id"]));
             router.AddProtectedRoute(HttpMethod.Put, "/deck", (r, p) => new ConfigureDeckCommand(mtcgManager, r.Payload));
+
             router.AddProtectedRoute(HttpMethod.Get, "/users/{id}", (r, p) => new GetUserDataCommand(mtcgManager, p["id"]));
             router.AddProtectedRoute(HttpMethod.Put, "/users/{id}", (r, p) => new SetUserDataCommand(mtcgManager, p["id"], r.Payload));
             router.AddProtectedRoute(HttpMethod.Get, "/stats{id}", (r, p) => new GetUserStatsCommand(mtcgManager, p["id"]));
             router.AddProtectedRoute(HttpMethod.Get, "/score{id}", (r, p) => new GetScoreboardCommand(mtcgManager, p["id"]));
+
             router.AddProtectedRoute(HttpMethod.Get, "/tradings{id}", (r, p) => new GetTradesCommand(mtcgManager, p["id"]));
+            router.AddProtectedRoute(HttpMethod.Post, "/tradings", (r, p) => new AddTradingDealCommand(mtcgManager, r.Payload));
         }
 
         private static string getAttribute(string json, string attribute) {

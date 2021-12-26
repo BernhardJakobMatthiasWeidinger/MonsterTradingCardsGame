@@ -86,8 +86,8 @@ namespace MTCG.Test.Models {
             string userData = u1.ToString();
 
             //assert
-            Assert.AreEqual($"id:{u1.Id},username:{u1.Username},name:{u1.Name},bio:{u1.Bio},image:{u1.Image}," +
-                    $"coins:20,gamesPlayed:0,gamesWon:0,gamesLost:0,elo:100,friends:[]", u1.ToString());
+            Assert.AreEqual($"UserId:{u1.Id},Username:{u1.Username},Name:{u1.Name},Bio:{u1.Bio},Image:{u1.Image}," +
+                    $"Coins:20,GamesPlayed:0,GamesWon:0,GamesLost:0,Elo:100,Friends:[]", u1.ToString());
         }
 
         [Test]
@@ -278,11 +278,12 @@ namespace MTCG.Test.Models {
             string dataPlain = u1.GetUserStats(false);
 
             //assert
-            Assert.AreEqual($"gamesPlayed:{u1.GamesPlayed},gamesWon:{u1.GamesWon},gamesLost:{u1.GamesWon},elo:{u1.Elo}", dataPlain);
+            Assert.AreEqual($"username:{u1.Username},gamesPlayed:{u1.GamesPlayed},gamesWon:{u1.GamesWon},gamesLost:{u1.GamesWon},elo:{u1.Elo}", dataPlain);
         }
 
         [Test]
-        [TestCase(null, "username")]
+        [TestCase(null, "password")]
+        [TestCase("maxi", "username")]
         [TestCase("0", "gamesPlayed")]
         [TestCase("0", "gamesWon")]
         [TestCase("0", "gamesLost")]

@@ -18,6 +18,8 @@ namespace MTCG {
             this.dBUserRepository = dBUserRepository;
             this.dBCardRepository = dBCardRepository;
             this.dBTradeRepository = dBTradeRepository;
+
+            AssignCardsAtStart(dBUserRepository.GetAllUsers());
             GetTradesFromDB();
         }
 
@@ -57,17 +59,42 @@ namespace MTCG {
             List<List<string>> ts = DBConnection.SelectAllTrades();
 
             foreach (List<string> trade in ts) {
-                Trade t = new Trade(Guid.Parse(trade[0]), dBCardRepository.GetCardById(Guid.Parse(trade[1])), 
-                    dBUserRepository.GetUserById(Guid.Parse(trade[2])),
-                    (CardType)Enum.Parse(typeof(CardType), trade[3]), (ElementType)Enum.Parse(typeof(ElementType), trade[4]),
-                    Double.Parse(trade[5]));
+                Card cardToTrade = dBCardRepository.GetCardById(Guid.Parse(trade[5]));
+                User provider = dBUserRepository.GetUserById(Guid.Parse(trade[4]));
+                CardType cardType = (CardType)Enum.Parse(typeof(CardType), trade[1]);
+                ElementType? elementType = !String.IsNullOrWhiteSpace(trade[2]) ? (ElementType)Enum.Parse(typeof(ElementType), trade[2]) : null;
 
-                dBTradeRepository.AddTrade(t);
+                Trade t = new Trade(Guid.Parse(trade[0]), cardToTrade, 
+                    provider, cardType, elementType, Double.Parse(trade[3]));
+
+                dBTradeRepository.AddTradeAtServerStart(t);
             }
         }
 
-        public string GetTrades(bool json) {
-            return dBTradeRepository.GetTrades(json);
+        private void AssignCardsAtStart(List<User> users) {
+            foreach (User u in users) {
+                dBCardRepository.AssignCardsAtStart(u);
+            }
+        }
+
+        public string GetTrades(User user, bool json) {
+            return dBTradeRepository.GetTrades(user, json);
+        }
+
+        public void CreateTrade(User provider, string payload) {
+            JObject json = (JObject)JsonConvert.DeserializeObject(payload);
+
+            Guid id = Guid.Parse(json["Id"].ToString());
+            Card cardToTrade = dBCardRepository.GetCardById(Guid.Parse(json["CardToTrade"].ToString()));
+            ElementType? elementType = null;
+            if (json["elementType"] != null) {
+                elementType = (ElementType)Enum.Parse(typeof(ElementType), json["elementType"].ToString());
+            }
+            CardType cardType = (CardType)Enum.Parse(typeof(CardType), json["Type"].ToString());
+            double minimumDamage = Double.Parse(json["MinimumDamage"].ToString());
+            
+            dBTradeRepository.CreateTrade(id, cardToTrade, provider, cardType, elementType, minimumDamage);
+            
         }
     }
 }

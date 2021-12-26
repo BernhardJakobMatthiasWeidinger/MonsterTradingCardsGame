@@ -7,13 +7,14 @@ namespace MTCG.Models {
     public class Trade {
         public Guid Id { get; private set; }
         public Card CardToTrade { get; private set; }
+        [JsonIgnore]
         public User Provider { get; private set; }
         public CardType CardType { get; private set; }
-        public ElementType ElementType { get; private set; }
+        public ElementType? ElementType { get; private set; }
         public double MinimumDamage { get; private set; }
 
         public Trade(Guid id, Card cardToTrade, User user, CardType cardType, 
-            ElementType elementType, double minimumDamage) {
+            ElementType? elementType, double minimumDamage) {
             this.Id = id;
             this.Provider = user;
             this.CardType = cardType;
@@ -30,7 +31,7 @@ namespace MTCG.Models {
         }
 
         public override string ToString() {
-            return $"TradeId:{Id},CardToTrade:{CardToTrade},Provider:{Provider},Type:{CardType},ElementType:{ElementType},MinimumDamage:{MinimumDamage}"; ;
+            return $"TradeId:{Id},CardToTrade:{CardToTrade},Type:{CardType},ElementType:{ElementType},MinimumDamage:{MinimumDamage}"; ;
         }
 
         public void TradeCard(User u2, Card cardForTrade) {

@@ -47,7 +47,7 @@ namespace MTCG.Test.Models {
 
             //assert
             Assert.AreEqual(m5, t1.CardToTrade);
-            Assert.AreEqual(u1, t1.U1);
+            Assert.AreEqual(u1, t1.Provider);
             Assert.AreEqual(CardType.monster, t1.CardType);
             Assert.AreEqual(ElementType.water, t1.ElementType);
             Assert.AreEqual(20.0, t1.MinimumDamage);

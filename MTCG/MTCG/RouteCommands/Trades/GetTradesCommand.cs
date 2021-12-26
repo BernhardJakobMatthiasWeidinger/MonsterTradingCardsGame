@@ -25,7 +25,7 @@ namespace MTCG.RouteCommands.Trades {
             Response response = new Response();
 
             response.StatusCode = StatusCode.Ok;
-            response.Payload = mTCGManager.GetTrades(json);
+            response.Payload = mTCGManager.GetTrades(User, json);
 
             return response;
         }
