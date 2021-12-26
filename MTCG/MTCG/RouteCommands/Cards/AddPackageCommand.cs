@@ -19,9 +19,25 @@ namespace MTCG.RouteCommands.Cards {
 
         public override Response Execute() {
             Response response = new Response();
+            try {
+                Package package = mTCGManager.CreatePackage(User.Username, payload);
 
-            response.StatusCode = StatusCode.Ok;
-            response.Payload = payload;
+                if (User.Username == "admin") {
+                    if (package != null) {
+                        DBConnection.InsertPackage(package);
+                        response.StatusCode = StatusCode.Created;
+                    } else {
+                        response.StatusCode = StatusCode.BadRequest;
+                    }
+                }
+                else {
+                    response.StatusCode = StatusCode.Unauthorized;
+                }
+            } catch (ArgumentException) {
+                response.StatusCode = StatusCode.Conflict;
+            } catch (Exception) {
+                response.StatusCode = StatusCode.BadRequest;
+            }
 
             return response;
         }

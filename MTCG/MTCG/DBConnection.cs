@@ -92,7 +92,7 @@ namespace MTCG {
             cmd.ExecuteNonQuery();
         }
 
-        public static List<Tuple<Card, bool, Guid>> SelectAllCards() {
+        public static List<Tuple<Card, bool, Guid?>> SelectAllCards() {
             var sql = "select cardid, name, damage, ismonster, indeck, userid" +
             " from cards;";
 
@@ -102,7 +102,7 @@ namespace MTCG {
             NpgsqlDataReader dr = cmd.ExecuteReader();
 
             //Card, isInDeck, UserId
-            List<Tuple<Card, bool, Guid>> cards = new List<Tuple<Card, bool, Guid>>();
+            List<Tuple<Card, bool, Guid?>> cards = new List<Tuple<Card, bool, Guid?>>();
             // Output rows
             while (dr.Read()) {
                 Card card;
@@ -111,7 +111,8 @@ namespace MTCG {
                 } else {
                     card = new MonsterCard(Guid.Parse(dr[0].ToString()), dr[1].ToString(), Double.Parse(dr[2].ToString()));
                 }
-                cards.Add(new Tuple<Card, bool, Guid>(card, Boolean.Parse(dr[4].ToString()), Guid.Parse(dr[5].ToString())));
+                cards.Add(new Tuple<Card, bool, Guid?>(card, Boolean.Parse(dr[4].ToString()), 
+                    !String.IsNullOrWhiteSpace(dr[5].ToString()) ? Guid.Parse(dr[5].ToString()) : null));
             }
             dr.DisposeAsync();
             return cards;
@@ -125,9 +126,9 @@ namespace MTCG {
             cmd.Parameters.AddWithValue("cardid", card.Id);
             cmd.Parameters.AddWithValue("name", card.Name);
             cmd.Parameters.AddWithValue("damage", card.Damage);
-            cmd.Parameters.AddWithValue("ismonster", card.GetType().Name == "MonsterCard" ? 1 : 0);
-            cmd.Parameters.AddWithValue("indeck", 0);
-            cmd.Parameters.AddWithValue("userid", "");
+            cmd.Parameters.AddWithValue("ismonster", card.GetType().Name == "MonsterCard" ? true : false);
+            cmd.Parameters.AddWithValue("indeck", false);
+            cmd.Parameters.AddWithValue("userid", DBNull.Value);
             cmd.ExecuteNonQuery();
         }
 
@@ -141,6 +142,24 @@ namespace MTCG {
             cmd.Parameters.AddWithValue("cardid", card.Id);
             cmd.Parameters.AddWithValue("indeck", inDeck);
             cmd.Parameters.AddWithValue("userid", userId);
+            cmd.ExecuteNonQuery();
+        }
+
+        public static void InsertPackage(Package package) {
+            foreach (Card card in package.Cards) {
+                InsertCard(card);
+            }
+
+            var sql = "insert into packages (packageid, cardid1, cardid2, cardid3, cardid4, cardid5)" +
+           " values(@packageid, @cardid1, @cardid2, @cardid3, @cardid4, @cardid5);";
+
+            NpgsqlCommand cmd = new NpgsqlCommand(sql, connection);
+            cmd.Parameters.AddWithValue("packageid", package.Id);
+            cmd.Parameters.AddWithValue("cardid1", package.Cards[0].Id);
+            cmd.Parameters.AddWithValue("cardid2", package.Cards[1].Id);
+            cmd.Parameters.AddWithValue("cardid3", package.Cards[2].Id);
+            cmd.Parameters.AddWithValue("cardid4", package.Cards[3].Id);
+            cmd.Parameters.AddWithValue("cardid5", package.Cards[4].Id);
             cmd.ExecuteNonQuery();
         }
     }

@@ -35,11 +35,12 @@ namespace MTCG {
         }
         private static void RegisterRoutes(Router router, MTCGManager mtcgManager) {
             // public routes
-            router.AddRoute(HttpMethod.Post, "/users", (r, p) => new RegisterCommand(mtcgManager, getAttribute(r.Payload, "username"), getAttribute(r.Payload, "password")));
-            router.AddRoute(HttpMethod.Post, "/sessions", (r, p) => new LoginCommand(mtcgManager, getAttribute(r.Payload, "username"), getAttribute(r.Payload, "password")));
+            router.AddRoute(HttpMethod.Post, "/users", (r, p) => new RegisterCommand(mtcgManager, getAttribute(r.Payload, "Username"), getAttribute(r.Payload, "Password")));
+            router.AddRoute(HttpMethod.Post, "/sessions", (r, p) => new LoginCommand(mtcgManager, getAttribute(r.Payload, "Username"), getAttribute(r.Payload, "Password")));
 
             // protected routes
             router.AddProtectedRoute(HttpMethod.Post, "/packages", (r, p) => new AddPackageCommand(mtcgManager, r.Payload));
+            router.AddProtectedRoute(HttpMethod.Post, "/transactions/packages", (r, p) => new GetPackageCommand(mtcgManager));
             router.AddProtectedRoute(HttpMethod.Get, "/cards{id}", (r, p) => new GetStackCommand(mtcgManager, p["id"]));
             router.AddProtectedRoute(HttpMethod.Get, "/deck{id}", (r, p) => new GetDeckCommand(mtcgManager, p["id"]));
         }
