@@ -92,8 +92,7 @@ namespace MTCG {
             cmd.ExecuteNonQuery();
         }
 
-        public static List<Tuple<Card, bool, Guid>> SelectAllCards()
-        {
+        public static List<Tuple<Card, bool, Guid>> SelectAllCards() {
             var sql = "select cardid, name, damage, ismonster, indeck, userid" +
             " from cards;";
 
@@ -118,8 +117,7 @@ namespace MTCG {
             return cards;
         }
 
-        public static void InsertCard(Card card)
-        {
+        public static void InsertCard(Card card) {
             var sql = "insert into cards (cardid, name, damage, ismonster, indeck, userid)" +
            " values(@cardid, @name, @damage, @ismonster, @indeck, @userid);";
 

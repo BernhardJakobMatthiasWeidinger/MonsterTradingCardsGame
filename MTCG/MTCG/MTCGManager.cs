@@ -9,9 +9,11 @@ using System.Threading.Tasks;
 namespace MTCG {
     public class MTCGManager {
         private readonly DBUserRepository dBUserRepository;
+        private readonly DBCardRepository dBCardRepository;
 
-        public MTCGManager(DBUserRepository dBUserRepository) {
+        public MTCGManager(DBUserRepository dBUserRepository, DBCardRepository dBCardRepository) {
             this.dBUserRepository = dBUserRepository;
+            this.dBCardRepository = dBCardRepository;
         }
 
         public User LoginUser(string username, string password) {
@@ -20,6 +22,14 @@ namespace MTCG {
         public bool RegisterUser(string username, string password) {
             User user = new User(Guid.NewGuid(), username, password);
             return dBUserRepository.InsertUser(user);
+        }
+
+        public List<Card> GetStack(Guid userId) {
+            return dBCardRepository.GetStack(userId);
+        }
+
+        public List<Card> GetDeck(Guid userId) {
+            return dBCardRepository.GetDeck(userId);
         }
     }
 }

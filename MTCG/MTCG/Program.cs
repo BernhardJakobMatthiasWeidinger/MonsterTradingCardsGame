@@ -18,7 +18,8 @@ namespace MTCG {
         static void Main(string[] args) {
             if (DBConnection.Connect()) {
                 DBUserRepository userRepository = new DBUserRepository();
-                MTCGManager mtcgManager = new MTCGManager(userRepository);
+                DBCardRepository cardRepository = new DBCardRepository();
+                MTCGManager mtcgManager = new MTCGManager(userRepository, cardRepository);
 
                 var identityProvider = new MTCGIdentityProvider(userRepository);
                 var routeParser = new IdRouteParser();
@@ -39,6 +40,8 @@ namespace MTCG {
 
             // protected routes
             router.AddProtectedRoute(HttpMethod.Post, "/packages", (r, p) => new AddPackageCommand(mtcgManager, r.Payload));
+            router.AddProtectedRoute(HttpMethod.Get, "/cards{id}", (r, p) => new GetStackCommand(mtcgManager, p["id"]));
+            router.AddProtectedRoute(HttpMethod.Get, "/deck{id}", (r, p) => new GetDeckCommand(mtcgManager, p["id"]));
         }
 
         private static string getAttribute(string json, string attribute) {

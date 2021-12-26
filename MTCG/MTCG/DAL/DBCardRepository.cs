@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 namespace MTCG.DAL {
     public class DBCardRepository {
         private readonly List<Tuple<Card, bool, Guid>> cards = new List<Tuple<Card, bool, Guid>>();
-        private readonly List<Card> packages = new List<Card>();
 
         public DBCardRepository() {
             cards = DBConnection.SelectAllCards();
@@ -30,6 +29,10 @@ namespace MTCG.DAL {
             }
 
             return deck;
+        }
+
+        public Card GetCardById(Guid cardId) {
+            return cards.FirstOrDefault(t => t.Item1.Id == cardId).Item1;
         }
     }
 }
