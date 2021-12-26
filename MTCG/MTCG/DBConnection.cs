@@ -132,14 +132,14 @@ namespace MTCG {
             cmd.ExecuteNonQuery();
         }
 
-        public static void UpdateCard(Card card, bool inDeck, Guid userId) {
+        public static void UpdateCard(Guid cardId, bool inDeck, Guid userId) {
             var sql = "UPDATE cards SET " +
                 "indeck = @indeck, " +
                 "userid = @userid " +
                 "WHERE cardid = @cardid; ";
 
             NpgsqlCommand cmd = new NpgsqlCommand(sql, connection);
-            cmd.Parameters.AddWithValue("cardid", card.Id);
+            cmd.Parameters.AddWithValue("cardid", cardId.ToString());
             cmd.Parameters.AddWithValue("indeck", inDeck);
             cmd.Parameters.AddWithValue("userid", userId);
             cmd.ExecuteNonQuery();
@@ -178,6 +178,14 @@ namespace MTCG {
             cmd.Parameters.AddWithValue("cardid3", package.Cards[2].Id);
             cmd.Parameters.AddWithValue("cardid4", package.Cards[3].Id);
             cmd.Parameters.AddWithValue("cardid5", package.Cards[4].Id);
+            cmd.ExecuteNonQuery();
+        }
+
+        public static void DeletePackage(Package package) {
+            var sql = "delete from packages where packageid = @packageid;";
+
+            NpgsqlCommand cmd = new NpgsqlCommand(sql, connection);
+            cmd.Parameters.AddWithValue("packageid", package.Id.ToString());
             cmd.ExecuteNonQuery();
         }
     }

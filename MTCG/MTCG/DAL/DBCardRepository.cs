@@ -58,11 +58,14 @@ namespace MTCG.DAL {
             Package package = new Package(Guid.NewGuid(), packageCards);
             packages.Add(package);
 
+            foreach (Card c in packageCards) {
+                cards.Add(new Tuple<Card, bool, Guid?>(c, false, null));
+            }
+
             return package;
         }
 
         public bool AcquirePackage(User user) {
-            
             if (packages.Count > 0) {
                 Package package = packages[0];
 
@@ -72,6 +75,7 @@ namespace MTCG.DAL {
                     return false;
                 }
 
+                DBConnection.DeletePackage(package);
                 packages.Remove(package);
                 return true;
             } else {
@@ -97,8 +101,19 @@ namespace MTCG.DAL {
             return deck;
         }
 
-        public Card GetCardById(Guid cardId) {
-            return cards.FirstOrDefault(t => t.Item1.Id == cardId).Item1;
+        public void ConfigureDeck(User user, List<Guid> cardIds) {
+            foreach (Guid id in cardIds) {
+                if (cards.Any(t => t.Item1.Id == id)) {
+                    if (!cards.Any(t => t.Item3 == user.Id || t.Item3 == null)) {
+                        throw new ArgumentException("Card not available.");
+                    }
+                } else {
+                    throw new ArgumentException("Card not found.");
+                }
+            }
+
+            cardIds.ForEach(c => DBConnection.UpdateCard(c, true, user.Id));
+            user.ConfigureDeck(cardIds);
         }
     }
 }

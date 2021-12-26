@@ -43,6 +43,7 @@ namespace MTCG {
             router.AddProtectedRoute(HttpMethod.Post, "/transactions/packages", (r, p) => new GetPackageCommand(mtcgManager));
             router.AddProtectedRoute(HttpMethod.Get, "/cards{id}", (r, p) => new GetStackCommand(mtcgManager, p["id"]));
             router.AddProtectedRoute(HttpMethod.Get, "/deck{id}", (r, p) => new GetDeckCommand(mtcgManager, p["id"]));
+            router.AddProtectedRoute(HttpMethod.Put, "/deck", (r, p) => new ConfigureDeckCommand(mtcgManager, r.Payload));
         }
 
         private static string getAttribute(string json, string attribute) {
