@@ -11,6 +11,7 @@ namespace MTCG.DAL {
 
         public DBUserRepository() {
             users = DBConnection.SelectAllUsers();
+            AssignCardsAtStart();
         }
         public User GetUserByAuthToken(string authToken) {
             return users.FirstOrDefault(user => user.Username + "-mtcgToken" == authToken);
@@ -63,9 +64,59 @@ namespace MTCG.DAL {
         public User GetUserById(Guid id) {
             return users.FirstOrDefault(u => u.Id == id);
         }
+        public Card GetCardById(Guid id) {
+            Card card = null;
+            foreach (User user in users) {
+                card = user.Stack.FirstOrDefault(c => c.Id == id);
+                if (card != null) {
+                    break;
+                }
+            }
+            return card;
+        }
 
         public List<User> GetAllUsers() {
             return users;
+        }
+
+        public void AssignCardsAtStart() {
+            List<Tuple<Card, bool, Guid?>> cards = DBConnection.SelectAllCards();
+
+            foreach (User user in users) {
+                foreach (var card in cards) {
+                    if (card.Item3 == user.Id) {
+                        user.Stack.Add(card.Item1);
+
+                        if (card.Item2 == true) {
+                            user.Deck.Add(card.Item1);
+                        }
+                    }
+                }
+            }
+        }
+        public List<Card> GetStack(Guid userId) {
+            return users.FirstOrDefault(u => u.Id == userId).Stack;
+        }
+
+        public List<Card> GetDeck(Guid userId) {
+            return users.FirstOrDefault(u => u.Id == userId).Deck;
+        }
+
+        public void ConfigureDeck(User user, List<Guid> cardIds) {
+            if (cardIds.Count != 4) {
+                throw new ArgumentException("Insufficent amount of cards");
+            }
+
+            foreach (Guid id in cardIds) {
+                if (!user.Stack.Any(c => c.Id == id)) {
+                    throw new ArgumentException("Card not found in stack");
+                }
+            }
+
+            user.Deck.ForEach(c => DBConnection.UpdateCard(c.Id, false, user.Id));
+            user.ConfigureDeck(cardIds);
+            user.Deck.ForEach(c => DBConnection.UpdateCard(c.Id, true, user.Id));
+            Console.WriteLine("");
         }
     }
 }

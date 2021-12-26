@@ -77,13 +77,13 @@ namespace MTCG {
                 "gamesWon = @gamesWon, " +
                 "gamesLost = @gamesLost, " +
                 "elo = @elo " +
-                "WHERE userid = @userid; ";
+                "WHERE username = @username; ";
 
             using var cmd = new NpgsqlCommand(sql, connection);
-            cmd.Parameters.AddWithValue("userid", user.Id);
-            cmd.Parameters.AddWithValue("name", user.Name);
-            cmd.Parameters.AddWithValue("bio", user.Bio);
-            cmd.Parameters.AddWithValue("image", user.Image);
+            cmd.Parameters.AddWithValue("username", user.Username);
+            cmd.Parameters.AddWithValue("name", user.Name ?? "");
+            cmd.Parameters.AddWithValue("bio", user.Bio ?? "");
+            cmd.Parameters.AddWithValue("image", user.Image ?? "");
             cmd.Parameters.AddWithValue("coins", user.Coins);
             cmd.Parameters.AddWithValue("gamesPlayed", user.GamesPlayed);
             cmd.Parameters.AddWithValue("gamesWon", user.GamesWon);
@@ -105,12 +105,7 @@ namespace MTCG {
             List<Tuple<Card, bool, Guid?>> cards = new List<Tuple<Card, bool, Guid?>>();
             // Output rows
             while (dr.Read()) {
-                Card card;
-                if (Boolean.Parse(dr[3].ToString()) == false) {
-                    card = new SpellCard(Guid.Parse(dr[0].ToString()), dr[1].ToString(), Double.Parse(dr[2].ToString()));
-                } else {
-                    card = new MonsterCard(Guid.Parse(dr[0].ToString()), dr[1].ToString(), Double.Parse(dr[2].ToString()));
-                }
+                Card card = GetCard(Guid.Parse(dr[0].ToString()), dr[1].ToString(), Double.Parse(dr[2].ToString()), Boolean.Parse(dr[3].ToString()));
                 cards.Add(new Tuple<Card, bool, Guid?>(card, Boolean.Parse(dr[4].ToString()), 
                     !String.IsNullOrWhiteSpace(dr[5].ToString()) ? Guid.Parse(dr[5].ToString()) : null));
             }
@@ -145,19 +140,34 @@ namespace MTCG {
             cmd.ExecuteNonQuery();
         }
 
-        public static List<List<Guid>> SelectAllPackages() {
-            var sql = "select packageid, cardid1, cardid2, cardid3, cardid4, cardid5" +
-            " from packages;";
+        public static List<Package> SelectAllPackages() {
+            var sql = "select packageid, " +
+                "c1.cardid, c1.name, c1.damage, c1.ismonster, " +
+                "c2.cardid, c2.name, c2.damage, c2.ismonster, " +
+                "c3.cardid, c3.name, c3.damage, c3.ismonster, " +
+                "c4.cardid, c4.name, c4.damage, c4.ismonster, " +
+                "c5.cardid, c5.name, c5.damage, c5.ismonster " +
+                "from packages p " +
+                "join cards c1 on p.cardid1 = c1.cardid " +
+                "join cards c2 on p.cardid2 = c2.cardid " +
+                "join cards c3 on p.cardid3 = c3.cardid " +
+                "join cards c4 on p.cardid4 = c4.cardid " +
+                "join cards c5 on p.cardid5 = c5.cardid; ";
 
             NpgsqlCommand cmd = new NpgsqlCommand(sql, connection);
             NpgsqlDataReader dr = cmd.ExecuteReader();
 
             //Card, isInDeck, UserId
-            List<List<Guid>> packages = new List<List<Guid>>();
+            List<Package> packages = new List<Package>();
             // Output rows
             while (dr.Read()) {
-                List<Guid> package = new List<Guid> { Guid.Parse(dr[0].ToString()), Guid.Parse(dr[1].ToString()), Guid.Parse(dr[2].ToString()),
-                Guid.Parse(dr[3].ToString()), Guid.Parse(dr[4].ToString()), Guid.Parse(dr[5].ToString())};
+                List<Card> cards = new List<Card>();
+                for (int i=1; i<=20; i+=4) {
+                    Card card = GetCard(Guid.Parse(dr[i].ToString()), dr[i+1].ToString(), Double.Parse(dr[i+2].ToString()), Boolean.Parse(dr[i+3].ToString()));
+                    cards.Add(card);
+                }
+
+                Package package = new Package(Guid.Parse(dr[0].ToString()), cards);
                 packages.Add(package);
             }
             dr.DisposeAsync();
@@ -223,6 +233,16 @@ namespace MTCG {
             cmd.Parameters.AddWithValue("userid", trade.Provider.Id);
             cmd.Parameters.AddWithValue("cardid", trade.CardToTrade.Id);
             cmd.ExecuteNonQuery();
+        }
+
+        private static Card GetCard(Guid id, string name, double damage, bool isMonster) {
+            Card card;
+            if (isMonster) {
+                card = new MonsterCard(id, name, damage);
+            } else {
+                card = new SpellCard(id, name, damage);
+            }
+            return card;
         }
     }
 }

@@ -11,15 +11,14 @@ using System.Threading.Tasks;
 namespace MTCG {
     public class MTCGManager {
         private readonly DBUserRepository dBUserRepository;
-        private readonly DBCardRepository dBCardRepository;
+        private readonly DBPackageRepository dBCardRepository;
         private readonly DBTradeRepository dBTradeRepository;
 
-        public MTCGManager(DBUserRepository dBUserRepository, DBCardRepository dBCardRepository, DBTradeRepository dBTradeRepository) {
+        public MTCGManager(DBUserRepository dBUserRepository, DBPackageRepository dBCardRepository, DBTradeRepository dBTradeRepository) {
             this.dBUserRepository = dBUserRepository;
             this.dBCardRepository = dBCardRepository;
             this.dBTradeRepository = dBTradeRepository;
 
-            AssignCardsAtStart(dBUserRepository.GetAllUsers());
             GetTradesFromDB();
         }
 
@@ -40,15 +39,15 @@ namespace MTCG {
         }
 
         public List<Card> GetStack(Guid userId) {
-            return dBCardRepository.GetStack(userId);
+            return dBUserRepository.GetStack(userId);
         }
 
         public List<Card> GetDeck(Guid userId) {
-            return dBCardRepository.GetDeck(userId);
+            return dBUserRepository.GetDeck(userId);
         }
 
         public void ConfigureDeck(User user, List<Guid> cardIds) {
-            dBCardRepository.ConfigureDeck(user, cardIds);
+            dBUserRepository.ConfigureDeck(user, cardIds);
         }
 
         public string GetScoreboard(bool json) {
@@ -59,7 +58,7 @@ namespace MTCG {
             List<List<string>> ts = DBConnection.SelectAllTrades();
 
             foreach (List<string> trade in ts) {
-                Card cardToTrade = dBCardRepository.GetCardById(Guid.Parse(trade[5]));
+                Card cardToTrade = dBUserRepository.GetCardById(Guid.Parse(trade[5]));
                 User provider = dBUserRepository.GetUserById(Guid.Parse(trade[4]));
                 CardType cardType = (CardType)Enum.Parse(typeof(CardType), trade[1]);
                 ElementType? elementType = !String.IsNullOrWhiteSpace(trade[2]) ? (ElementType)Enum.Parse(typeof(ElementType), trade[2]) : null;
@@ -71,12 +70,6 @@ namespace MTCG {
             }
         }
 
-        private void AssignCardsAtStart(List<User> users) {
-            foreach (User u in users) {
-                dBCardRepository.AssignCardsAtStart(u);
-            }
-        }
-
         public string GetTrades(User user, bool json) {
             return dBTradeRepository.GetTrades(user, json);
         }
@@ -85,7 +78,7 @@ namespace MTCG {
             JObject json = (JObject)JsonConvert.DeserializeObject(payload);
 
             Guid id = Guid.Parse(json["Id"].ToString());
-            Card cardToTrade = dBCardRepository.GetCardById(Guid.Parse(json["CardToTrade"].ToString()));
+            Card cardToTrade = dBUserRepository.GetCardById(Guid.Parse(json["CardToTrade"].ToString()));
             ElementType? elementType = null;
             if (json["elementType"] != null) {
                 elementType = (ElementType)Enum.Parse(typeof(ElementType), json["elementType"].ToString());

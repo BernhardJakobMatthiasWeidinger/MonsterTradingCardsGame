@@ -29,6 +29,7 @@ namespace MTCG.RouteCommands.Users {
                     JObject jObject = (JObject)JsonConvert.DeserializeObject(payload);
 
                     User.SetUserData(jObject["Name"].ToString(), jObject["Bio"].ToString(), jObject["Image"].ToString());
+                    DBConnection.UpdateUser(User);
                     response.StatusCode = StatusCode.Ok;
                 } else {
                     response.StatusCode = StatusCode.Unauthorized;

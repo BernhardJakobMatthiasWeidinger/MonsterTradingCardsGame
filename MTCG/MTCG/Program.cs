@@ -19,7 +19,7 @@ namespace MTCG {
         static void Main(string[] args) {
             if (DBConnection.Connect()) {
                 DBUserRepository userRepository = new DBUserRepository();
-                DBCardRepository cardRepository = new DBCardRepository();
+                DBPackageRepository cardRepository = new DBPackageRepository();
                 DBTradeRepository tradeRepository = new DBTradeRepository();
                 MTCGManager mtcgManager = new MTCGManager(userRepository, cardRepository, tradeRepository);
 

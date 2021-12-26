@@ -33,10 +33,11 @@ namespace MTCG.RouteCommands.Cards {
                 response.StatusCode = StatusCode.Ok;
             } catch (ArgumentException) {
                 response.StatusCode = StatusCode.Forbidden;
+                response.Payload = User.DeckToString(true);
             } catch (FormatException) {
                 response.StatusCode = StatusCode.BadRequest;
+                response.Payload = User.DeckToString(true);
             }
-            response.Payload = User.DeckToString(true);
 
             return response;
         }
