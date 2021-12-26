@@ -7,11 +7,12 @@ namespace MTCG.Models {
         public Guid Id { get; private set; }
         public List<Card> Cards { get; private set; }
 
-        public Package(List<Card> cards) {
+        public Package(Guid id, List<Card> cards) {
             if (cards.Count != 5) {
                 throw new ArgumentException($"A package should be provided with 5 cards, " +
                     $"cards given: {cards.Count}");
             } else {
+                this.Id = id;
                 this.Cards = cards;
             }
         }

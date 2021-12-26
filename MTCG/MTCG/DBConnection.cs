@@ -145,6 +145,24 @@ namespace MTCG {
             cmd.ExecuteNonQuery();
         }
 
+        public static List<List<Guid>> SelectAllPackages() {
+            var sql = "select packageid, cardid1, cardid2, cardid3, cardid4, cardid5" +
+            " from packages;";
+
+            NpgsqlCommand cmd = new NpgsqlCommand(sql, connection);
+            NpgsqlDataReader dr = cmd.ExecuteReader();
+
+            //Card, isInDeck, UserId
+            List<List<Guid>> packages = new List<List<Guid>>();
+            // Output rows
+            while (dr.Read()) {
+                List<Guid> package = new List<Guid> { Guid.Parse(dr[0].ToString()), Guid.Parse(dr[1].ToString()), Guid.Parse(dr[2].ToString()),
+                Guid.Parse(dr[3].ToString()), Guid.Parse(dr[4].ToString()), Guid.Parse(dr[5].ToString())};
+                packages.Add(package);
+            }
+            dr.DisposeAsync();
+            return packages;
+        }
         public static void InsertPackage(Package package) {
             foreach (Card card in package.Cards) {
                 InsertCard(card);

@@ -16,7 +16,15 @@ namespace MTCG.RouteCommands.Cards {
         }
 
         public override Response Execute() {
-            return new Response();
+            Response response = new Response();
+
+            if (mTCGManager.AcquirePackage(User)) {
+                response.StatusCode = StatusCode.Ok;
+            } else {
+                response.StatusCode = StatusCode.Forbidden;
+            }
+
+            return response;
         }
     }
 }

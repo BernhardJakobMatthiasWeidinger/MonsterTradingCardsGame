@@ -77,14 +77,14 @@ namespace MTCG {
             Console.WriteLine("\nCreate Packages:");
             try
             {
-                Package p0 = new Package(new List<Card> { m1, m2, s1, s2 });
+                Package p0 = new Package(Guid.NewGuid(), new List<Card> { m1, m2, s1, s2 });
             }
             catch (ArgumentException e)
             {
                 Console.WriteLine(e.Message);
             }
-            Package p1 = new Package(new List<Card> { m1, m2, m3, s1, s2 });
-            Package p2 = new Package(new List<Card> { m4, m5, s3, s4, s5 });
+            Package p1 = new Package(Guid.NewGuid(), new List<Card> { m1, m2, m3, s1, s2 });
+            Package p2 = new Package(Guid.NewGuid(), new List<Card> { m4, m5, s3, s4, s5 });
 
             //Create user1
             Console.WriteLine("\nCreate User 1 and add cards to stack and deck:");

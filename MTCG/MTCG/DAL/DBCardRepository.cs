@@ -14,6 +14,20 @@ namespace MTCG.DAL {
 
         public DBCardRepository() {
             cards = DBConnection.SelectAllCards();
+            SelectAllPackages();
+        }
+
+        private void SelectAllPackages() {
+            List<List<Guid>> ps = DBConnection.SelectAllPackages();
+
+            foreach (List<Guid> package in ps) {
+                List<Card> cs = new List<Card>();
+                for (int i=1; i <=5; ++i) {
+                    cs.Add(cards.Find(t => t.Item1.Id == package[i]).Item1);
+                }
+
+                packages.Add(new Package(package[0], cs));
+            }
         }
 
         public Package CreatePackage(string username, string payload) {
@@ -41,15 +55,28 @@ namespace MTCG.DAL {
                 }
             }
 
-            foreach (Card card in packageCards) {
-                cards.Add(new Tuple<Card, bool, Guid?>(null, false, null));
-            }
-
-            Package package = new Package(packageCards);
+            Package package = new Package(Guid.NewGuid(), packageCards);
             packages.Add(package);
 
             return package;
+        }
 
+        public bool AcquirePackage(User user) {
+            
+            if (packages.Count > 0) {
+                Package package = packages[0];
+
+                try {
+                    package.AquirePackage(user);
+                } catch (ArgumentException) {
+                    return false;
+                }
+
+                packages.Remove(package);
+                return true;
+            } else {
+                return false;
+            } 
         }
 
         public List<Card> GetStack(Guid userId) {

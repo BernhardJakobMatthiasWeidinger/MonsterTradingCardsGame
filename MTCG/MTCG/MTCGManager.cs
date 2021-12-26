@@ -30,8 +30,8 @@ namespace MTCG {
             return dBCardRepository.CreatePackage(username, payload);
         }
 
-        public List<Card> AcquirePackage(Guid userId) {
-            return null; // dBCardRepository.AcquirePackage(username, payload);
+        public bool AcquirePackage(User user) {
+            return dBCardRepository.AcquirePackage(user);
         }
 
         public List<Card> GetStack(Guid userId) {

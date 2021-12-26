@@ -62,3 +62,5 @@ CREATE TABLE friends (
     foreign key(userId1) references users(userId),
     foreign key(userId2) references users(userId)
 );
+
+insert into users (userId, username, password, name, bio, image, coins, gamesPlayed, gamesWon, gamesLost, elo) values ('00000000-0000-0000-0000-000000000000', 'admin', 'supersecretadmin1', 'Adminovic', 'Admin of the MTCG', '', 100, 0, 0, 0, 10000);
