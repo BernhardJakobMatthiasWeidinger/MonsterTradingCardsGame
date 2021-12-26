@@ -9,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MTCG.RouteCommands.Cards {
+namespace MTCG.RouteCommands.Users {
     public class ConfigureDeckCommand : ProtectedRouteCommand {
         private readonly MTCGManager mTCGManager;
         private readonly string payload;

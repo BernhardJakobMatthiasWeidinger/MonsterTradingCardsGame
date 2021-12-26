@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
+
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -10,9 +12,8 @@ using SWE1HttpServer.Core.Server;
 using MTCG.Models;
 using MTCG.DAL;
 using MTCG.RouteCommands.Users;
-using System.Net;
-using MTCG.RouteCommands.Cards;
 using MTCG.RouteCommands.Trades;
+using MTCG.RouteCommands.Packages;
 
 namespace MTCG {
     class Program {
