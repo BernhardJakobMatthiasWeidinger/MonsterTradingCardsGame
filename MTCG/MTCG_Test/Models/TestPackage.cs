@@ -29,7 +29,7 @@ namespace MTCG.Test.Models {
         public void testConstructor_throwsNoException() {
             //arrange
             //act
-            Package p1 = new Package(new List<Card> { m1, m2, m3, s1, s2 });
+            Package p1 = new Package(Guid.NewGuid(), new List<Card> { m1, m2, m3, s1, s2 });
 
             //assert
             Assert.AreEqual(5, p1.Cards.Count);
@@ -39,7 +39,7 @@ namespace MTCG.Test.Models {
         public void testConstructor_throwsExceptionTooFewCards() {
             //arrange
             //act & assert
-            ArgumentException ex1 = Assert.Throws<ArgumentException>(delegate { new Package(new List<Card> { m1, m2, m3, s1 }); });
+            ArgumentException ex1 = Assert.Throws<ArgumentException>(delegate { new Package(Guid.NewGuid(), new List<Card> { m1, m2, m3, s1 }); });
             Assert.That(ex1.Message, Is.EqualTo("A package should be provided with 5 cards, cards given: 4"));
         }
 
@@ -47,7 +47,7 @@ namespace MTCG.Test.Models {
         public void testConstructor_throwsExceptionTooManyCards() {
             //arrange
             //act & assert
-            ArgumentException ex1 = Assert.Throws<ArgumentException>(delegate { new Package(new List<Card> { m1, m2, m3, s1, s2, s3 }); });
+            ArgumentException ex1 = Assert.Throws<ArgumentException>(delegate { new Package(Guid.NewGuid(), new List<Card> { m1, m2, m3, s1, s2, s3 }); });
             Assert.That(ex1.Message, Is.EqualTo("A package should be provided with 5 cards, cards given: 6"));
         }
 
@@ -56,7 +56,7 @@ namespace MTCG.Test.Models {
         public void testAcquirePackage() {
             //arrange
             User u1 = new User(Guid.NewGuid(), "maxi", "musterpassword1");
-            Package p1 = new Package(new List<Card> { m1, m2, m3, s1, s2 });
+            Package p1 = new Package(Guid.NewGuid(), new List<Card> { m1, m2, m3, s1, s2 });
 
             //act
             p1.AquirePackage(u1);
@@ -72,7 +72,7 @@ namespace MTCG.Test.Models {
             User u1 = new User(Guid.NewGuid(), "maxi", "musterpassword1");
             u1.Coins = 3;
 
-            Package p1 = new Package(new List<Card> { m1, m2, m3, s1, s2 });
+            Package p1 = new Package(Guid.NewGuid(), new List<Card> { m1, m2, m3, s1, s2 });
 
             //act & assert
             ArgumentException ex = Assert.Throws<ArgumentException>(delegate { p1.AquirePackage(u1); });

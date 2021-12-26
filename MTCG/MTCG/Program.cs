@@ -12,6 +12,7 @@ using MTCG.DAL;
 using MTCG.RouteCommands.Users;
 using System.Net;
 using MTCG.RouteCommands.Cards;
+using MTCG.RouteCommands.Trades;
 
 namespace MTCG {
     class Program {
@@ -19,7 +20,8 @@ namespace MTCG {
             if (DBConnection.Connect()) {
                 DBUserRepository userRepository = new DBUserRepository();
                 DBCardRepository cardRepository = new DBCardRepository();
-                MTCGManager mtcgManager = new MTCGManager(userRepository, cardRepository);
+                DBTradeRepository tradeRepository = new DBTradeRepository();
+                MTCGManager mtcgManager = new MTCGManager(userRepository, cardRepository, tradeRepository);
 
                 var identityProvider = new MTCGIdentityProvider(userRepository);
                 var routeParser = new IdRouteParser();
@@ -48,6 +50,7 @@ namespace MTCG {
             router.AddProtectedRoute(HttpMethod.Put, "/users/{id}", (r, p) => new SetUserDataCommand(mtcgManager, p["id"], r.Payload));
             router.AddProtectedRoute(HttpMethod.Get, "/stats{id}", (r, p) => new GetUserStatsCommand(mtcgManager, p["id"]));
             router.AddProtectedRoute(HttpMethod.Get, "/score{id}", (r, p) => new GetScoreboardCommand(mtcgManager, p["id"]));
+            router.AddProtectedRoute(HttpMethod.Get, "/tradings{id}", (r, p) => new GetTradesCommand(mtcgManager, p["id"]));
         }
 
         private static string getAttribute(string json, string attribute) {

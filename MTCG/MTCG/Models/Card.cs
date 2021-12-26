@@ -31,7 +31,7 @@ namespace MTCG.Models {
         }
 
         public override string ToString() {
-            return $"id:{this.Id},name:{this.Name},damage:{this.Damage},elementType:{this.ElementType}";
+            return $"CardId:{this.Id},Name:{this.Name},Damage:{this.Damage},ElementType:{this.ElementType}";
         }
     }
 

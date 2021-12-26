@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -6,7 +7,7 @@ namespace MTCG.Models {
     public class Trade {
         public Guid Id { get; private set; }
         public Card CardToTrade { get; private set; }
-        public User U1 { get; private set; }
+        public User Provider { get; private set; }
         public CardType CardType { get; private set; }
         public ElementType ElementType { get; private set; }
         public double MinimumDamage { get; private set; }
@@ -14,7 +15,7 @@ namespace MTCG.Models {
         public Trade(Guid id, Card cardToTrade, User user, CardType cardType, 
             ElementType elementType, double minimumDamage) {
             this.Id = id;
-            this.U1 = user;
+            this.Provider = user;
             this.CardType = cardType;
             this.ElementType = elementType;
             this.MinimumDamage = minimumDamage;
@@ -28,8 +29,12 @@ namespace MTCG.Models {
             }
         }
 
+        public override string ToString() {
+            return $"TradeId:{Id},CardToTrade:{CardToTrade},Provider:{Provider},Type:{CardType},ElementType:{ElementType},MinimumDamage:{MinimumDamage}"; ;
+        }
+
         public void TradeCard(User u2, Card cardForTrade) {
-            if (U1 == u2) {
+            if (Provider == u2) {
                 throw new ArgumentException("Cannot trade card with yourself.");
             } else if (u2.Deck.Contains(cardForTrade)) {
                 throw new ArgumentException("Cannot trade card if it's in the deck.");
@@ -46,11 +51,19 @@ namespace MTCG.Models {
 
             //trade provided card
             u2.Stack.Remove(cardForTrade);
-            U1.Stack.Add(cardForTrade);
+            Provider.Stack.Add(cardForTrade);
 
             //trade card of Trade
-            U1.Stack.Remove(CardToTrade);
+            Provider.Stack.Remove(CardToTrade);
             u2.Stack.Add(CardToTrade);
+        }
+
+        public string TradeToString(bool json) {
+            if (json) {
+                return JsonConvert.SerializeObject(this);
+            } else {
+                return ToString();
+            }
         }
     }
 }

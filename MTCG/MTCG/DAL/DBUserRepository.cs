@@ -59,5 +59,9 @@ namespace MTCG.DAL {
         private User GetUserByUsername(string username) {
             return users.FirstOrDefault(u => u.Username == username);
         }
+
+        public User GetUserById(Guid id) {
+            return users.FirstOrDefault(u => u.Id == id);
+        }
     }
 }

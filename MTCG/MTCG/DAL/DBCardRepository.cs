@@ -11,6 +11,7 @@ namespace MTCG.DAL {
     public class DBCardRepository {
         private readonly List<Tuple<Card, bool, Guid?>> cards = new List<Tuple<Card, bool, Guid?>>();
         private readonly List<Package> packages = new List<Package>();
+        private readonly List<Trade> trades = new List<Trade>();
 
         public DBCardRepository() {
             cards = DBConnection.SelectAllCards();
@@ -22,7 +23,7 @@ namespace MTCG.DAL {
 
             foreach (List<Guid> package in ps) {
                 List<Card> cs = new List<Card>();
-                for (int i=1; i <=5; ++i) {
+                for (int i = 1; i <= 5; ++i) {
                     cs.Add(cards.Find(t => t.Item1.Id == package[i]).Item1);
                 }
 
@@ -80,7 +81,7 @@ namespace MTCG.DAL {
                 return true;
             } else {
                 return false;
-            } 
+            }
         }
 
         public List<Card> GetStack(Guid userId) {
@@ -114,6 +115,10 @@ namespace MTCG.DAL {
 
             cardIds.ForEach(c => DBConnection.UpdateCard(c, true, user.Id));
             user.ConfigureDeck(cardIds);
+        }
+
+        public Card GetCardById(Guid id) {
+            return cards.FirstOrDefault(t => t.Item1.Id == id).Item1;
         }
     }
 }

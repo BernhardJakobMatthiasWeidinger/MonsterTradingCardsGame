@@ -163,6 +163,7 @@ namespace MTCG {
             dr.DisposeAsync();
             return packages;
         }
+
         public static void InsertPackage(Package package) {
             foreach (Card card in package.Cards) {
                 InsertCard(card);
@@ -187,6 +188,27 @@ namespace MTCG {
             NpgsqlCommand cmd = new NpgsqlCommand(sql, connection);
             cmd.Parameters.AddWithValue("packageid", package.Id.ToString());
             cmd.ExecuteNonQuery();
+        }
+
+        public static List<List<string>> SelectAllTrades() {
+            var sql = "select tradeid, cardtype, elementtype, minimumdamage, userid, cardid" +
+            " from trades;";
+
+            NpgsqlCommand cmd = new NpgsqlCommand(sql, connection);
+            NpgsqlDataReader dr = cmd.ExecuteReader();
+
+            List<List<string>> trades = new List<List<string>>();
+
+            while (dr.Read()) {
+                List<string> trade = new List<string>();
+                for (int i=0; i <=5; ++i) {
+                    trade.Add(dr[i].ToString());
+                }
+                trades.Add(trade);
+            }
+            dr.DisposeAsync();
+
+            return trades;
         }
     }
 }
