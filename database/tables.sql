@@ -46,7 +46,6 @@ CREATE TABLE packages (
 CREATE TABLE trades (
     tradeId         varchar(50),
     cardType        varchar(50) not null,
-    elementType     varchar(50),
     minimumDamage   real		not null,
     userId          varchar(50),
     cardId          varchar(50),

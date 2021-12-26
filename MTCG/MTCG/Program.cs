@@ -55,6 +55,8 @@ namespace MTCG {
 
             router.AddProtectedRoute(HttpMethod.Get, "/tradings{id}", (r, p) => new GetTradesCommand(mtcgManager, p["id"]));
             router.AddProtectedRoute(HttpMethod.Post, "/tradings", (r, p) => new AddTradingDealCommand(mtcgManager, r.Payload));
+            router.AddProtectedRoute(HttpMethod.Post, "/tradings/{id}", (r, p) => new TradeCardCommand(mtcgManager, p["id"], r.Payload));
+            router.AddProtectedRoute(HttpMethod.Delete, "/tradings/{id}", (r, p) => new DeleteTradingDealCommand(mtcgManager, p["id"]));
         }
 
         private static string getAttribute(string json, string attribute) {
@@ -130,7 +132,7 @@ namespace MTCG {
             Console.WriteLine("\nCreate Trade:");
             try
             {
-                Trade tfail1 = new Trade(Guid.NewGuid(), s4, u1, CardType.spell, ElementType.fire, 15.0);
+                Trade tfail1 = new Trade(Guid.NewGuid(), s4, u1, CardType.spell, 15.0);
             }
             catch (ArgumentException e)
             {
@@ -138,14 +140,14 @@ namespace MTCG {
             }
             try
             {
-                Trade tfail2 = new Trade(Guid.NewGuid(), s1, u1, CardType.spell, ElementType.fire, 15.0);
+                Trade tfail2 = new Trade(Guid.NewGuid(), s1, u1, CardType.spell, 15.0);
             }
             catch (ArgumentException e)
             {
                 Console.WriteLine(e.Message);
             }
 
-            Trade t1 = new Trade(Guid.NewGuid(), s2, u1, CardType.spell, ElementType.normal, 15.0);
+            Trade t1 = new Trade(Guid.NewGuid(), s2, u1, CardType.spell, 15.0);
 
             //Trade with user2
             Console.WriteLine("\nTrade with user2:");

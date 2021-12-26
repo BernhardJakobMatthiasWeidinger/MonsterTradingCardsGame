@@ -10,15 +10,12 @@ namespace MTCG.Models {
         [JsonIgnore]
         public User Provider { get; private set; }
         public CardType CardType { get; private set; }
-        public ElementType? ElementType { get; private set; }
         public double MinimumDamage { get; private set; }
 
-        public Trade(Guid id, Card cardToTrade, User user, CardType cardType, 
-            ElementType? elementType, double minimumDamage) {
+        public Trade(Guid id, Card cardToTrade, User user, CardType cardType, double minimumDamage) {
             this.Id = id;
             this.Provider = user;
             this.CardType = cardType;
-            this.ElementType = elementType;
             this.MinimumDamage = minimumDamage;
 
             if (user.Deck.Contains(cardToTrade)) {
@@ -31,7 +28,7 @@ namespace MTCG.Models {
         }
 
         public override string ToString() {
-            return $"TradeId:{Id},CardToTrade:{CardToTrade},Type:{CardType},ElementType:{ElementType},MinimumDamage:{MinimumDamage}"; ;
+            return $"TradeId:{Id},CardToTrade:{CardToTrade},Type:{CardType},MinimumDamage:{MinimumDamage}"; ;
         }
 
         public void TradeCard(User u2, Card cardForTrade) {
@@ -44,8 +41,6 @@ namespace MTCG.Models {
             } else if (cardForTrade.GetType().Name == "MonsterCard" && CardType == CardType.spell ||
                 cardForTrade.GetType().Name == "SpellCard" && CardType == CardType.monster) {
                 throw new ArgumentException("Cannot trade card, wrong card type was provided.");
-            } else if (this.ElementType != cardForTrade.ElementType) {
-                throw new ArgumentException("Cannot trade card, wrong element type was provided.");
             } else if (this.MinimumDamage > cardForTrade.Damage) {
                 throw new ArgumentException("Cannot trade card, damage of card is too small.");
             }

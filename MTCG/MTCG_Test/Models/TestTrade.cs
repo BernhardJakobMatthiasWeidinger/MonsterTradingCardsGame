@@ -43,13 +43,12 @@ namespace MTCG.Test.Models {
         public void testConstructor() {
             //arrange
             //act
-            Trade t1 = new Trade(Guid.NewGuid(), m5, u1, CardType.monster, ElementType.water, 20.0);
+            Trade t1 = new Trade(Guid.NewGuid(), m5, u1, CardType.monster, 20.0);
 
             //assert
             Assert.AreEqual(m5, t1.CardToTrade);
             Assert.AreEqual(u1, t1.Provider);
             Assert.AreEqual(CardType.monster, t1.CardType);
-            Assert.AreEqual(ElementType.water, t1.ElementType);
             Assert.AreEqual(20.0, t1.MinimumDamage);
         }
 
@@ -57,7 +56,7 @@ namespace MTCG.Test.Models {
         public void testConstructor_throwsExceptionCardNotInStack() {
             //arrange
             //act & assert
-            ArgumentException ex = Assert.Throws<ArgumentException>(delegate { new Trade(Guid.NewGuid(), m6, u1, CardType.monster, ElementType.water, 20.0); });
+            ArgumentException ex = Assert.Throws<ArgumentException>(delegate { new Trade(Guid.NewGuid(), m6, u1, CardType.monster, 20.0); });
             Assert.That(ex.Message, Is.EqualTo("Cannot trade card if it's not in the stack."));
         }
 
@@ -65,7 +64,7 @@ namespace MTCG.Test.Models {
         public void testConstructor_throwsExceptionCardInDeck() {
             //arrange
             //act & assert
-            ArgumentException ex = Assert.Throws<ArgumentException>(delegate { new Trade(Guid.NewGuid(), m1, u1, CardType.monster, ElementType.water, 20.0); });
+            ArgumentException ex = Assert.Throws<ArgumentException>(delegate { new Trade(Guid.NewGuid(), m1, u1, CardType.monster, 20.0); });
             Assert.That(ex.Message, Is.EqualTo("Cannot trade card if it's in the deck."));
         }
 
@@ -78,7 +77,7 @@ namespace MTCG.Test.Models {
             u1.Stack.Add(m_1);
             u2.Stack.Add(m_2);
 
-            Trade t1 = new Trade(Guid.NewGuid(), m_1, u1, CardType.monster, ElementType.water, 20.0);
+            Trade t1 = new Trade(Guid.NewGuid(), m_1, u1, CardType.monster, 20.0);
 
             //act
             t1.TradeCard(u2, m_2);
@@ -91,7 +90,7 @@ namespace MTCG.Test.Models {
         [Test]
         public void testTradeCard_throwsExceptionSameUser() {
             //arrange
-            Trade t1 = new Trade(Guid.NewGuid(), m5, u1, CardType.monster, ElementType.water, 20.0);
+            Trade t1 = new Trade(Guid.NewGuid(), m5, u1, CardType.monster, 20.0);
 
             //act & assert
             ArgumentException ex = Assert.Throws<ArgumentException>(delegate { t1.TradeCard(u1, m1); });
@@ -101,7 +100,7 @@ namespace MTCG.Test.Models {
         [Test]
         public void testTradeCard_throwsExceptionInDeck() {
             //arrange
-            Trade t1 = new Trade(Guid.NewGuid(), m5, u1, CardType.monster, ElementType.water, 20.0);
+            Trade t1 = new Trade(Guid.NewGuid(), m5, u1, CardType.monster, 20.0);
 
             //act & assert
             ArgumentException ex = Assert.Throws<ArgumentException>(delegate { t1.TradeCard(u2, m6); });
@@ -111,7 +110,7 @@ namespace MTCG.Test.Models {
         [Test]
         public void testTradeCard_throwsExceptionNotInStack() {
             //arrange
-            Trade t1 = new Trade(Guid.NewGuid(), m5, u1, CardType.monster, ElementType.water, 20.0);
+            Trade t1 = new Trade(Guid.NewGuid(), m5, u1, CardType.monster, 20.0);
 
             //act & assert
             ArgumentException ex = Assert.Throws<ArgumentException>(delegate { t1.TradeCard(u2, m1); });
@@ -121,7 +120,7 @@ namespace MTCG.Test.Models {
         [Test]
         public void testTradeCard_throwsExceptionWrongCardType() {
             //arrange
-            Trade t1 = new Trade(Guid.NewGuid(), m5, u1, CardType.monster, ElementType.water, 20.0);
+            Trade t1 = new Trade(Guid.NewGuid(), m5, u1, CardType.monster, 20.0);
             SpellCard s1 = new SpellCard(Guid.NewGuid(), "FireSpell", 30.0);
             u2.Stack.Add(s1);
 
@@ -131,21 +130,9 @@ namespace MTCG.Test.Models {
         }
 
         [Test]
-        public void testTradeCard_throwsExceptionWrongElementType() {
-            //arrange
-            Trade t1 = new Trade(Guid.NewGuid(), m5, u1, CardType.monster, ElementType.water, 20.0);
-            MonsterCard m = new MonsterCard(Guid.NewGuid(), "FireWizard", 30.0);
-            u2.Stack.Add(m);
-
-            //act & assert
-            ArgumentException ex = Assert.Throws<ArgumentException>(delegate { t1.TradeCard(u2, m); });
-            Assert.That(ex.Message, Is.EqualTo("Cannot trade card, wrong element type was provided."));
-        }
-
-        [Test]
         public void testTradeCard_throwsExceptionTooSmallDamage() {
             //arrange
-            Trade t1 = new Trade(Guid.NewGuid(), m5, u1, CardType.monster, ElementType.water, 20.0);
+            Trade t1 = new Trade(Guid.NewGuid(), m5, u1, CardType.monster, 20.0);
             MonsterCard m = new MonsterCard(Guid.NewGuid(), "WaterWizard", 10.0);
             u2.Stack.Add(m);
 

@@ -61,10 +61,8 @@ namespace MTCG {
                 Card cardToTrade = dBUserRepository.GetCardById(Guid.Parse(trade[5]));
                 User provider = dBUserRepository.GetUserById(Guid.Parse(trade[4]));
                 CardType cardType = (CardType)Enum.Parse(typeof(CardType), trade[1]);
-                ElementType? elementType = !String.IsNullOrWhiteSpace(trade[2]) ? (ElementType)Enum.Parse(typeof(ElementType), trade[2]) : null;
 
-                Trade t = new Trade(Guid.Parse(trade[0]), cardToTrade, 
-                    provider, cardType, elementType, Double.Parse(trade[3]));
+                Trade t = new Trade(Guid.Parse(trade[0]), cardToTrade, provider, cardType, Double.Parse(trade[3]));
 
                 dBTradeRepository.AddTradeAtServerStart(t);
             }
@@ -79,15 +77,21 @@ namespace MTCG {
 
             Guid id = Guid.Parse(json["Id"].ToString());
             Card cardToTrade = dBUserRepository.GetCardById(Guid.Parse(json["CardToTrade"].ToString()));
-            ElementType? elementType = null;
-            if (json["elementType"] != null) {
-                elementType = (ElementType)Enum.Parse(typeof(ElementType), json["elementType"].ToString());
-            }
             CardType cardType = (CardType)Enum.Parse(typeof(CardType), json["Type"].ToString());
             double minimumDamage = Double.Parse(json["MinimumDamage"].ToString());
             
-            dBTradeRepository.CreateTrade(id, cardToTrade, provider, cardType, elementType, minimumDamage);
-            
+            dBTradeRepository.CreateTrade(id, cardToTrade, provider, cardType, minimumDamage);
+        }
+
+        public void TradeCard(User provider, string tId, string cId) {
+            Guid tradeId = Guid.Parse(tId);
+            Guid cardId = Guid.Parse(cId);
+            dBTradeRepository.TradeCard(provider, tradeId, dBUserRepository.GetCardById(cardId));
+        }
+
+        public void DeleteTrade(User provider, string id) {
+            Guid tradeId = Guid.Parse(id);
+            dBTradeRepository.DeleteTrade(provider, tradeId);
         }
     }
 }

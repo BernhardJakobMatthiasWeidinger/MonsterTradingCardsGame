@@ -201,7 +201,7 @@ namespace MTCG {
         }
 
         public static List<List<string>> SelectAllTrades() {
-            var sql = "select tradeid, cardtype, elementtype, minimumdamage, userid, cardid" +
+            var sql = "select tradeid, cardtype, minimumdamage, userid, cardid" +
             " from trades;";
 
             NpgsqlCommand cmd = new NpgsqlCommand(sql, connection);
@@ -211,7 +211,7 @@ namespace MTCG {
 
             while (dr.Read()) {
                 List<string> trade = new List<string>();
-                for (int i=0; i <=5; ++i) {
+                for (int i=0; i <=4; ++i) {
                     trade.Add(dr[i].ToString());
                 }
                 trades.Add(trade);
@@ -222,16 +222,23 @@ namespace MTCG {
         }
 
         public static void InsertTrade(Trade trade) {
-            var sql = "insert into trades (tradeid, cardtype, elementtype, minimumdamage, userid, cardid)" +
-           " values (@tradeid, @cardtype, @elementtype, @minimumdamage, @userid, @cardid);";
+            var sql = "insert into trades (tradeid, cardtype, minimumdamage, userid, cardid)" +
+           " values (@tradeid, @cardtype, @minimumdamage, @userid, @cardid);";
 
             NpgsqlCommand cmd = new NpgsqlCommand(sql, connection);
             cmd.Parameters.AddWithValue("tradeid", trade.Id);
             cmd.Parameters.AddWithValue("cardtype", trade.CardType.ToString());
-            cmd.Parameters.AddWithValue("elementtype", trade.ElementType.ToString());
             cmd.Parameters.AddWithValue("minimumdamage", trade.MinimumDamage);
             cmd.Parameters.AddWithValue("userid", trade.Provider.Id);
             cmd.Parameters.AddWithValue("cardid", trade.CardToTrade.Id);
+            cmd.ExecuteNonQuery();
+        }
+
+        public static void DeleteTrade(Trade trade) {
+            var sql = "delete from trades where tradeid = @tradeid";
+
+            NpgsqlCommand cmd = new NpgsqlCommand(sql, connection);
+            cmd.Parameters.AddWithValue("tradeid", trade.Id.ToString());
             cmd.ExecuteNonQuery();
         }
 
