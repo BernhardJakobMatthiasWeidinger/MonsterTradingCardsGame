@@ -10,16 +10,22 @@ using System.Threading.Tasks;
 namespace MTCG.RouteCommands.Users {
     public class GetUserStatsCommand : ProtectedRouteCommand {
         private readonly MTCGManager mTCGManager;
+        private bool json = true;
 
-        public GetUserStatsCommand(MTCGManager mTCGManager) {
+        public GetUserStatsCommand(MTCGManager mTCGManager, string format) {
             this.mTCGManager = mTCGManager;
+            if (!String.IsNullOrWhiteSpace(format)) {
+                if (format.Split("=")[1] == "plain") {
+                    json = false;
+                }
+            }
         }
 
         public override Response Execute() {
             Response response = new Response();
 
             response.StatusCode = StatusCode.Ok;
-            response.Payload = User.GetUserStats(true);
+            response.Payload = User.GetUserStats(json);
 
             return response;
         }

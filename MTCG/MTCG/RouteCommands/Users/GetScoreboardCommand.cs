@@ -10,15 +10,21 @@ using System.Threading.Tasks;
 namespace MTCG.RouteCommands.Users {
     public class GetScoreboardCommand : ProtectedRouteCommand {
         private readonly MTCGManager mTCGManager;
+        private bool json = true;
 
-        public GetScoreboardCommand(MTCGManager mTCGManager) {
+        public GetScoreboardCommand(MTCGManager mTCGManager, string format) {
             this.mTCGManager = mTCGManager;
+            if (!String.IsNullOrWhiteSpace(format)) {
+                if (format.Split("=")[1] == "plain") {
+                    json = false;
+                }
+            }
         }
 
         public override Response Execute() {
             Response response = new Response();
 
-            string scoreboard = mTCGManager.GetScoreboard();
+            string scoreboard = mTCGManager.GetScoreboard(json);
             response.StatusCode = StatusCode.Ok;
             response.Payload = scoreboard;
 

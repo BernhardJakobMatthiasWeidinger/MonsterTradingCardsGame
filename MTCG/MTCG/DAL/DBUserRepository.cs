@@ -39,14 +39,21 @@ namespace MTCG.DAL {
             return false;
         }
 
-        public string GetScoreboard() {
-            JArray jArray = new JArray();
-
+        public string GetScoreboard(bool json) {
             users.Sort((x, y) => x.Elo - y.Elo);
-            foreach (User user in users.Where(u => u.Username != "admin")) {
-                jArray.Add(user.GetUserStats(true));
+            if (json) {
+                JArray jArray = new JArray();
+                foreach (User user in users.Where(u => u.Username != "admin")) {
+                    jArray.Add(user.GetUserStats(json));
+                }
+                return JsonConvert.SerializeObject(jArray);
+            } else {
+                string scoreboard = "";
+                foreach (User user in users.Where(u => u.Username != "admin")) {
+                    scoreboard +=  user.GetUserStats(json) + "\n";
+                }
+                return scoreboard;
             }
-            return JsonConvert.SerializeObject(jArray);
         }
 
         private User GetUserByUsername(string username) {

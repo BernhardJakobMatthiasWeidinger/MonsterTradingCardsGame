@@ -46,8 +46,8 @@ namespace MTCG {
             dBCardRepository.ConfigureDeck(user, cardIds);
         }
 
-        public string GetScoreboard() {
-            return dBUserRepository.GetScoreboard();
+        public string GetScoreboard(bool json) {
+            return dBUserRepository.GetScoreboard(json);
         }
     }
 }
