@@ -20,7 +20,7 @@ namespace MTCG.RouteCommands.Battles {
         public override Response Execute() {
             Response response = new Response();
             try {
-                mTCGManager.GetLogFromBattle(User, id);
+                response.Payload = mTCGManager.GetLogFromBattle(User, id);
             } catch (ArgumentException) {
                 response.StatusCode = StatusCode.Conflict;
             } catch (Exception) {

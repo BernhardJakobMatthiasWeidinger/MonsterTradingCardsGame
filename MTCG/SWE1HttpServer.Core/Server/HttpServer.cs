@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace SWE1HttpServer.Core.Server
@@ -30,7 +31,7 @@ namespace SWE1HttpServer.Core.Server
             while (isListening)
             {
                 var client = listener.AcceptClient();
-                HandleClient(client);
+                Task.Run(() => HandleClient(client));
             }
         }
 

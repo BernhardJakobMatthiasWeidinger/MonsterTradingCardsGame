@@ -20,29 +20,48 @@ namespace MTCG.DAL {
 
             Battle battle;
             if (user1Id == "") {
-                battle = battles.FirstOrDefault(b => Math.Abs(b.User1.Elo - user.Elo) <= 10);
-                if (battle != null) {
+                bool joinBattle = false;
+                lock (this) {
+                    battle = battles.FirstOrDefault(b => Math.Abs(b.User1.Elo - user.Elo) <= 10);
+                    joinBattle = (battle != null) ? true : false;
+                    if (!joinBattle) {
+                        battle = new Battle(Guid.NewGuid(), user);
+                        battles.Add(battle);
+                    } 
+                }
+
+                if (joinBattle) {
                     log = battle.Play(user);
                 } else {
-                    battle = new Battle(Guid.NewGuid(), user);
-                    battles.Add(battle);
                     log = battle.InitializeBattle();
                 }
             } else {
-                battle = battles.FirstOrDefault(b => b.User1.Id == Guid.Parse(user1Id));
-                if (battle == null) {
-                    throw new InvalidCastException("No battle with specified user found.");
+                lock (this) {
+                    battle = battles.FirstOrDefault(b => b.User1.Id == Guid.Parse(user1Id));
+                    if (battle == null) {
+                        throw new InvalidCastException("No battle with specified user found.");
+                    }
+                    log = battle.Play(user);
                 }
-                log = battle.Play(user);
             }
 
             lock (this) {
+                UpdateUserAfterBattle(user);
                 if (battles.Contains(battle)) {
                     battles.Remove(battle);
                 }
             }
 
             return log;
+        }
+
+        private void UpdateUserAfterBattle(User user) {
+            DBConnection.UpdateUser(user);
+
+            foreach (Card card in user.Stack) {
+                bool inDeck = user.Deck.Contains(card);
+                DBConnection.UpdateCard(card.Id, inDeck, user.Id);
+            }
         }
     }
 }

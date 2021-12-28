@@ -56,8 +56,8 @@ namespace MTCG {
             router.AddProtectedRoute(HttpMethod.Get, "/stats{id}", (r, p) => new GetUserStatsCommand(mtcgManager, p["id"]));
             router.AddProtectedRoute(HttpMethod.Get, "/score{id}", (r, p) => new GetScoreboardCommand(mtcgManager, p["id"]));
 
-            router.AddProtectedRoute(HttpMethod.Post, "/battle", (r, p) => new StartOrJoinBattleCommand(mtcgManager, ""));
-            router.AddProtectedRoute(HttpMethod.Post, "/battle/{id}", (r, p) => new StartOrJoinBattleCommand(mtcgManager, p["id"]));
+            router.AddProtectedRoute(HttpMethod.Post, "/battles", (r, p) => new StartOrJoinBattleCommand(mtcgManager, ""));
+            router.AddProtectedRoute(HttpMethod.Post, "/battles/{id}", (r, p) => new StartOrJoinBattleCommand(mtcgManager, p["id"]));
 
             router.AddProtectedRoute(HttpMethod.Get, "/tradings{id}", (r, p) => new GetTradesCommand(mtcgManager, p["id"]));
             router.AddProtectedRoute(HttpMethod.Post, "/tradings", (r, p) => new AddTradingDealCommand(mtcgManager, r.Payload));
