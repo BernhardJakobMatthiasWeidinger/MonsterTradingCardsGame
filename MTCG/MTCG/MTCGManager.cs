@@ -13,11 +13,14 @@ namespace MTCG {
         private readonly DBUserRepository dBUserRepository;
         private readonly DBPackageRepository dBCardRepository;
         private readonly DBTradeRepository dBTradeRepository;
+        private readonly DBBattleRepository dBBattleRepository;
 
-        public MTCGManager(DBUserRepository dBUserRepository, DBPackageRepository dBCardRepository, DBTradeRepository dBTradeRepository) {
+        public MTCGManager(DBUserRepository dBUserRepository, DBPackageRepository dBCardRepository, 
+            DBTradeRepository dBTradeRepository, DBBattleRepository dBBattleRepository) {
             this.dBUserRepository = dBUserRepository;
             this.dBCardRepository = dBCardRepository;
             this.dBTradeRepository = dBTradeRepository;
+            this.dBBattleRepository = dBBattleRepository;
 
             GetTradesFromDB();
         }
@@ -52,6 +55,10 @@ namespace MTCG {
 
         public string GetScoreboard(bool json) {
             return dBUserRepository.GetScoreboard(json);
+        }
+
+        public string GetLogFromBattle(User user, string userId) {
+            return dBBattleRepository.Battle(user, userId);
         }
 
         private void GetTradesFromDB() {

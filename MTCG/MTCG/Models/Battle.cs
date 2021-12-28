@@ -1,12 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 
 namespace MTCG.Models {
     public class Battle {
         public Guid Id { get; private set; }
         public User User1 { get; private set; }
         public User User2 { get; private set; }
+
+        private string log;
+        private AutoResetEvent waitHandle = new AutoResetEvent(false);
 
         public Battle(Guid id, User user1) {
             if (user1.Deck.Count != 4) {
@@ -15,6 +19,11 @@ namespace MTCG.Models {
             }
             this.Id = id;
             this.User1 = user1;
+        }
+
+        public string InitializeBattle() {
+            waitHandle.WaitOne();
+            return log;
         }
 
         public string Play(User user2) {
@@ -31,6 +40,7 @@ namespace MTCG.Models {
                     break;
                 } 
             }
+            log = res;
 
             if (User1.Deck.Count > User2.Deck.Count) {
                 CalculateStatsAfterBattle(User1, User2);
@@ -40,6 +50,7 @@ namespace MTCG.Models {
 
             User1.ConfigureDeckAfterBattle();
             User2.ConfigureDeckAfterBattle();
+            waitHandle.Set();
 
             return res;
         }

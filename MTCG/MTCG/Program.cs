@@ -14,6 +14,7 @@ using MTCG.DAL;
 using MTCG.RouteCommands.Users;
 using MTCG.RouteCommands.Trades;
 using MTCG.RouteCommands.Packages;
+using MTCG.RouteCommands.Battles;
 
 namespace MTCG {
     class Program {
@@ -22,7 +23,8 @@ namespace MTCG {
                 DBUserRepository userRepository = new DBUserRepository();
                 DBPackageRepository cardRepository = new DBPackageRepository();
                 DBTradeRepository tradeRepository = new DBTradeRepository();
-                MTCGManager mtcgManager = new MTCGManager(userRepository, cardRepository, tradeRepository);
+                DBBattleRepository battleRepository = new DBBattleRepository();
+                MTCGManager mtcgManager = new MTCGManager(userRepository, cardRepository, tradeRepository, battleRepository);
 
                 var identityProvider = new MTCGIdentityProvider(userRepository);
                 var routeParser = new IdRouteParser();
@@ -53,6 +55,9 @@ namespace MTCG {
             router.AddProtectedRoute(HttpMethod.Put, "/users/{id}", (r, p) => new SetUserDataCommand(mtcgManager, p["id"], r.Payload));
             router.AddProtectedRoute(HttpMethod.Get, "/stats{id}", (r, p) => new GetUserStatsCommand(mtcgManager, p["id"]));
             router.AddProtectedRoute(HttpMethod.Get, "/score{id}", (r, p) => new GetScoreboardCommand(mtcgManager, p["id"]));
+
+            router.AddProtectedRoute(HttpMethod.Post, "/battle", (r, p) => new StartOrJoinBattleCommand(mtcgManager, ""));
+            router.AddProtectedRoute(HttpMethod.Post, "/battle/{id}", (r, p) => new StartOrJoinBattleCommand(mtcgManager, p["id"]));
 
             router.AddProtectedRoute(HttpMethod.Get, "/tradings{id}", (r, p) => new GetTradesCommand(mtcgManager, p["id"]));
             router.AddProtectedRoute(HttpMethod.Post, "/tradings", (r, p) => new AddTradingDealCommand(mtcgManager, r.Payload));

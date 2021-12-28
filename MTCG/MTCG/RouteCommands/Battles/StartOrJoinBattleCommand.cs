@@ -1,5 +1,4 @@
 ﻿using MTCG.Models;
-using Newtonsoft.Json;
 using SWE1HttpServer.Core.Response;
 using SWE1HttpServer.Core.Routing;
 using System;
@@ -8,28 +7,22 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MTCG.RouteCommands.Trades {
-    public class TradeCardCommand : ProtectedRouteCommand {
+namespace MTCG.RouteCommands.Battles {
+    public class StartOrJoinBattleCommand : ProtectedRouteCommand {
         private readonly MTCGManager mTCGManager;
         private readonly string id;
-        private readonly string payload;
 
-        public TradeCardCommand(MTCGManager mTCGManager, string id, string payload) {
+        public StartOrJoinBattleCommand(MTCGManager mTCGManager, string id) {
             this.mTCGManager = mTCGManager;
             this.id = id;
-            this.payload = payload;
         }
 
         public override Response Execute() {
             Response response = new Response();
-
             try {
-                mTCGManager.TradeCard(User, id, JsonConvert.DeserializeObject<string>(payload));
-                response.StatusCode = StatusCode.Ok;
+                mTCGManager.GetLogFromBattle(User, id);
             } catch (ArgumentException) {
-                response.StatusCode = StatusCode.NotFound;
-            } catch (InvalidOperationException) {
-                response.StatusCode = StatusCode.Forbidden;
+                response.StatusCode = StatusCode.Conflict;
             } catch (Exception) {
                 response.StatusCode = StatusCode.BadRequest;
             }
