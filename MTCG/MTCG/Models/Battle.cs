@@ -40,19 +40,24 @@ namespace MTCG.Models {
                     break;
                 } 
             }
-            log = res;
 
+            res += $"{User1.Username} Cards: {User1.Deck.Count}, {User2.Username} Cards: {User2.Deck.Count}";
             if (User1.Deck.Count > User2.Deck.Count) {
+                 res += $"=> Winner: {User1.Username}";
                 CalculateStatsAfterBattle(User1, User2);
             } else if (User1.Deck.Count < User2.Deck.Count) {
                 CalculateStatsAfterBattle(User2, User1);
+                res += $"=> Winner: {User2.Username}";
+            } else {
+                res += $"=> Draw";
             }
+            log = res += "\n";
 
             User1.ConfigureDeckAfterBattle();
             User2.ConfigureDeckAfterBattle();
             waitHandle.Set();
 
-            return res;
+            return log;
         }
 
         private string CompareCards(int round) {

@@ -41,7 +41,7 @@ namespace MTCG.DAL {
         }
 
         public string GetScoreboard(bool json) {
-            users.Sort((x, y) => x.Elo - y.Elo);
+            users.Sort((x, y) => y.Elo - x.Elo);
             if (json) {
                 JArray jArray = new JArray();
                 foreach (User user in users.Where(u => u.Username != "admin")) {
@@ -116,7 +116,6 @@ namespace MTCG.DAL {
             user.Deck.ForEach(c => DBConnection.UpdateCard(c.Id, false, user.Id));
             user.ConfigureDeck(cardIds);
             user.Deck.ForEach(c => DBConnection.UpdateCard(c.Id, true, user.Id));
-            Console.WriteLine("");
         }
     }
 }
