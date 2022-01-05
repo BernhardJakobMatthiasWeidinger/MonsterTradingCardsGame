@@ -251,5 +251,46 @@ namespace MTCG {
             }
             return card;
         }
+
+        public static List<Tuple<Guid, Guid>> SelectAllFriends() {
+            var sql = "select userid1, userid2" +
+            " from friends;";
+
+            NpgsqlCommand cmd = new NpgsqlCommand(sql, connection);
+            NpgsqlDataReader dr = cmd.ExecuteReader();
+            List<Tuple<Guid, Guid>> friends = new List<Tuple<Guid, Guid>>();
+
+            while (dr.Read()) {
+                friends.Add(new Tuple<Guid, Guid>(Guid.Parse(dr[0].ToString()), Guid.Parse(dr[1].ToString())));
+            }
+            dr.DisposeAsync();
+            return friends;
+        }
+
+        public static void InsertFriend(Guid userid1, Guid userid2) {
+            var sql = "insert into friends (userid1, userid2) values (@userid1, @userid2);";
+
+            NpgsqlCommand cmd = new NpgsqlCommand(sql, connection);
+            cmd.Parameters.AddWithValue("userid1", userid1);
+            cmd.Parameters.AddWithValue("userid2", userid2);
+            cmd.ExecuteNonQuery();
+        }
+
+        public static void DeleteFriend(Guid userid1, Guid userid2) {
+            var sql = "delete from friends where userid1 = @userid1 and userid2 = @userid2";
+
+            NpgsqlCommand cmd = new NpgsqlCommand(sql, connection);
+            cmd.Parameters.AddWithValue("userid1", userid1.ToString());
+            cmd.Parameters.AddWithValue("userid2", userid2.ToString());
+
+            if (cmd.ExecuteNonQuery() == 0) {
+                sql = "delete from friends where userid1 = @userid2 and userid2 = @userid1";
+
+                cmd = new NpgsqlCommand(sql, connection);
+                cmd.Parameters.AddWithValue("userid1", userid1.ToString());
+                cmd.Parameters.AddWithValue("userid2", userid2.ToString());
+                cmd.ExecuteNonQuery();
+            }
+        }
     }
 }

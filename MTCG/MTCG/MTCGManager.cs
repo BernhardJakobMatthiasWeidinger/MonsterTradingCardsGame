@@ -100,5 +100,17 @@ namespace MTCG {
             Guid tradeId = Guid.Parse(id);
             dBTradeRepository.DeleteTrade(provider, tradeId);
         }
+
+        public string GetFriends(User user, bool json) {
+            return dBUserRepository.GetFriends(user, json);
+        }
+
+        public void AddFriend(User user, string other) {
+            dBUserRepository.AddFriend(user, other);
+        }
+
+        public void DeleteFriend(User user, string other) {
+            dBUserRepository.DeleteFriend(user, other);
+        }
     }
 }

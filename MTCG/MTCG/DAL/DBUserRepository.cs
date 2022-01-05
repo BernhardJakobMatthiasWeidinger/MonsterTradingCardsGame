@@ -12,6 +12,7 @@ namespace MTCG.DAL {
         public DBUserRepository() {
             users = DBConnection.SelectAllUsers();
             AssignCardsAtStart();
+            AssignFriendsAtStart();
         }
         public User GetUserByAuthToken(string authToken) {
             return users.FirstOrDefault(user => user.Username + "-mtcgToken" == authToken);
@@ -94,6 +95,18 @@ namespace MTCG.DAL {
                 }
             }
         }
+
+        public void AssignFriendsAtStart() {
+            List<Tuple<Guid, Guid>> friendships = DBConnection.SelectAllFriends();
+
+            foreach (Tuple<Guid, Guid> friends in friendships) {
+                User user1 = users.FirstOrDefault(u => u.Id == friends.Item1);
+                User user2 = users.FirstOrDefault(u => u.Id == friends.Item2);
+
+                user1.AddFriend(user2);
+            }
+        }
+
         public List<Card> GetStack(Guid userId) {
             return users.FirstOrDefault(u => u.Id == userId).Stack;
         }
@@ -116,6 +129,53 @@ namespace MTCG.DAL {
             user.Deck.ForEach(c => DBConnection.UpdateCard(c.Id, false, user.Id));
             user.ConfigureDeck(cardIds);
             user.Deck.ForEach(c => DBConnection.UpdateCard(c.Id, true, user.Id));
+        }
+
+        public string GetFriends(User user, bool isJson) {
+            string res = "";
+            if (isJson) {
+                JArray array = new JArray();
+                foreach (Guid friendId in user.Friends) {
+                    array.Add(JsonConvert.SerializeObject(users.FirstOrDefault(u => u.Id == friendId)));
+                }
+                JObject o = new JObject();
+                o["Friends"] = array;
+                res = o.ToString();
+            } else {
+                int i = 0;
+                foreach (Guid friendId in user.Friends) {
+                    res += users.FirstOrDefault(u => u.Id == friendId).ToString();
+                    res += i != (user.Friends.Count - 1) ? ";" : "";
+                    i++;
+                }
+            }
+            return res;
+        }
+
+        public void AddFriend(User user1, string other) {
+            User user2 = users.FirstOrDefault(u => u.Username == other);
+
+            if (user2 == null) {
+                throw new InvalidCastException();
+            } else if (user1.Friends.Contains(user2.Id) || user1 == user2) {
+                throw new ArgumentException();
+            } 
+
+            user1.AddFriend(user2);
+            DBConnection.InsertFriend(user1.Id, user2.Id);
+        }
+
+        public void DeleteFriend(User user1, string other) {
+            User user2 = users.FirstOrDefault(u => u.Username == other);
+
+            if (user2 == null) {
+                throw new InvalidCastException();
+            } else if (!user1.Friends.Contains(user2.Id)) {
+                throw new ArgumentException();
+            }
+
+            user1.RemoveFriend(user2);
+            DBConnection.DeleteFriend(user1.Id, user2.Id);
         }
     }
 }

@@ -43,13 +43,14 @@ namespace MTCG.Models {
 
             res += $"{User1.Username} Cards: {User1.Deck.Count}, {User2.Username} Cards: {User2.Deck.Count}";
             if (User1.Deck.Count > User2.Deck.Count) {
-                 res += $"=> Winner: {User1.Username}";
+                 res += $" => Winner: {User1.Username}";
                 CalculateStatsAfterBattle(User1, User2);
             } else if (User1.Deck.Count < User2.Deck.Count) {
                 CalculateStatsAfterBattle(User2, User1);
-                res += $"=> Winner: {User2.Username}";
+                res += $" => Winner: {User2.Username}";
             } else {
-                res += $"=> Draw";
+                CalculateStatsAfterBattle(User1, User2, true);
+                res += $" => Draw";
             }
             log = res += "\n";
 
@@ -82,13 +83,15 @@ namespace MTCG.Models {
             return res + $" => {winner}";
         }
 
-        private void CalculateStatsAfterBattle(User winner, User loser) {
+        private void CalculateStatsAfterBattle(User winner, User loser, bool draw=false) {
             winner.GamesPlayed++;
-            winner.GamesWon++;
-            winner.Elo += 3;
             loser.GamesPlayed++;
-            loser.GamesLost++;
-            loser.Elo -= 5;
+            if (!draw) {
+                winner.GamesWon++;
+                winner.Elo += 3;
+                loser.GamesLost++;
+                loser.Elo -= 5;
+            }
         }
         
         private void GiveCard(User winner, User loser, Card cardToGive) {
