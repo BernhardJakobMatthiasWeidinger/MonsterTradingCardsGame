@@ -32,43 +32,47 @@ namespace MTCG.DAL {
         }
 
         public void CreateTrade(Guid id, Card cardToTrade, User provider, CardType cardType, double minimumDamage) {
-            if (trades.Any(t => t.Id == id || t.CardToTrade == cardToTrade)) {
-                throw new ArgumentException("Trade already exists");
-            } else {
-                Trade trade = new Trade(id, cardToTrade, provider, cardType, minimumDamage);
-                DBConnection.InsertTrade(trade);
-                trades.Add(trade);
+            lock (this) {
+                if (trades.Any(t => t.Id == id || t.CardToTrade == cardToTrade)) {
+                    throw new ArgumentException("Trade already exists");
+                } else {
+                    Trade trade = new Trade(id, cardToTrade, provider, cardType, minimumDamage);
+                    DBConnection.InsertTrade(trade);
+                    trades.Add(trade);
+                }
             }
         }
 
         public void TradeCard(User trader, Guid tradeId, Card card) {
-            Trade trade = trades.FirstOrDefault(t => t.Id == tradeId);
-            if (trade == null) {
-                throw new ArgumentException("Trade not found");
-            } else if (trade.Provider == trader) {
-                throw new InvalidOperationException("Cannot trade card with yourself");
+            lock (this) {
+                Trade trade = trades.FirstOrDefault(t => t.Id == tradeId);
+                if (trade == null) {
+                    throw new ArgumentException("Trade not found");
+                } else if (trade.Provider == trader) {
+                    throw new InvalidOperationException("Cannot trade card with yourself");
+                }
+
+                trade.TradeCard(trader, card);
+                trades.Remove(trade);
+
+                DBConnection.UpdateCard(trade.CardToTrade.Id, false, trader.Id);
+                DBConnection.UpdateCard(card.Id, false, trade.Provider.Id);
+                DBConnection.DeleteTrade(trade);
             }
-
-            Card cardOfProvider = trade.CardToTrade;
-            User provider = trade.Provider;
-
-            trade.TradeCard(trader, card);
-            trades.Remove(trade);
-
-            DBConnection.UpdateCard(cardOfProvider.Id, false, trader.Id);
-            DBConnection.UpdateCard(card.Id, false, provider.Id);
-            DBConnection.DeleteTrade(trade);
         }
 
         public void DeleteTrade(User provider, Guid tradeId) {
-            Trade trade = trades.FirstOrDefault(t => t.Id == tradeId);
-            if (trade == null) {
-                throw new ArgumentException("Trade not found");
-            } else if (trade.Provider != provider) {
-                throw new InvalidOperationException("Cannot delete trade");
+            lock (this) {
+                Trade trade = trades.FirstOrDefault(t => t.Id == tradeId);
+                if (trade == null) {
+                    throw new ArgumentException("Trade not found");
+                }
+                else if (trade.Provider != provider) {
+                    throw new InvalidOperationException("Cannot delete trade");
+                }
+                trades.Remove(trade);
+                DBConnection.DeleteTrade(trade);
             }
-            trades.Remove(trade);
-            DBConnection.DeleteTrade(trade);
         }
     }
 }

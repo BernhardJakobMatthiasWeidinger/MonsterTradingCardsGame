@@ -22,43 +22,49 @@ namespace MTCG.DAL {
 
             List<Card> packageCards = new List<Card>();
             JArray jsonCards = JsonConvert.DeserializeObject<JArray>(payload);
+            Package package;
 
-            foreach (JObject card in jsonCards) {
-                Guid id = Guid.Parse(card["Id"].ToString());
-                string name = card["Name"].ToString();
-                double damage = Double.Parse(card["Damage"].ToString());
+            lock (this) {
+                foreach (JObject card in jsonCards) {
+                    Guid id = Guid.Parse(card["Id"].ToString());
+                    string name = card["Name"].ToString();
+                    double damage = Double.Parse(card["Damage"].ToString());
 
-                if (name.ToLower().Contains("spell")) {
-                    packageCards.Add(new SpellCard(id, name, damage));
-                } else {
-                    packageCards.Add(new MonsterCard(id, name, damage));
+                    if (name.ToLower().Contains("spell")) {
+                        packageCards.Add(new SpellCard(id, name, damage));
+                    }
+                    else {
+                        packageCards.Add(new MonsterCard(id, name, damage));
+                    }
                 }
+                package = new Package(Guid.NewGuid(), packageCards);
+                packages.Add(package);
             }
-
-            Package package = new Package(Guid.NewGuid(), packageCards);
-            packages.Add(package);
 
             return package;
         }
 
         public bool AcquirePackage(User user) {
-            if (packages.Count > 0) {
-                Package package = packages[0];
+            lock (this) {
+                if (packages.Count > 0) {
+                    Package package = packages[0];
 
-                try {
-                    List<Card> cs = package.Cards;
-                    package.AquirePackage(user);
-                    cs.ForEach(c => DBConnection.UpdateCard(c.Id, false, user.Id));
-                } catch (ArgumentException) {
+                    try {
+                        List<Card> cs = package.Cards;
+                        package.AquirePackage(user);
+                        cs.ForEach(c => DBConnection.UpdateCard(c.Id, false, user.Id));
+                    }
+                    catch (ArgumentException) {
+                        return false;
+                    }
+
+                    DBConnection.DeletePackage(package);
+                    DBConnection.UpdateUser(user);
+                    packages.Remove(package);
+                    return true;
+                } else {
                     return false;
                 }
-
-                DBConnection.DeletePackage(package);
-                DBConnection.UpdateUser(user);
-                packages.Remove(package);
-                return true;
-            } else {
-                return false;
             }
         }
     }

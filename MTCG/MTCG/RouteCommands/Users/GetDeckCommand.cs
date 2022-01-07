@@ -24,11 +24,10 @@ namespace MTCG.RouteCommands.Users {
         public override Response Execute() {
             Response response = new Response();
 
-            if (User.Stack.Any()) {
+            if (User.Deck.Any()) {
                 response.StatusCode = StatusCode.Ok;
                 response.Payload = User.DeckToString(json);
-            }
-            else {
+            } else {
                 response.StatusCode = StatusCode.NoContent;
             }
 

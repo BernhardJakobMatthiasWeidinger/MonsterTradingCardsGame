@@ -24,11 +24,14 @@ namespace MTCG.DAL {
 
         public bool InsertUser(User user) {
             if (GetUserByUsername(user.Username) == null) {
-                users.Add(user);
-                try {
-                    DBConnection.InsertUser(user);
-                } catch (Exception) {
-                    return false;
+                lock (this) {
+                    users.Add(user);
+                    try {
+                        DBConnection.InsertUser(user);
+                    }
+                    catch (Exception) {
+                        return false;
+                    }
                 }
                 return true;
             }
@@ -130,9 +133,11 @@ namespace MTCG.DAL {
                 }
             }
 
-            user.Deck.ForEach(c => DBConnection.UpdateCard(c.Id, false, user.Id));
-            user.ConfigureDeck(cardIds);
-            user.Deck.ForEach(c => DBConnection.UpdateCard(c.Id, true, user.Id));
+            lock (this) {
+                user.Deck.ForEach(c => DBConnection.UpdateCard(c.Id, false, user.Id));
+                user.ConfigureDeck(cardIds);
+                user.Deck.ForEach(c => DBConnection.UpdateCard(c.Id, true, user.Id));
+            }
         }
 
         public string GetFriends(User user, bool isJson) {
@@ -154,29 +159,32 @@ namespace MTCG.DAL {
         }
 
         public void AddFriend(User user1, string other) {
-            User user2 = users.FirstOrDefault(u => u.Username == other);
+            lock (this) {
+                User user2 = users.FirstOrDefault(u => u.Username == other);
+                if (user2 == null) {
+                    throw new InvalidCastException();
+                } else if (user1.Friends.Contains(user2.Id) || user1 == user2) {
+                    throw new ArgumentException();
+                } 
 
-            if (user2 == null) {
-                throw new InvalidCastException();
-            } else if (user1.Friends.Contains(user2.Id) || user1 == user2) {
-                throw new ArgumentException();
-            } 
-
-            user1.AddFriend(user2);
-            DBConnection.InsertFriend(user1.Id, user2.Id);
+                user1.AddFriend(user2);
+                DBConnection.InsertFriend(user1.Id, user2.Id);
+            }
         }
 
         public void DeleteFriend(User user1, string other) {
-            User user2 = users.FirstOrDefault(u => u.Username == other);
+            lock (this) {
+                User user2 = users.FirstOrDefault(u => u.Username == other);
+                if (user2 == null) {
+                    throw new InvalidCastException();
+                }
+                else if (!user1.Friends.Contains(user2.Id)) {
+                    throw new ArgumentException();
+                }
 
-            if (user2 == null) {
-                throw new InvalidCastException();
-            } else if (!user1.Friends.Contains(user2.Id)) {
-                throw new ArgumentException();
+                user1.RemoveFriend(user2);
+                DBConnection.DeleteFriend(user1.Id, user2.Id);
             }
-
-            user1.RemoveFriend(user2);
-            DBConnection.DeleteFriend(user1.Id, user2.Id);
         }
     }
 }

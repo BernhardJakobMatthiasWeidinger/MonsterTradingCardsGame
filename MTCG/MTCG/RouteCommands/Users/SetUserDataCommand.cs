@@ -28,8 +28,10 @@ namespace MTCG.RouteCommands.Users {
                 if (User.Username == username) {
                     JObject jObject = (JObject)JsonConvert.DeserializeObject(payload);
 
-                    User.SetUserData(jObject["Name"].ToString(), jObject["Bio"].ToString(), jObject["Image"].ToString());
-                    DBConnection.UpdateUser(User);
+                    lock (this) {
+                        User.SetUserData(jObject["Name"].ToString(), jObject["Bio"].ToString(), jObject["Image"].ToString());
+                        DBConnection.UpdateUser(User);
+                    }
                     response.StatusCode = StatusCode.Ok;
                 } else {
                     response.StatusCode = StatusCode.Unauthorized;
