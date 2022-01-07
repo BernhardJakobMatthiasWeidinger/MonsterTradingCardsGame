@@ -33,7 +33,7 @@ namespace MTCG.Models {
         }
 
         public override string ToString() {
-            return $"CardId:{this.Id},Name:{this.Name},Damage:{this.Damage},ElementType:{this.ElementType}";
+            return $"CardId:{this.Id, -35} Name:{this.Name, -20} Damage:{this.Damage, -3} ElementType:{this.ElementType, -7}";
         }
     }
 
@@ -52,7 +52,7 @@ namespace MTCG.Models {
         }
 
         public override string ToString() {
-            return base.ToString() + $",MonsterType:{this.MonsterType}";
+            return base.ToString() + $" MonsterType:{this.MonsterType, -10}";
         }
     }
 

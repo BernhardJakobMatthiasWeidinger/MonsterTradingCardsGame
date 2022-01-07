@@ -146,11 +146,8 @@ namespace MTCG.DAL {
                 o["Friends"] = array;
                 res = o.ToString();
             } else {
-                int i = 0;
                 foreach (Guid friendId in user.Friends) {
-                    res += users.FirstOrDefault(u => u.Id == friendId).ToString();
-                    res += i != (user.Friends.Count - 1) ? ";" : "";
-                    i++;
+                    res += users.FirstOrDefault(u => u.Id == friendId).ToString() + "\n";
                 }
             }
             return res;

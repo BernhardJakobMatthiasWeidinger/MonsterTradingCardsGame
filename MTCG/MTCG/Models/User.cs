@@ -50,8 +50,8 @@ namespace MTCG.Models {
         }
 
         public override string ToString() {
-            string res = $"UserId:{Id},Username:{Username},Name:{Name},Bio:{Bio},Image:{Image}," +
-                    $"Coins:{Coins},GamesPlayed:{GamesPlayed},GamesWon:{GamesWon},GamesLost:{GamesLost},Elo:{Elo},Friends:[";
+            string res = $"UserId:{Id, -35} Username:{Username, -20} Name:{Name, -30} Bio:{Bio, -30} Image:{Image, -5}" +
+                    $"Coins:{Coins, -3} GamesPlayed:{GamesPlayed, -3} GamesWon:{GamesWon, -3} GamesLost:{GamesLost, -3} Elo:{Elo, -4} Friends:[";
 
             int i = 0;
             foreach (Guid friend in Friends) {
@@ -151,7 +151,7 @@ namespace MTCG.Models {
                 o["elo"] = Elo;
                 res = JsonConvert.SerializeObject(o);
             } else {
-                res += $"username:{Username},gamesPlayed:{GamesPlayed},gamesWon:{GamesWon},gamesLost:{GamesWon},elo:{Elo}";
+                res += $"username:{Username, -20} gamesPlayed:{GamesPlayed, -3} gamesWon:{GamesWon, -3} gamesLost:{GamesWon, -3} elo:{Elo, -4}";
             }
             return res;
         }
@@ -167,11 +167,8 @@ namespace MTCG.Models {
                 o["Deck"] = array;
                 res = o.ToString();
             } else {
-                int i = 0;
                 foreach (Card card in Deck) {
-                    res += card.ToString();
-                    res += i != (Deck.Count - 1) ? ";" : "";
-                    i++;
+                    res += card.ToString() + "\n";
                 }
             }
             return res;
@@ -188,11 +185,8 @@ namespace MTCG.Models {
                 o["Stack"] = array;
                 res = o.ToString();
             } else {
-                int i = 0;
                 foreach (Card card in Stack) {
-                    res += card.ToString();
-                    res += i != (Stack.Count - 1) ? ";" : "";
-                    i++;
+                    res += card.ToString() + "\n";
                 }
             }
             return res;

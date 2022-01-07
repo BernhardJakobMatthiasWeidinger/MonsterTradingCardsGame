@@ -28,7 +28,7 @@ namespace MTCG.Models {
         }
 
         public override string ToString() {
-            return $"TradeId:{Id},CardToTrade:{CardToTrade},Type:{CardType},MinimumDamage:{MinimumDamage}"; ;
+            return $"TradeId: {Id, -35} CardToTrade: {CardToTrade, -75} Type: {CardType, -8} MinimumDamage: {MinimumDamage, -3}"; ;
         }
 
         public void TradeCard(User u2, Card cardForTrade) {

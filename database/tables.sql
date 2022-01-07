@@ -4,10 +4,10 @@ CREATE DATABASE mtcg;
 
 CREATE TABLE users (
     userId          varchar(50),
-    username        varchar(50) unique not null,
+    username        varchar(30) unique not null,
     password        varchar(64) not null,
-    name            varchar(50) ,
-    bio             varchar(50) ,
+    name            varchar(30) ,
+    bio             varchar(40) ,
     image           text,
     coins           smallint,
     gamesPlayed     integer,
