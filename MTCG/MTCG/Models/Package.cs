@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MTCG.Exceptions;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -9,8 +10,7 @@ namespace MTCG.Models {
 
         public Package(Guid id, List<Card> cards) {
             if (cards.Count != 5) {
-                throw new ArgumentException($"A package should be provided with 5 cards, " +
-                    $"cards given: {cards.Count}");
+                throw new InconsistentNumberException();
             } else {
                 this.Id = id;
                 this.Cards = cards;
@@ -22,7 +22,7 @@ namespace MTCG.Models {
                 user.Coins -= 5;
                 user.Stack.AddRange(Cards);
             } else {
-                throw new ArgumentException($"User {user.Username} has an insufficent amount of coins ({user.Coins}), coins needed: 5");
+                throw new InconsistentNumberException();
             }
         }
     }

@@ -1,4 +1,5 @@
-﻿using MTCG.Models;
+﻿using MTCG.Exceptions;
+using MTCG.Models;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
@@ -58,8 +59,7 @@ namespace MTCG.Test.Models {
         public void testConstructor_SpecialRuleThrowsExceptionNegativDamage(string name1, string name2, double? damage1, double? damage2) {
             //arrange
             //act & assert
-            ArgumentException ex = Assert.Throws<ArgumentException>(delegate { new SpecialRule(name1, name2, damage1, damage2); });
-            Assert.That(ex.Message, Is.EqualTo("Damages of rule have to be positive."));
+            Assert.Throws<InconsistentNumberException>(delegate { new SpecialRule(name1, name2, damage1, damage2); });
         }
 
         [Test]
@@ -85,8 +85,7 @@ namespace MTCG.Test.Models {
         public void testConstructor_ElementRuleThrowsExceptionNegativDamage(ElementType element1, ElementType element2, double multiplier1, double multiplier2) {
             //arrange
             //act & assert
-            ArgumentException ex = Assert.Throws<ArgumentException>(delegate { new ElementRule(element1, element2, multiplier1, multiplier2); });
-            Assert.That(ex.Message, Is.EqualTo("Multipliers have to be positive."));
+            Assert.Throws<InconsistentNumberException>(delegate { new ElementRule(element1, element2, multiplier1, multiplier2); });
         }
 
         [Test]

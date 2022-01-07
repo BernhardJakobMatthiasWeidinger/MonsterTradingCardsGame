@@ -1,4 +1,5 @@
-﻿using MTCG.Models;
+﻿using MTCG.Exceptions;
+using MTCG.Models;
 using SWE1HttpServer.Core.Response;
 using SWE1HttpServer.Core.Routing;
 using System;
@@ -21,8 +22,10 @@ namespace MTCG.RouteCommands.Battles {
             Response response = new Response();
             try {
                 response.Payload = mTCGManager.GetLogFromBattle(User, id);
-            } catch (ArgumentException) {
+            } catch (EntityAlreadyExistsException) {
                 response.StatusCode = StatusCode.Conflict;
+            } catch (InconsistentNumberException) {
+                response.StatusCode = StatusCode.Forbidden;
             } catch (Exception) {
                 response.StatusCode = StatusCode.BadRequest;
             }

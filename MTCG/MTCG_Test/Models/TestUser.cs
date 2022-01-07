@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Text;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using MTCG.Exceptions;
 
 namespace MTCG.Test.Models {
     public class TestUser {
@@ -55,8 +56,7 @@ namespace MTCG.Test.Models {
         public void testConstructor_throwExceptionInvalidUsername(string username) {
             //arrange
             //act & assert
-            ArgumentException ex = Assert.Throws<ArgumentException>(delegate { new User(Guid.NewGuid(), username, "testUserPassword"); });
-            Assert.That(ex.Message, Is.EqualTo("Username is not allowed to contain following characters: ; / \\ \' \""));
+            Assert.Throws<ArgumentException>(delegate { new User(Guid.NewGuid(), username, "testUserPassword"); });
         }
 
         [Test]
@@ -67,11 +67,8 @@ namespace MTCG.Test.Models {
         [TestCase("test\"User;Password")]
         public void testConstructor_throwExceptionInvalidPassword(string password) {
             //arrange
-            //act
-            ArgumentException ex = Assert.Throws<ArgumentException>(delegate { new User(Guid.NewGuid(), "testUser", password); });
-
-            //assert
-            Assert.That(ex.Message, Is.EqualTo("Password is not allowed to contain following characters: ; / \\ \' \""));
+            //act & assert
+            Assert.Throws<ArgumentException>(delegate { new User(Guid.NewGuid(), "testUser", password); });
         }
 
         [Test]
@@ -143,8 +140,7 @@ namespace MTCG.Test.Models {
             u1.Stack.AddRange(new List<Card> { m1, m2, m3, m4 });
 
             //act & assert
-            ArgumentException ex1 = Assert.Throws<ArgumentException>(delegate { u1.ConfigureDeck(new List<Guid> { m1.Id, m2.Id, m3.Id, m4.Id, m5.Id }); });
-            Assert.That(ex1.Message, Is.EqualTo($"A deck should be provided with 4 cards, cards given: 5"));
+            Assert.Throws<InconsistentNumberException>(delegate { u1.ConfigureDeck(new List<Guid> { m1.Id, m2.Id, m3.Id, m4.Id, m5.Id }); });
         }
 
         [Test]
@@ -153,8 +149,7 @@ namespace MTCG.Test.Models {
             u1.Stack.AddRange(new List<Card> { m1, m2, m3, m4 });
 
             //act & assert
-            ArgumentException ex2 = Assert.Throws<ArgumentException>(delegate { u1.ConfigureDeck(new List<Guid> { m1.Id, m2.Id, m3.Id }); });
-            Assert.That(ex2.Message, Is.EqualTo($"A deck should be provided with 4 cards, cards given: 3"));
+            Assert.Throws<InconsistentNumberException>(delegate { u1.ConfigureDeck(new List<Guid> { m1.Id, m2.Id, m3.Id }); });
         }
 
         [Test]
@@ -163,8 +158,7 @@ namespace MTCG.Test.Models {
             u1.Stack.AddRange(new List<Card> { m1, m2, m3, m4 });
 
             //act & assert
-            ArgumentException ex3 = Assert.Throws<ArgumentException>(delegate { u1.ConfigureDeck(new List<Guid> { m1.Id, m2.Id, m3.Id, m5.Id }); });
-            Assert.That(ex3.Message, Is.EqualTo($"Card with id {m5.Id} was not found in stack!"));
+            Assert.Throws<NotInDeckOrStackException>(delegate { u1.ConfigureDeck(new List<Guid> { m1.Id, m2.Id, m3.Id, m5.Id }); });
         }
 
         [Test]
@@ -211,8 +205,16 @@ namespace MTCG.Test.Models {
             u1.AddFriend(u2);
 
             //assert
-            ArgumentException ex1 = Assert.Throws<ArgumentException>(delegate { u2.AddFriend(u1); });
+            FriendException ex1 = Assert.Throws<FriendException>(delegate { u2.AddFriend(u1); });
             Assert.That(ex1.Message, Is.EqualTo($"User maxi is already your friend!"));
+        }
+
+        [Test]
+        public void testAddFriend_throwsExceptionSameUser() {
+            //arrange
+            //act & assert
+            FriendException ex1 = Assert.Throws<FriendException>(delegate { u1.AddFriend(u1); });
+            Assert.That(ex1.Message, Is.EqualTo($"You cannot befriend yourself!"));
         }
 
         [Test]
@@ -237,8 +239,16 @@ namespace MTCG.Test.Models {
             User u3 = new User(Guid.NewGuid(), "otto", "supersecretpassword1");
 
             //act & assert
-            ArgumentException ex1 = Assert.Throws<ArgumentException>(delegate { u1.RemoveFriend(u3); });
+            FriendException ex1 = Assert.Throws<FriendException>(delegate { u1.RemoveFriend(u3); });
             Assert.That(ex1.Message, Is.EqualTo($"User otto is not your friend!"));
+        }
+
+        [Test]
+        public void testRemoveFriend_throwsExceptionSameUser() {
+            //arrange
+            //act & assert
+            FriendException ex1 = Assert.Throws<FriendException>(delegate { u1.RemoveFriend(u1); });
+            Assert.That(ex1.Message, Is.EqualTo($"You cannot unfriend yourself!"));
         }
 
         [Test]

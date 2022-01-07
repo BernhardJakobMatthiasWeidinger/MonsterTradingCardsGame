@@ -1,4 +1,5 @@
-﻿using MTCG.Models;
+﻿using MTCG.Exceptions;
+using MTCG.Models;
 using SWE1HttpServer.Core.Response;
 using SWE1HttpServer.Core.Routing;
 using System;
@@ -23,7 +24,7 @@ namespace MTCG.RouteCommands.Trades {
             try {
                 mTCGManager.DeleteTrade(User, tradeId);
                 response.StatusCode = StatusCode.Ok;
-            } catch (ArgumentException) {
+            } catch (EntityNotFoundException) {
                 response.StatusCode = StatusCode.NotFound;
             } catch (InvalidOperationException) {
                 response.StatusCode = StatusCode.Forbidden;

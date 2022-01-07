@@ -1,8 +1,10 @@
-﻿using MTCG.Models;
-using NUnit.Framework;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using NUnit.Framework;
+
+using MTCG.Models;
+using MTCG.Exceptions;
 
 namespace MTCG.Test.Models {
     public class TestBattle {
@@ -39,8 +41,7 @@ namespace MTCG.Test.Models {
         public void testConstructor_throwsException() {
             //arrange
             //act & assert
-            ArgumentException ex1 = Assert.Throws<ArgumentException>(delegate { new Battle(Guid.NewGuid(), u1); });
-            Assert.That(ex1.Message, Is.EqualTo("A deck should consist of 4 cards, cards in deck: 0"));
+            Assert.Throws<InconsistentNumberException>(delegate { new Battle(Guid.NewGuid(), u1); });
         }
 
         [Test]

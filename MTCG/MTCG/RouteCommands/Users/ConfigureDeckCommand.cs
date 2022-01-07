@@ -1,5 +1,4 @@
-﻿using MTCG.Models;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using SWE1HttpServer.Core.Response;
 using SWE1HttpServer.Core.Routing;
@@ -8,6 +7,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
+using MTCG.Models;
+using MTCG.Exceptions;
 
 namespace MTCG.RouteCommands.Users {
     public class ConfigureDeckCommand : ProtectedRouteCommand {
@@ -31,15 +33,19 @@ namespace MTCG.RouteCommands.Users {
 
                 mTCGManager.ConfigureDeck(User, cardIds);
                 response.StatusCode = StatusCode.Ok;
-            } catch (ArgumentException) {
-                response.StatusCode = StatusCode.Forbidden;
-                response.Payload = User.DeckToString(true);
-            } catch (FormatException) {
-                response.StatusCode = StatusCode.BadRequest;
+            } catch (Exception ex) {
+                if (ex is InconsistentNumberException) {
+                    response.StatusCode = StatusCode.Conflict;
+                } else if (ex is NotInDeckOrStackException) {
+                    response.StatusCode = StatusCode.Forbidden;
+                } else {
+                    response.StatusCode = StatusCode.BadRequest;
+                }
+
                 response.Payload = User.DeckToString(true);
             }
 
-            return response;
+                return response;
         }
     }
 }

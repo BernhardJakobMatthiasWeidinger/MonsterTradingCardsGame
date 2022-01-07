@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading;
+using MTCG.Exceptions;
 
 namespace MTCG.Models {
     public class Battle {
@@ -14,8 +13,7 @@ namespace MTCG.Models {
 
         public Battle(Guid id, User user1) {
             if (user1.Deck.Count != 4) {
-                throw new ArgumentException($"A deck should consist of 4 cards, " +
-                    $"cards in deck: {user1.Deck.Count}");
+                throw new InconsistentNumberException();
             }
             this.Id = id;
             this.User1 = user1;
@@ -28,8 +26,7 @@ namespace MTCG.Models {
 
         public string Play(User user2) {
             if (user2.Deck.Count != 4) {
-                throw new ArgumentException($"A deck should consist of 4 cards, " +
-                    $"cards in deck: {user2.Deck.Count}");
+                throw new InconsistentNumberException();
             }
             this.User2 = user2;
 

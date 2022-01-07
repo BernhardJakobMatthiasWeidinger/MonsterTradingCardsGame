@@ -1,4 +1,5 @@
-﻿using MTCG.Models;
+﻿using MTCG.Exceptions;
+using MTCG.Models;
 using Newtonsoft.Json;
 using SWE1HttpServer.Core.Response;
 using SWE1HttpServer.Core.Routing;
@@ -26,12 +27,18 @@ namespace MTCG.RouteCommands.Trades {
             try {
                 mTCGManager.TradeCard(User, id, JsonConvert.DeserializeObject<string>(payload));
                 response.StatusCode = StatusCode.Ok;
-            } catch (ArgumentException) {
+            } catch (EntityNotFoundException) {
                 response.StatusCode = StatusCode.NotFound;
-            } catch (InvalidOperationException) {
-                response.StatusCode = StatusCode.Forbidden;
-            } catch (Exception) {
-                response.StatusCode = StatusCode.BadRequest;
+            } catch (Exception ex) {
+                if (ex is InvalidOperationException || 
+                    ex is InDeckException ||
+                    ex is NotInDeckOrStackException ||
+                    ex is InvalidCardTypeException ||
+                    ex is InconsistentNumberException) {
+                    response.StatusCode = StatusCode.Conflict;
+                } else {
+                    response.StatusCode = StatusCode.BadRequest;
+                }
             }
 
             return response;

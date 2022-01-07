@@ -1,4 +1,5 @@
-﻿using MTCG.Models;
+﻿using MTCG.Exceptions;
+using MTCG.Models;
 using SWE1HttpServer.Core.Response;
 using SWE1HttpServer.Core.Routing;
 using System;
@@ -23,10 +24,14 @@ namespace MTCG.RouteCommands.Trades {
             try {
                 mTCGManager.CreateTrade(User, payload);
                 response.StatusCode = StatusCode.Created;
-            } catch (ArgumentException) {
-                response.StatusCode = StatusCode.Forbidden;
-            } catch (Exception) {
-                response.StatusCode = StatusCode.BadRequest;
+            } catch (Exception ex) {
+                if (ex is EntityAlreadyExistsException ||
+                    ex is InDeckException ||
+                    ex is NotInDeckOrStackException) {
+                    response.StatusCode = StatusCode.Forbidden;
+                } else {
+                    response.StatusCode = StatusCode.BadRequest;
+                }
             }
 
             return response;

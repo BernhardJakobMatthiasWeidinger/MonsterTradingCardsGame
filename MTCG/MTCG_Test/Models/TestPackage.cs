@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using NUnit;
 using NUnit.Framework;
 
 using MTCG.Models;
+using MTCG.Exceptions;
 
 namespace MTCG.Test.Models {
     public class TestPackage {
@@ -39,16 +39,14 @@ namespace MTCG.Test.Models {
         public void testConstructor_throwsExceptionTooFewCards() {
             //arrange
             //act & assert
-            ArgumentException ex1 = Assert.Throws<ArgumentException>(delegate { new Package(Guid.NewGuid(), new List<Card> { m1, m2, m3, s1 }); });
-            Assert.That(ex1.Message, Is.EqualTo("A package should be provided with 5 cards, cards given: 4"));
+            Assert.Throws<InconsistentNumberException>(delegate { new Package(Guid.NewGuid(), new List<Card> { m1, m2, m3, s1 }); });
         }
 
         [Test]
         public void testConstructor_throwsExceptionTooManyCards() {
             //arrange
             //act & assert
-            ArgumentException ex1 = Assert.Throws<ArgumentException>(delegate { new Package(Guid.NewGuid(), new List<Card> { m1, m2, m3, s1, s2, s3 }); });
-            Assert.That(ex1.Message, Is.EqualTo("A package should be provided with 5 cards, cards given: 6"));
+            Assert.Throws<InconsistentNumberException>(delegate { new Package(Guid.NewGuid(), new List<Card> { m1, m2, m3, s1, s2, s3 }); });
         }
 
 
@@ -75,8 +73,7 @@ namespace MTCG.Test.Models {
             Package p1 = new Package(Guid.NewGuid(), new List<Card> { m1, m2, m3, s1, s2 });
 
             //act & assert
-            ArgumentException ex = Assert.Throws<ArgumentException>(delegate { p1.AquirePackage(u1); });
-            Assert.That(ex.Message, Is.EqualTo($"User maxi has an insufficent amount of coins (3), coins needed: 5"));
+            Assert.Throws<InconsistentNumberException>(delegate { p1.AquirePackage(u1); });
         }
     }
 }

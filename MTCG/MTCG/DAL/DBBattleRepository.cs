@@ -1,4 +1,5 @@
-﻿using MTCG.Models;
+﻿using MTCG.Exceptions;
+using MTCG.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +14,7 @@ namespace MTCG.DAL {
             string log = "";
 
             if (battles.Any(b => b.User1 == user || b.User2 == user)) {
-                throw new ArgumentException("User is already in a battle");
+                throw new EntityAlreadyExistsException();
             }
 
             //Only players with elo difference of 10 can battle each other
@@ -39,7 +40,7 @@ namespace MTCG.DAL {
                 lock (this) {
                     battle = battles.FirstOrDefault(b => b.User1.Id == Guid.Parse(user1Id));
                     if (battle == null) {
-                        throw new InvalidCastException("No battle with specified user found.");
+                        throw new EntityNotFoundException("No battle with specified user found.");
                     }
                     log = battle.Play(user);
                 }

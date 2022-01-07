@@ -1,8 +1,5 @@
-﻿using Newtonsoft.Json.Converters;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Text.Json.Serialization;
+﻿using System;
+using MTCG.Exceptions;
 
 namespace MTCG.Models {
     public abstract class Card {
@@ -18,7 +15,7 @@ namespace MTCG.Models {
             this.ElementType = ElementType.normal;
             
             if (damage < 0) {
-                throw new ArgumentException("Damage has to be positive.");
+                throw new InconsistentNumberException();
             }
 
             if (name.Length >= 7) {
@@ -58,12 +55,9 @@ namespace MTCG.Models {
 
     public class SpellCard : Card {
         public SpellCard(Guid id, string name, double damage) : base(id, name, damage) {
-            if (this.ElementType == ElementType.normal && name.Substring(0, 7).ToLower() != "regular") {
-                throw new ArgumentException("Spell card has to begin with 'Regular', 'Fire' or 'Water'.");
-            }
-
-            if (name.Substring(name.Length-5).ToLower() != "spell") {
-                throw new ArgumentException("Spell card has to end with 'Spell'.");
+            if (this.ElementType == ElementType.normal && name.Substring(0, 7).ToLower() != "regular" ||
+                name.Substring(name.Length - 5).ToLower() != "spell") {
+                throw new InvalidCardNameException();
             }
         }
     }

@@ -1,4 +1,5 @@
-﻿using MTCG.Models;
+﻿using MTCG.Exceptions;
+using MTCG.Models;
 using Newtonsoft.Json;
 using SWE1HttpServer.Core.Response;
 using SWE1HttpServer.Core.Routing;
@@ -24,10 +25,12 @@ namespace MTCG.RouteCommands.Users {
             try {
                 mTCGManager.DeleteFriend(User, other);
                 response.StatusCode = StatusCode.Created;
-            } catch (ArgumentException) {
+            } catch (EntityNotFoundException) {
+                response.StatusCode = StatusCode.NotFound;
+            } catch (FriendException) {
                 response.StatusCode = StatusCode.Conflict;
-            } catch (InvalidCastException) {
-                response.StatusCode = StatusCode.Conflict;
+            } catch (Exception) {
+                response.StatusCode = StatusCode.BadRequest;
             }
 
             return response;

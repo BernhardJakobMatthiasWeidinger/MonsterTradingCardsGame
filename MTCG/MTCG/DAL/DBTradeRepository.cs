@@ -1,4 +1,5 @@
-﻿using MTCG.Models;
+﻿using MTCG.Exceptions;
+using MTCG.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -34,7 +35,7 @@ namespace MTCG.DAL {
         public void CreateTrade(Guid id, Card cardToTrade, User provider, CardType cardType, double minimumDamage) {
             lock (this) {
                 if (trades.Any(t => t.Id == id || t.CardToTrade == cardToTrade)) {
-                    throw new ArgumentException("Trade already exists");
+                    throw new EntityAlreadyExistsException();
                 } else {
                     Trade trade = new Trade(id, cardToTrade, provider, cardType, minimumDamage);
                     DBConnection.InsertTrade(trade);
@@ -47,9 +48,9 @@ namespace MTCG.DAL {
             lock (this) {
                 Trade trade = trades.FirstOrDefault(t => t.Id == tradeId);
                 if (trade == null) {
-                    throw new ArgumentException("Trade not found");
+                    throw new EntityNotFoundException();
                 } else if (trade.Provider == trader) {
-                    throw new InvalidOperationException("Cannot trade card with yourself");
+                    throw new InvalidOperationException();
                 }
 
                 trade.TradeCard(trader, card);
@@ -65,10 +66,9 @@ namespace MTCG.DAL {
             lock (this) {
                 Trade trade = trades.FirstOrDefault(t => t.Id == tradeId);
                 if (trade == null) {
-                    throw new ArgumentException("Trade not found");
-                }
-                else if (trade.Provider != provider) {
-                    throw new InvalidOperationException("Cannot delete trade");
+                    throw new EntityNotFoundException();
+                } else if (trade.Provider != provider) {
+                    throw new InvalidOperationException();
                 }
                 trades.Remove(trade);
                 DBConnection.DeleteTrade(trade);

@@ -1,4 +1,5 @@
-﻿using MTCG.Models;
+﻿using MTCG.Exceptions;
+using MTCG.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -28,8 +29,7 @@ namespace MTCG.DAL {
                     users.Add(user);
                     try {
                         DBConnection.InsertUser(user);
-                    }
-                    catch (Exception) {
+                    } catch (Exception) {
                         return false;
                     }
                 }
@@ -124,12 +124,12 @@ namespace MTCG.DAL {
 
         public void ConfigureDeck(User user, List<Guid> cardIds) {
             if (cardIds.Count != 4) {
-                throw new ArgumentException("Insufficent amount of cards");
+                throw new InconsistentNumberException();
             }
 
             foreach (Guid id in cardIds) {
                 if (!user.Stack.Any(c => c.Id == id)) {
-                    throw new ArgumentException("Card not found in stack");
+                    throw new NotInDeckOrStackException("Card not found in stack");
                 }
             }
 
@@ -162,9 +162,7 @@ namespace MTCG.DAL {
             lock (this) {
                 User user2 = users.FirstOrDefault(u => u.Username == other);
                 if (user2 == null) {
-                    throw new InvalidCastException();
-                } else if (user1.Friends.Contains(user2.Id) || user1 == user2) {
-                    throw new ArgumentException();
+                    throw new EntityNotFoundException();
                 } 
 
                 user1.AddFriend(user2);
@@ -176,11 +174,8 @@ namespace MTCG.DAL {
             lock (this) {
                 User user2 = users.FirstOrDefault(u => u.Username == other);
                 if (user2 == null) {
-                    throw new InvalidCastException();
-                }
-                else if (!user1.Friends.Contains(user2.Id)) {
-                    throw new ArgumentException();
-                }
+                    throw new EntityNotFoundException();
+                } 
 
                 user1.RemoveFriend(user2);
                 DBConnection.DeleteFriend(user1.Id, user2.Id);

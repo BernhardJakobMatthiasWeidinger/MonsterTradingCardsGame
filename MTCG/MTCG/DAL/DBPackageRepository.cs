@@ -1,4 +1,5 @@
 ﻿using MTCG.Models;
+using MTCG.Exceptions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -32,8 +33,7 @@ namespace MTCG.DAL {
 
                     if (name.ToLower().Contains("spell")) {
                         packageCards.Add(new SpellCard(id, name, damage));
-                    }
-                    else {
+                    } else {
                         packageCards.Add(new MonsterCard(id, name, damage));
                     }
                 }
@@ -53,8 +53,7 @@ namespace MTCG.DAL {
                         List<Card> cs = package.Cards;
                         package.AquirePackage(user);
                         cs.ForEach(c => DBConnection.UpdateCard(c.Id, false, user.Id));
-                    }
-                    catch (ArgumentException) {
+                    } catch (Exception) {
                         return false;
                     }
 

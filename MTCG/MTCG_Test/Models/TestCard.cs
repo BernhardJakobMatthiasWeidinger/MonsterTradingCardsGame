@@ -3,6 +3,7 @@ using NUnit;
 using NUnit.Framework;
 
 using MTCG.Models;
+using MTCG.Exceptions;
 
 namespace MTCG.Test.Models {
     public class TestCard {
@@ -23,16 +24,14 @@ namespace MTCG.Test.Models {
         public void testConstructor_nameThrowsExceptionWrongPrefix() {
             //arrange
             //act & assert
-            ArgumentException ex = Assert.Throws<ArgumentException>(delegate { new SpellCard(Guid.NewGuid(), "SomethingSpell", 12.0); });
-            Assert.That(ex.Message, Is.EqualTo("Spell card has to begin with 'Regular', 'Fire' or 'Water'."));
+            Assert.Throws<InvalidCardNameException>(delegate { new SpellCard(Guid.NewGuid(), "SomethingSpell", 12.0); });
         }
 
         [Test]
         public void testConstructor_nameThrowsExceptionWrongPostfix() {
             //arrange
             //act & assert
-            ArgumentException ex = Assert.Throws<ArgumentException>(delegate { new SpellCard(Guid.NewGuid(), "FireSomething", 12.0); });
-            Assert.That(ex.Message, Is.EqualTo("Spell card has to end with 'Spell'."));
+            Assert.Throws<InvalidCardNameException>(delegate { new SpellCard(Guid.NewGuid(), "FireSomething", 12.0); });
         }
 
         [Test]
@@ -42,13 +41,12 @@ namespace MTCG.Test.Models {
             MonsterCard m1 = new MonsterCard(Guid.NewGuid(), "WaterDragon", 25.0);
             SpellCard s1 = new SpellCard(Guid.NewGuid(), "RegularSpell", 12.0);
             SpellCard s2 = new SpellCard(Guid.NewGuid(), "RegularSpell", 0.0);
-            ArgumentException ex = Assert.Throws<ArgumentException>(delegate { new SpellCard(Guid.NewGuid(), "FireSpell", -12.0);  });
+            Assert.Throws<InconsistentNumberException>(delegate { new SpellCard(Guid.NewGuid(), "FireSpell", -12.0);  });
 
             //assert
             Assert.AreEqual(m1.Damage, 25.0);
             Assert.AreEqual(s1.Damage, 12.0);
             Assert.AreEqual(s2.Damage, 0.0);
-            Assert.That(ex.Message, Is.EqualTo("Damage has to be positive."));
         }
 
         [Test]

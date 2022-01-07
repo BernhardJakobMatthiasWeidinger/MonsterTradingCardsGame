@@ -31,8 +31,12 @@ namespace MTCG {
         }
 
         public bool RegisterUser(string username, string password) {
-            User user = new User(Guid.NewGuid(), username, ConvertToHash(password));
-            return dBUserRepository.InsertUser(user);
+            try {
+                User user = new User(Guid.NewGuid(), username, ConvertToHash(password));
+                return dBUserRepository.InsertUser(user);
+            } catch (ArgumentException) {
+                return false;
+            }
         }
 
         public Package CreatePackage(string username, string payload) {

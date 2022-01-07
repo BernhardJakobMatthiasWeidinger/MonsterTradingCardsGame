@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MTCG.Exceptions;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -15,7 +16,7 @@ namespace MTCG.Models {
 
         public ElementRule(ElementType element1, ElementType element2, double multiplier1, double multiplier2) {
             if (multiplier1 < 0 || multiplier2 < 0) {
-                throw new ArgumentException("Multipliers have to be positive.");
+                throw new InconsistentNumberException();
             }
             this.Element1 = element1;
             this.Element2 = element2;
@@ -46,11 +47,11 @@ namespace MTCG.Models {
         public SpecialRule(string cardName1, string cardName2, double? damage1, double? damage2) {
             if (damage1.HasValue) {
                 if (damage1.Value < 0) 
-                    throw new ArgumentException("Damages of rule have to be positive.");
+                    throw new InconsistentNumberException();
             }
             if (damage2.HasValue) {
                 if (damage2.Value < 0)
-                    throw new ArgumentException("Damages of rule have to be positive.");
+                    throw new InconsistentNumberException();
             }
             this.CardName1 = cardName1.ToLower();
             this.CardName2 = cardName2.ToLower();

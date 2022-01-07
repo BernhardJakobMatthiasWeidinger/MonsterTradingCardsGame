@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using MTCG.Exceptions;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -19,9 +20,9 @@ namespace MTCG.Models {
             this.MinimumDamage = minimumDamage;
 
             if (user.Deck.Contains(cardToTrade)) {
-                throw new ArgumentException("Cannot trade card if it's in the deck.");
+                throw new InDeckException();
             } else if (!user.Stack.Contains(cardToTrade)) {
-                throw new ArgumentException("Cannot trade card if it's not in the stack.");
+                throw new NotInDeckOrStackException();
             } else {
                 this.CardToTrade = cardToTrade;
             }
@@ -33,16 +34,16 @@ namespace MTCG.Models {
 
         public void TradeCard(User u2, Card cardForTrade) {
             if (Provider == u2) {
-                throw new ArgumentException("Cannot trade card with yourself.");
+                throw new InvalidOperationException();
             } else if (u2.Deck.Contains(cardForTrade)) {
-                throw new ArgumentException("Cannot trade card if it's in the deck.");
+                throw new InDeckException();
             } else if (!u2.Stack.Contains(cardForTrade)) {
-                throw new ArgumentException("Cannot trade card if it's not in the stack.");
+                throw new NotInDeckOrStackException();
             } else if (cardForTrade.GetType().Name == "MonsterCard" && CardType == CardType.spell ||
                 cardForTrade.GetType().Name == "SpellCard" && CardType == CardType.monster) {
-                throw new ArgumentException("Cannot trade card, wrong card type was provided.");
+                throw new InvalidCardTypeException();
             } else if (this.MinimumDamage > cardForTrade.Damage) {
-                throw new ArgumentException("Cannot trade card, damage of card is too small.");
+                throw new InconsistentNumberException();
             }
 
             //trade provided card

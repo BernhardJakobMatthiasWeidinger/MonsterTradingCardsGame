@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using MTCG.Exceptions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using SWE1HttpServer.Core.Authentication;
@@ -29,11 +30,9 @@ namespace MTCG.Models {
 
         public User(Guid id, string username, string password) {
             this.Id = id;
-            if (username.IndexOfAny(new char[] { ';', '/', '\\', '\'', '"' }) != -1) {
-                throw new ArgumentException("Username is not allowed to contain following characters: ; / \\ \' \"");
-            }
-            if (password.IndexOfAny(new char[] { ';', '/', '\\', '\'', '"' }) != -1) {
-                throw new ArgumentException("Password is not allowed to contain following characters: ; / \\ \' \"");
+            if (username.IndexOfAny(new char[] { ';', '/', '\\', '\'', '"' }) != -1 ||
+                password.IndexOfAny(new char[] { ';', '/', '\\', '\'', '"' }) != -1) {
+                throw new ArgumentException();
             }
             this.Username = username;
             this.Password = password;
@@ -84,8 +83,7 @@ namespace MTCG.Models {
             List<Card> res = new List<Card>();
 
             if (guids.Count != 4) {
-                throw new ArgumentException($"A deck should be provided with 4 cards, " +
-                    $"cards given: {guids.Count}");
+                throw new InconsistentNumberException();
             }
 
             foreach (Guid guid in guids) {
@@ -93,7 +91,7 @@ namespace MTCG.Models {
                 if (card != null) {
                     res.Add(card);
                 } else {
-                    throw new ArgumentException($"Card with id {guid} was not found in stack!");
+                    throw new NotInDeckOrStackException();
                 }
             }
 
@@ -114,8 +112,10 @@ namespace MTCG.Models {
 
         public void AddFriend(User other) {
             if (this.Friends.Contains(other.Id)) {
-                throw new ArgumentException($"User {other.Username} is already your friend!");
-            } else {
+                throw new FriendException($"User {other.Username} is already your friend!");
+            } else if (this == other) {
+                throw new FriendException($"You cannot befriend yourself!");
+            } else { 
                 this.Friends.Add(other.Id);
                 other.Friends.Add(this.Id);
             }
@@ -125,8 +125,10 @@ namespace MTCG.Models {
             if (this.Friends.Contains(other.Id)) {
                 this.Friends.Remove(other.Id);
                 other.Friends.Remove(this.Id);
+            } else if (this == other) {
+                throw new FriendException($"You cannot unfriend yourself!");
             } else {
-                throw new ArgumentException($"User {other.Username} is not your friend!");
+                throw new FriendException($"User {other.Username} is not your friend!");
             }
         }
 

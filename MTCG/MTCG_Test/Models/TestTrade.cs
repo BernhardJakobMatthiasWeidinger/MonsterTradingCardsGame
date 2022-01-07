@@ -4,6 +4,7 @@ using NUnit;
 using NUnit.Framework;
 
 using MTCG.Models;
+using MTCG.Exceptions;
 
 namespace MTCG.Test.Models {
     public class TestTrade {
@@ -56,16 +57,14 @@ namespace MTCG.Test.Models {
         public void testConstructor_throwsExceptionCardNotInStack() {
             //arrange
             //act & assert
-            ArgumentException ex = Assert.Throws<ArgumentException>(delegate { new Trade(Guid.NewGuid(), m6, u1, CardType.monster, 20.0); });
-            Assert.That(ex.Message, Is.EqualTo("Cannot trade card if it's not in the stack."));
+            Assert.Throws<NotInDeckOrStackException>(delegate { new Trade(Guid.NewGuid(), m6, u1, CardType.monster, 20.0); });
         }
 
         [Test]
         public void testConstructor_throwsExceptionCardInDeck() {
             //arrange
             //act & assert
-            ArgumentException ex = Assert.Throws<ArgumentException>(delegate { new Trade(Guid.NewGuid(), m1, u1, CardType.monster, 20.0); });
-            Assert.That(ex.Message, Is.EqualTo("Cannot trade card if it's in the deck."));
+            Assert.Throws<InDeckException>(delegate { new Trade(Guid.NewGuid(), m1, u1, CardType.monster, 20.0); });
         }
 
         [Test]
@@ -93,8 +92,7 @@ namespace MTCG.Test.Models {
             Trade t1 = new Trade(Guid.NewGuid(), m5, u1, CardType.monster, 20.0);
 
             //act & assert
-            ArgumentException ex = Assert.Throws<ArgumentException>(delegate { t1.TradeCard(u1, m1); });
-            Assert.That(ex.Message, Is.EqualTo("Cannot trade card with yourself."));
+            Assert.Throws<InvalidOperationException>(delegate { t1.TradeCard(u1, m1); });
         }
 
         [Test]
@@ -103,8 +101,7 @@ namespace MTCG.Test.Models {
             Trade t1 = new Trade(Guid.NewGuid(), m5, u1, CardType.monster, 20.0);
 
             //act & assert
-            ArgumentException ex = Assert.Throws<ArgumentException>(delegate { t1.TradeCard(u2, m6); });
-            Assert.That(ex.Message, Is.EqualTo("Cannot trade card if it's in the deck."));
+            Assert.Throws<InDeckException>(delegate { t1.TradeCard(u2, m6); });
         }
 
         [Test]
@@ -113,8 +110,7 @@ namespace MTCG.Test.Models {
             Trade t1 = new Trade(Guid.NewGuid(), m5, u1, CardType.monster, 20.0);
 
             //act & assert
-            ArgumentException ex = Assert.Throws<ArgumentException>(delegate { t1.TradeCard(u2, m1); });
-            Assert.That(ex.Message, Is.EqualTo("Cannot trade card if it's not in the stack."));
+            Assert.Throws<NotInDeckOrStackException>(delegate { t1.TradeCard(u2, m1); });
         }
 
         [Test]
@@ -125,8 +121,7 @@ namespace MTCG.Test.Models {
             u2.Stack.Add(s1);
 
             //act & assert
-            ArgumentException ex4 = Assert.Throws<ArgumentException>(delegate { t1.TradeCard(u2, s1); });
-            Assert.That(ex4.Message, Is.EqualTo("Cannot trade card, wrong card type was provided."));
+            Assert.Throws<InvalidCardTypeException>(delegate { t1.TradeCard(u2, s1); });
         }
 
         [Test]
@@ -137,8 +132,7 @@ namespace MTCG.Test.Models {
             u2.Stack.Add(m);
 
             //act & assert
-            ArgumentException ex = Assert.Throws<ArgumentException>(delegate { t1.TradeCard(u2, m); });
-            Assert.That(ex.Message, Is.EqualTo("Cannot trade card, damage of card is too small."));
+            Assert.Throws<InconsistentNumberException>(delegate { t1.TradeCard(u2, m); });
         }
     }
 }
