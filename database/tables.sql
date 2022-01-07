@@ -5,7 +5,7 @@ CREATE DATABASE mtcg;
 CREATE TABLE users (
     userId          varchar(50),
     username        varchar(50) unique not null,
-    password        varchar(50) not null,
+    password        varchar(64) not null,
     name            varchar(50) ,
     bio             varchar(50) ,
     image           text,
@@ -62,4 +62,4 @@ CREATE TABLE friends (
     foreign key(userId2) references users(userId)
 );
 
-insert into users (userId, username, password, name, bio, image, coins, gamesPlayed, gamesWon, gamesLost, elo) values ('00000000-0000-0000-0000-000000000000', 'admin', 'supersecretadmin1', 'Adminovic', 'Admin of the MTCG', '', 100, 0, 0, 0, 10000);
+insert into users (userId, username, password, name, bio, image, coins, gamesPlayed, gamesWon, gamesLost, elo) values ('00000000-0000-0000-0000-000000000000', 'admin', 'dac585d8513e9ed72f27db11569cbfe4d631cb6c52b78eaaf998271ef6a7f06b', 'Adminovic', 'Admin of the MTCG', '', 100, 0, 0, 0, 10000);

@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Security.Cryptography;
 
 namespace MTCG {
     public class MTCGManager {
@@ -26,10 +27,11 @@ namespace MTCG {
         }
 
         public User LoginUser(string username, string password) {
-            return dBUserRepository.GetUserByCredentials(username, password);
+            return dBUserRepository.GetUserByCredentials(username, ConvertToHash(password));
         }
+
         public bool RegisterUser(string username, string password) {
-            User user = new User(Guid.NewGuid(), username, password);
+            User user = new User(Guid.NewGuid(), username, ConvertToHash(password));
             return dBUserRepository.InsertUser(user);
         }
 
@@ -111,6 +113,20 @@ namespace MTCG {
 
         public void DeleteFriend(User user, string other) {
             dBUserRepository.DeleteFriend(user, other);
+        }
+
+        private string ConvertToHash(string rawData) {
+            // Create a SHA256   
+            using (SHA256 sha256Hash = SHA256.Create()) {
+                byte[] bytes = sha256Hash.ComputeHash(Encoding.UTF8.GetBytes(rawData));
+
+                StringBuilder builder = new StringBuilder();
+                for (int i = 0; i < bytes.Length; i++) {
+                    builder.Append(bytes[i].ToString("x2"));
+                }
+
+                return builder.ToString();
+            }
         }
     }
 }

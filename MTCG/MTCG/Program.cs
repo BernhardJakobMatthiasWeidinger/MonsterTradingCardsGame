@@ -15,11 +15,18 @@ using MTCG.RouteCommands.Users;
 using MTCG.RouteCommands.Trades;
 using MTCG.RouteCommands.Packages;
 using MTCG.RouteCommands.Battles;
+using Newtonsoft.Json.Converters;
 
 namespace MTCG {
     class Program {
         static void Main(string[] args) {
             if (DBConnection.Connect()) {
+                JsonConvert.DefaultSettings = (() => {
+                    var settings = new JsonSerializerSettings();
+                    settings.Converters.Add(new StringEnumConverter { CamelCaseText = true });
+                    return settings;
+                });
+
                 DBUserRepository userRepository = new DBUserRepository();
                 DBPackageRepository cardRepository = new DBPackageRepository();
                 DBTradeRepository tradeRepository = new DBTradeRepository();

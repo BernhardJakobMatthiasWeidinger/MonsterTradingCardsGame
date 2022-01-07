@@ -25,7 +25,11 @@ namespace MTCG.DAL {
         public bool InsertUser(User user) {
             if (GetUserByUsername(user.Username) == null) {
                 users.Add(user);
-                DBConnection.InsertUser(user);
+                try {
+                    DBConnection.InsertUser(user);
+                } catch (Exception) {
+                    return false;
+                }
                 return true;
             }
             return false;

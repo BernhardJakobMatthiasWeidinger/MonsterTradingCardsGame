@@ -107,7 +107,7 @@ namespace MTCG.Models {
                 Deck = sortedList;
             } else if (Deck.Count < 4) {
                 //add strongest remaining cards from stack to deck
-                List<Card> sortedList = Stack.OrderByDescending(c => c.Damage).ToList().Take(4-Deck.Count).ToList();
+                List<Card> sortedList = Stack.OrderByDescending(c => c.Damage).ToList().Except(Deck).Take(4-Deck.Count).ToList();
                 Deck.AddRange(sortedList);
             }
         }
