@@ -86,8 +86,8 @@ namespace MTCG.Test.Models {
             string userData = u1.ToString();
 
             //assert
-            Assert.AreEqual($"UserId:{u1.Id},Username:{u1.Username},Name:{u1.Name},Bio:{u1.Bio},Image:{u1.Image}," +
-                    $"Coins:20,GamesPlayed:0,GamesWon:0,GamesLost:0,Elo:100,Friends:[]", u1.ToString());
+            Assert.AreEqual($"UserId:{u1.Id, -35} Username:{u1.Username, -20} Name:{u1.Name, -30} Bio:{u1.Bio, -30} Image:{u1.Image, -5}" +
+                    $"Coins:20  GamesPlayed:0   GamesWon:0   GamesLost:0   Elo:100  Friends:[]", u1.ToString());
         }
 
         [Test]
@@ -278,7 +278,7 @@ namespace MTCG.Test.Models {
             string dataPlain = u1.GetUserStats(false);
 
             //assert
-            Assert.AreEqual($"username:{u1.Username},gamesPlayed:{u1.GamesPlayed},gamesWon:{u1.GamesWon},gamesLost:{u1.GamesWon},elo:{u1.Elo}", dataPlain);
+            Assert.AreEqual($"username:{u1.Username, -20} gamesPlayed:{u1.GamesPlayed, -3} gamesWon:{u1.GamesWon, -3} gamesLost:{u1.GamesWon, -3} elo:{u1.Elo, -4}", dataPlain);
         }
 
         [Test]
@@ -307,12 +307,9 @@ namespace MTCG.Test.Models {
             //act
             string dataPlain = u1.DeckToString(false);
 
-            int i = 0;
             string dataPlainRes = "";
             foreach (Card card in u1.Deck) {
-                dataPlainRes += card.ToString();
-                dataPlainRes += i != (u1.Deck.Count - 1) ? ";" : "";
-                i++;
+                dataPlainRes += card.ToString() + "\n";
             }
             
             //assert
@@ -345,12 +342,9 @@ namespace MTCG.Test.Models {
             //act
             string dataPlain = u1.StackToString(false);
 
-            int i = 0;
             string dataPlainRes = "";
             foreach (Card card in u1.Stack) {
-                dataPlainRes += card.ToString();
-                dataPlainRes += i != (u1.Stack.Count - 1) ? ";" : "";
-                i++;
+                dataPlainRes += card.ToString() + "\n";
             }
 
             //assert

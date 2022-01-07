@@ -111,7 +111,7 @@ namespace MTCG.Test.Models {
             MonsterCard m1 = new MonsterCard(Guid.NewGuid(), name, damage);
 
             //assert
-            Assert.AreEqual($"CardId:{m1.Id},Name:{name},Damage:{damage},ElementType:{m1.ElementType},MonsterType:{m1.MonsterType}", m1.ToString());
+            Assert.AreEqual($"CardId:{m1.Id, -35} Name:{name, -20} Damage:{damage, -3} ElementType:{m1.ElementType, -7} MonsterType:{m1.MonsterType,-10}", m1.ToString());
         }
 
         [Test]
@@ -123,7 +123,7 @@ namespace MTCG.Test.Models {
             SpellCard s1 = new SpellCard(Guid.NewGuid(), name, damage);
 
             //assert
-            Assert.AreEqual($"CardId:{s1.Id},Name:{name},Damage:{damage},ElementType:{s1.ElementType}", s1.ToString());
+            Assert.AreEqual($"CardId:{s1.Id, -35} Name:{name, -20} Damage:{damage, -3} ElementType:{s1.ElementType, -7}", s1.ToString());
         }
     }
 }
