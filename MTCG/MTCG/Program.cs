@@ -83,6 +83,7 @@ namespace MTCG {
         }
 
         private static void JsonSettings() {
+            //Convert enum numbers to string in json
             JsonConvert.DefaultSettings = (() => {
                 var settings = new JsonSerializerSettings();
                 settings.Converters.Add(new StringEnumConverter { CamelCaseText = true });

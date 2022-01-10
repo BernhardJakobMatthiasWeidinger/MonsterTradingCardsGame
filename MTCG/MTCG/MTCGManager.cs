@@ -63,19 +63,19 @@ namespace MTCG {
             return dBUserRepository.GetScoreboard(json);
         }
 
-        public string GetLogFromBattle(User user, string userId) {
-            return dBBattleRepository.Battle(user, userId);
+        public string GetLogFromBattle(User user, string username) {
+            return dBBattleRepository.Battle(user, username);
         }
 
         private void GetTradesFromDB() {
             List<List<string>> ts = DBConnection.SelectAllTrades();
 
             foreach (List<string> trade in ts) {
-                Card cardToTrade = dBUserRepository.GetCardById(Guid.Parse(trade[5]));
-                User provider = dBUserRepository.GetUserById(Guid.Parse(trade[4]));
+                Card cardToTrade = dBUserRepository.GetCardById(Guid.Parse(trade[4]));
+                User provider = dBUserRepository.GetUserById(Guid.Parse(trade[3]));
                 CardType cardType = (CardType)Enum.Parse(typeof(CardType), trade[1]);
 
-                Trade t = new Trade(Guid.Parse(trade[0]), cardToTrade, provider, cardType, Double.Parse(trade[3]));
+                Trade t = new Trade(Guid.Parse(trade[0]), cardToTrade, provider, cardType, Double.Parse(trade[2]));
 
                 dBTradeRepository.AddTradeAtServerStart(t);
             }
@@ -120,7 +120,7 @@ namespace MTCG {
         }
 
         private string ConvertToHash(string rawData) {
-            // Create a SHA256   
+            // Create a SHA256 hash from password
             using (SHA256 sha256Hash = SHA256.Create()) {
                 byte[] bytes = sha256Hash.ComputeHash(Encoding.UTF8.GetBytes(rawData));
 

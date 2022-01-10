@@ -20,6 +20,7 @@ namespace MTCG.Models {
         }
 
         public string InitializeBattle() {
+            //wait until function play (called by user2) is done
             waitHandle.WaitOne();
             return log;
         }
@@ -30,6 +31,7 @@ namespace MTCG.Models {
             }
             this.User2 = user2;
 
+            //plays until no card in deck is available or 100 rounds passes
             string res = "";
             for (int i=1; i <= 100; ++i) {
                 res += CompareCards(i) + "\n";
@@ -38,9 +40,21 @@ namespace MTCG.Models {
                 } 
             }
 
-            res += $"{User1.Username} Cards: {User1.Deck.Count}, {User2.Username} Cards: {User2.Deck.Count}";
+            //add winner to battle and log
+            log = res += BattleResult() + "\n";
+
+            User1.ConfigureDeckAfterBattle();
+            User2.ConfigureDeckAfterBattle();
+            waitHandle.Set();
+
+            return log;
+        }
+
+        private string BattleResult() {
+            string res = "";
+            res = $"{User1.Username} Cards: {User1.Deck.Count}, {User2.Username} Cards: {User2.Deck.Count}";
             if (User1.Deck.Count > User2.Deck.Count) {
-                 res += $" => Winner: {User1.Username}";
+                res += $" => Winner: {User1.Username}";
                 CalculateStatsAfterBattle(User1, User2);
             } else if (User1.Deck.Count < User2.Deck.Count) {
                 CalculateStatsAfterBattle(User2, User1);
@@ -49,13 +63,8 @@ namespace MTCG.Models {
                 CalculateStatsAfterBattle(User1, User2, true);
                 res += $" => Draw";
             }
-            log = res += "\n";
 
-            User1.ConfigureDeckAfterBattle();
-            User2.ConfigureDeckAfterBattle();
-            waitHandle.Set();
-
-            return log;
+            return res;
         }
 
         private string CompareCards(int round) {

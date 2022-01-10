@@ -11,20 +11,22 @@ using System.Threading.Tasks;
 namespace MTCG.RouteCommands.Battles {
     public class StartOrJoinBattleCommand : ProtectedRouteCommand {
         private readonly MTCGManager mTCGManager;
-        private readonly string id;
+        private readonly string username;
 
-        public StartOrJoinBattleCommand(MTCGManager mTCGManager, string id) {
+        public StartOrJoinBattleCommand(MTCGManager mTCGManager, string username) {
             this.mTCGManager = mTCGManager;
-            this.id = id;
+            this.username = username;
         }
 
         public override Response Execute() {
             Response response = new Response();
             try {
-                response.Payload = mTCGManager.GetLogFromBattle(User, id);
+                response.Payload = mTCGManager.GetLogFromBattle(User, username);
             } catch (EntityAlreadyExistsException) {
                 response.StatusCode = StatusCode.Conflict;
             } catch (InconsistentNumberException) {
+                response.StatusCode = StatusCode.Forbidden;
+            } catch (FriendException) {
                 response.StatusCode = StatusCode.Forbidden;
             } catch (Exception) {
                 response.StatusCode = StatusCode.BadRequest;

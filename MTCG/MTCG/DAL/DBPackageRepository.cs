@@ -25,6 +25,7 @@ namespace MTCG.DAL {
             JArray jsonCards = JsonConvert.DeserializeObject<JArray>(payload);
             Package package;
 
+            //create cards and add to package
             lock (this) {
                 foreach (JObject card in jsonCards) {
                     Guid id = Guid.Parse(card["Id"].ToString());
@@ -50,16 +51,18 @@ namespace MTCG.DAL {
                     Package package = packages[0];
 
                     try {
+                        //assign all cards to user and delete package
                         List<Card> cs = package.Cards;
                         package.AquirePackage(user);
                         cs.ForEach(c => DBConnection.UpdateCard(c.Id, false, user.Id));
+
+                        DBConnection.DeletePackage(package);
+                        DBConnection.UpdateUser(user);
+                        packages.Remove(package);
                     } catch (Exception) {
                         return false;
                     }
 
-                    DBConnection.DeletePackage(package);
-                    DBConnection.UpdateUser(user);
-                    packages.Remove(package);
                     return true;
                 } else {
                     return false;

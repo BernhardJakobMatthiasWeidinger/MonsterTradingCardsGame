@@ -7,10 +7,11 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace MTCG.DAL {
-    public class DBUserRepository : IUserRepository {
+    public class DBUserRepository {
         private readonly List<User> users = new List<User>();
 
         public DBUserRepository() {
+            //set values at server start from DB
             users = DBConnection.SelectAllUsers();
             AssignCardsAtStart();
             AssignFriendsAtStart();
@@ -41,14 +42,15 @@ namespace MTCG.DAL {
         public bool UpdateUser(string username, string name, string bio, string image) {
             User u1 = GetUserByUsername(username);
             if (u1 != null) {
-                users.Find(u => u == u1).SetUserData(name, bio, image);
-                DBConnection.UpdateUser(GetUserByUsername(username));
+                u1.SetUserData(name, bio, image);
+                DBConnection.UpdateUser(u1);
                 return true;
             }
             return false;
         }
 
         public string GetScoreboard(bool json) {
+            //get stats of all players sorted by elo
             users.Sort((x, y) => y.Elo - x.Elo);
             if (json) {
                 JArray jArray = new JArray();
@@ -134,6 +136,7 @@ namespace MTCG.DAL {
             }
 
             lock (this) {
+                //set inDeck flag of database to false
                 user.Deck.ForEach(c => DBConnection.UpdateCard(c.Id, false, user.Id));
                 user.ConfigureDeck(cardIds);
                 user.Deck.ForEach(c => DBConnection.UpdateCard(c.Id, true, user.Id));
@@ -141,6 +144,7 @@ namespace MTCG.DAL {
         }
 
         public string GetFriends(User user, bool isJson) {
+            //return all friends of user in json or plain format
             string res = "";
             if (isJson) {
                 JArray array = new JArray();

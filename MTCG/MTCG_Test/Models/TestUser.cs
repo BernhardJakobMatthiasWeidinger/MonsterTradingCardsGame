@@ -39,7 +39,7 @@ namespace MTCG.Test.Models {
             Assert.AreEqual("maxi", u1.Username);
             Assert.AreEqual("testUserPassword", u1.Password);
             Assert.AreEqual(null, u1.Name);
-            Assert.AreEqual("Hier könnte deine Biografie stehen!", u1.Bio);
+            Assert.AreEqual("Your bio could stand here!", u1.Bio);
             Assert.AreEqual(20, u1.Coins);
             Assert.AreEqual(0, u1.GamesPlayed);
             Assert.AreEqual(0, u1.GamesWon);
@@ -264,7 +264,7 @@ namespace MTCG.Test.Models {
         [Test]
         [TestCase("maxi", "Username")]
         [TestCase("", "Name")]
-        [TestCase("Hier könnte deine Biografie stehen!", "Bio")]
+        [TestCase("Your bio could stand here!", "Bio")]
         [TestCase("", "Image")]
         [TestCase("20", "Coins")]
         [TestCase("0", "GamesPlayed")]

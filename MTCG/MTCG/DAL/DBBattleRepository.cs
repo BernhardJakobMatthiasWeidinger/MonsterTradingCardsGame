@@ -10,19 +10,19 @@ namespace MTCG.DAL {
     public class DBBattleRepository {
         private readonly List<Battle> battles = new List<Battle>();
 
-        public string Battle(User user, string user1Id = "") {
+        public string Battle(User user, string user1Name = "") {
             string log = "";
 
             if (battles.Any(b => b.User1 == user || b.User2 == user)) {
                 throw new EntityAlreadyExistsException();
             }
 
-            //Only players with elo difference of 10 can battle each other
 
             Battle battle;
-            if (user1Id == "") {
+            if (user1Name == "") {
                 bool joinBattle = false;
                 lock (this) {
+                    //Only players with elo difference of 10 or smaller can battle each other
                     battle = battles.FirstOrDefault(b => Math.Abs(b.User1.Elo - user.Elo) <= 10);
                     joinBattle = (battle != null) ? true : false;
                     if (!joinBattle) {
@@ -31,21 +31,26 @@ namespace MTCG.DAL {
                     } 
                 }
 
+                //join or initiate random battle
                 if (joinBattle) {
                     log = battle.Play(user);
                 } else {
                     log = battle.InitializeBattle();
                 }
             } else {
+                //join specific battle of friend with username
                 lock (this) {
-                    battle = battles.FirstOrDefault(b => b.User1.Id == Guid.Parse(user1Id));
+                    battle = battles.FirstOrDefault(b => b.User1.Username == user1Name);
                     if (battle == null) {
                         throw new EntityNotFoundException("No battle with specified user found.");
-                    }
+                    } else if (!battle.User1.Friends.Contains(user.Id)) {
+                        throw new FriendException();
+                    } 
                     log = battle.Play(user);
                 }
             }
 
+            //update database
             lock (this) {
                 UpdateUserAfterBattle(user);
                 if (battles.Contains(battle)) {

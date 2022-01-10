@@ -37,7 +37,7 @@ namespace MTCG.Models {
             this.Username = username;
             this.Password = password;
 
-            this.Bio = "Hier könnte deine Biografie stehen!";
+            this.Bio = "Your bio could stand here!";
             this.Coins = 20;
             this.GamesPlayed = 0;
             this.GamesWon = 0;

@@ -13,6 +13,7 @@ namespace MTCG.DAL {
         private readonly List<Trade> trades = new List<Trade>();
 
         public string GetTrades(User user, bool json) {
+            //get all trades in json or plain format
             if (json) {
                 JArray array = new JArray();
                 foreach (Trade t in trades.Where(t => t.Provider != user)) {
