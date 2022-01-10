@@ -1,0 +1,31 @@
+1. Design
+
+2. Lessons learned
+
+3. Unit Testing
+
+4. Unique Feature - Friends
+As a mandatory unqiue feature, I added a the functionality of friends. I added a table "friends" into the database, which consists of two columns with the IDs of the befriended users. At the server itself, I added a list of Guids, which stores the IDs of the befriended users. 
+
+	4.1 Add Friends	
+	The first feature is the posibility to add friends. To add a user as a friend, 
+	send the request POST /friends with the username of the friend as a payload, 
+	the IDs of the users will be added to the database and to the Guid lists.
+
+	4.2 Show List of Friends
+	With the request GET /friends, the server returns a list of the data, 
+	either json or plain format, of all your friends. 
+	The data contains the ID, username, alternative name, bio, image, 
+	coins, the stats and also the IDs of their friends.
+
+	4.3 Battle Friends
+	Users can join specific battles with the request POST /battles/\{username\}. 
+	This only works if the user, which started the battle, 
+	is befriended with the joining user.
+
+	4.4 Remove Friends
+	With the request DELETE /friends/ and the username as the payload, 
+	the users will no longer be befriended. The relationship in the database and 
+	also the IDs in the coresponding lists will be deleted. 
+
+

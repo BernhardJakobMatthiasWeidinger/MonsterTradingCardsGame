@@ -76,6 +76,7 @@ namespace MTCG.Test.Models {
         }
 
         [Test]
+        [TestCase("FireTroll", MonsterType.troll)]
         [TestCase("WaterDragon", MonsterType.dragon)]
         [TestCase("FireElf", MonsterType.elf)]
         [TestCase("FireGoblin", MonsterType.goblin)]

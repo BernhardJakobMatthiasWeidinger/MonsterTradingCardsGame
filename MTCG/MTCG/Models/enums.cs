@@ -20,7 +20,8 @@ namespace MTCG.Models {
         ork,
         knight,
         kraken,
-        elf
+        elf,
+        troll
     }
 
     [JsonConverter(typeof(StringEnumConverter))]
