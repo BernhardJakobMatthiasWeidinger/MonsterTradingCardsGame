@@ -14,11 +14,7 @@ namespace MTCG.RouteCommands.Users {
 
         public GetFriendsCommand(MTCGManager mTCGManager, string format) {
             this.mTCGManager = mTCGManager;
-            if (!String.IsNullOrWhiteSpace(format)) {
-                if (format.Split("=")[1] == "plain") {
-                    json = false;
-                }
-            }
+            if (format == "plain") { json = false; }
         }
 
         public override Response Execute() {

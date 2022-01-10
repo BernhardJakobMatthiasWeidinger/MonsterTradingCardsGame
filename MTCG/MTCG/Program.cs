@@ -49,24 +49,30 @@ namespace MTCG {
             router.AddProtectedRoute(HttpMethod.Post, "/packages", (r, p) => new AddPackageCommand(mtcgManager, r.Payload));
             router.AddProtectedRoute(HttpMethod.Post, "/transactions/packages", (r, p) => new GetPackageCommand(mtcgManager));
 
-            router.AddProtectedRoute(HttpMethod.Get, "/cards{id}", (r, p) => new GetStackCommand(mtcgManager, p["id"]));
-            router.AddProtectedRoute(HttpMethod.Get, "/deck{id}", (r, p) => new GetDeckCommand(mtcgManager, p["id"]));
+            router.AddProtectedRoute(HttpMethod.Get, "/cards", (r, p) => new GetStackCommand(mtcgManager, ""));
+            router.AddProtectedRoute(HttpMethod.Get, "/cards?format={id}", (r, p) => new GetStackCommand(mtcgManager, p["id"]));
+            router.AddProtectedRoute(HttpMethod.Get, "/deck", (r, p) => new GetDeckCommand(mtcgManager, ""));
+            router.AddProtectedRoute(HttpMethod.Get, "/deck?format={id}", (r, p) => new GetDeckCommand(mtcgManager, p["id"]));
             router.AddProtectedRoute(HttpMethod.Put, "/deck", (r, p) => new ConfigureDeckCommand(mtcgManager, r.Payload));
 
             router.AddProtectedRoute(HttpMethod.Get, "/users/{id}", (r, p) => new GetUserDataCommand(mtcgManager, p["id"]));
             router.AddProtectedRoute(HttpMethod.Put, "/users/{id}", (r, p) => new SetUserDataCommand(mtcgManager, p["id"], r.Payload));
-            router.AddProtectedRoute(HttpMethod.Get, "/stats{id}", (r, p) => new GetUserStatsCommand(mtcgManager, p["id"]));
-            router.AddProtectedRoute(HttpMethod.Get, "/score{id}", (r, p) => new GetScoreboardCommand(mtcgManager, p["id"]));
+            router.AddProtectedRoute(HttpMethod.Get, "/stats", (r, p) => new GetUserStatsCommand(mtcgManager, ""));
+            router.AddProtectedRoute(HttpMethod.Get, "/stats?format={id}", (r, p) => new GetUserStatsCommand(mtcgManager, p["id"]));
+            router.AddProtectedRoute(HttpMethod.Get, "/score", (r, p) => new GetScoreboardCommand(mtcgManager, ""));
+            router.AddProtectedRoute(HttpMethod.Get, "/score?format={id}", (r, p) => new GetScoreboardCommand(mtcgManager, p["id"]));
 
             router.AddProtectedRoute(HttpMethod.Post, "/battles", (r, p) => new StartOrJoinBattleCommand(mtcgManager, ""));
             router.AddProtectedRoute(HttpMethod.Post, "/battles/{id}", (r, p) => new StartOrJoinBattleCommand(mtcgManager, p["id"]));
 
-            router.AddProtectedRoute(HttpMethod.Get, "/tradings{id}", (r, p) => new GetTradesCommand(mtcgManager, p["id"]));
+            router.AddProtectedRoute(HttpMethod.Get, "/tradings", (r, p) => new GetTradesCommand(mtcgManager, ""));
+            router.AddProtectedRoute(HttpMethod.Get, "/tradings?format={id}", (r, p) => new GetTradesCommand(mtcgManager, p["id"]));
             router.AddProtectedRoute(HttpMethod.Post, "/tradings", (r, p) => new AddTradingDealCommand(mtcgManager, r.Payload));
             router.AddProtectedRoute(HttpMethod.Post, "/tradings/{id}", (r, p) => new TradeCardCommand(mtcgManager, p["id"], r.Payload));
             router.AddProtectedRoute(HttpMethod.Delete, "/tradings/{id}", (r, p) => new DeleteTradingDealCommand(mtcgManager, p["id"]));
 
-            router.AddProtectedRoute(HttpMethod.Get, "/friends{id}", (r, p) => new GetFriendsCommand(mtcgManager, p["id"]));
+            router.AddProtectedRoute(HttpMethod.Get, "/friends", (r, p) => new GetFriendsCommand(mtcgManager, ""));
+            router.AddProtectedRoute(HttpMethod.Get, "/friends?format={id}", (r, p) => new GetFriendsCommand(mtcgManager, p["id"]));
             router.AddProtectedRoute(HttpMethod.Post, "/friends", (r, p) => new AddFriendCommand(mtcgManager, r.Payload));
             router.AddProtectedRoute(HttpMethod.Delete, "/friends", (r, p) => new DeleteFriendCommand(mtcgManager, r.Payload));
         }
