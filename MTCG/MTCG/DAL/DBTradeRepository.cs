@@ -14,18 +14,21 @@ namespace MTCG.DAL {
 
         public string GetTrades(User user, bool json) {
             //get all trades in json or plain format
-            if (json) {
-                JArray array = new JArray();
-                foreach (Trade t in trades.Where(t => t.Provider != user)) {
-                    array.Add(t.TradeToString(json));
+            lock (this) {
+                if (json) {
+                    JArray array = new JArray();
+                    foreach (Trade t in trades.Where(t => t.Provider != user)) {
+                        array.Add(t.TradeToString(json));
+                    }
+                    return JsonConvert.SerializeObject(array);
                 }
-                return JsonConvert.SerializeObject(array);
-            } else {
-                string tradesString = "";
-                foreach (Trade t in trades.Where(t => t.Provider != user)) {
-                    tradesString += t.TradeToString(json) + "\n";
+                else {
+                    string tradesString = "";
+                    foreach (Trade t in trades.Where(t => t.Provider != user)) {
+                        tradesString += t.TradeToString(json) + "\n";
+                    }
+                    return tradesString;
                 }
-                return tradesString;
             }
         }
 

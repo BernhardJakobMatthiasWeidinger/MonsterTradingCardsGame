@@ -17,11 +17,15 @@ namespace MTCG.DAL {
             AssignFriendsAtStart();
         }
         public User GetUserByAuthToken(string authToken) {
-            return users.FirstOrDefault(user => user.Username + "-mtcgToken" == authToken);
+            lock (this) {
+                return users.FirstOrDefault(user => user.Username + "-mtcgToken" == authToken);
+            }
         }
 
         public User GetUserByCredentials(string username, string password) {
-            return users.FirstOrDefault(user => user.Username == username && user.Password == password);
+            lock (this) {
+                return users.FirstOrDefault(user => user.Username == username && user.Password == password);
+            }
         }
 
         public bool InsertUser(User user) {
@@ -39,54 +43,50 @@ namespace MTCG.DAL {
             return false;
         }
 
-        public bool UpdateUser(string username, string name, string bio, string image) {
-            User u1 = GetUserByUsername(username);
-            if (u1 != null) {
-                u1.SetUserData(name, bio, image);
-                DBConnection.UpdateUser(u1);
-                return true;
-            }
-            return false;
-        }
-
         public string GetScoreboard(bool json) {
             //get stats of all players sorted by elo
-            users.Sort((x, y) => y.Elo - x.Elo);
-            if (json) {
-                JArray jArray = new JArray();
-                foreach (User user in users.Where(u => u.Username != "admin")) {
-                    jArray.Add(user.GetUserStats(json));
+            lock (this) {
+                users.Sort((x, y) => y.Elo - x.Elo);
+                if (json) {
+                    JArray jArray = new JArray();
+                    foreach (User user in users.Where(u => u.Username != "admin")) {
+                        jArray.Add(user.GetUserStats(json));
+                    }
+                    return JsonConvert.SerializeObject(jArray);
                 }
-                return JsonConvert.SerializeObject(jArray);
-            } else {
-                string scoreboard = "";
-                foreach (User user in users.Where(u => u.Username != "admin")) {
-                    scoreboard +=  user.GetUserStats(json) + "\n";
+                else {
+                    string scoreboard = "";
+                    foreach (User user in users.Where(u => u.Username != "admin")) {
+                        scoreboard += user.GetUserStats(json) + "\n";
+                    }
+                    return scoreboard;
                 }
-                return scoreboard;
             }
         }
 
         private User GetUserByUsername(string username) {
-            return users.FirstOrDefault(u => u.Username == username);
+            lock (this) {
+                return users.FirstOrDefault(u => u.Username == username);
+            }
         }
 
         public User GetUserById(Guid id) {
-            return users.FirstOrDefault(u => u.Id == id);
+            lock (this) {
+                return users.FirstOrDefault(u => u.Id == id);
+            }
         }
+
         public Card GetCardById(Guid id) {
             Card card = null;
-            foreach (User user in users) {
-                card = user.Stack.FirstOrDefault(c => c.Id == id);
-                if (card != null) {
-                    break;
+            lock (this) {
+                foreach (User user in users) {
+                    card = user.Stack.FirstOrDefault(c => c.Id == id);
+                    if (card != null) {
+                        break;
+                    }
                 }
             }
             return card;
-        }
-
-        public List<User> GetAllUsers() {
-            return users;
         }
 
         public void AssignCardsAtStart() {
@@ -117,11 +117,15 @@ namespace MTCG.DAL {
         }
 
         public List<Card> GetStack(Guid userId) {
-            return users.FirstOrDefault(u => u.Id == userId).Stack;
+            lock (this) {
+                return users.FirstOrDefault(u => u.Id == userId).Stack;
+            }
         }
 
         public List<Card> GetDeck(Guid userId) {
-            return users.FirstOrDefault(u => u.Id == userId).Deck;
+            lock (this) {
+                return users.FirstOrDefault(u => u.Id == userId).Deck;
+            }
         }
 
         public void ConfigureDeck(User user, List<Guid> cardIds) {
@@ -146,17 +150,21 @@ namespace MTCG.DAL {
         public string GetFriends(User user, bool isJson) {
             //return all friends of user in json or plain format
             string res = "";
-            if (isJson) {
-                JArray array = new JArray();
-                foreach (Guid friendId in user.Friends) {
-                    array.Add(JsonConvert.SerializeObject(users.FirstOrDefault(u => u.Id == friendId)));
+
+            lock (this) {
+                if (isJson) {
+                    JArray array = new JArray();
+                    foreach (Guid friendId in user.Friends) {
+                        array.Add(JsonConvert.SerializeObject(users.FirstOrDefault(u => u.Id == friendId)));
+                    }
+                    JObject o = new JObject();
+                    o["Friends"] = array;
+                    res = o.ToString();
                 }
-                JObject o = new JObject();
-                o["Friends"] = array;
-                res = o.ToString();
-            } else {
-                foreach (Guid friendId in user.Friends) {
-                    res += users.FirstOrDefault(u => u.Id == friendId).ToString() + "\n";
+                else {
+                    foreach (Guid friendId in user.Friends) {
+                        res += users.FirstOrDefault(u => u.Id == friendId).ToString() + "\n";
+                    }
                 }
             }
             return res;
