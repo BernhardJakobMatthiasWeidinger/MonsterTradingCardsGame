@@ -1,11 +1,31 @@
 1. Design
+Model class diagramm: class_diagramm.png
 
 2. Lessons learned
 
 3. Unit Testing
+For the unit tests I tested all models (view class_diagramm.png) 
+with their respective constructors and their public methods.
+For each method, which throws exceptions, I split them up into a test with no error and 
+tests with errors (for each error another test). 
+Furthermore, I wrote multiple test cases for each test, so that all possible code paths are covered.
+
+	3.1 Method names with no exception
+	The basic structure of my test names is as follows: testMethod or testMethod_explanation. 
+	For the explanation, I either wrote the expected result 
+	(f.e. testGetUserData_plain and testGetUserData_json) or the expected behaviour 
+	(f.e. testCompareAllRules_noCalculation and testCompareAllRules_withCalculation)
+
+	3.2 Method names with exception
+	If the method throws an error, I designed additional test cases, 
+	which I named testMethod_throwsExcpetion or testMethod_throwsExcpetionExplanation.
+	For the explanation, I simply wrote the reason why the error should be thrown.
 
 4. Unique Feature - Friends
-As a mandatory unqiue feature, I added a the functionality of friends. I added a table "friends" into the database, which consists of two columns with the IDs of the befriended users. At the server itself, I added a list of Guids, which stores the IDs of the befriended users. 
+As a mandatory unqiue feature, I added a the functionality of friends. I added a table "friends" 
+into the database, which consists of two columns with the IDs of the befriended users. 
+At the server itself, I added a list of Guids to the users, 
+which stores the IDs of the befriended users. 
 
 	4.1 Add Friends	
 	The first feature is the posibility to add friends. To add a user as a friend, 
@@ -19,7 +39,7 @@ As a mandatory unqiue feature, I added a the functionality of friends. I added a
 	coins, the stats and also the IDs of their friends.
 
 	4.3 Battle Friends
-	Users can join specific battles with the request POST /battles/\{username\}. 
+	Users can join specific battles with the request POST /battles/{username}. 
 	This only works if the user, which started the battle, 
 	is befriended with the joining user.
 
@@ -27,3 +47,7 @@ As a mandatory unqiue feature, I added a the functionality of friends. I added a
 	With the request DELETE /friends/ and the username as the payload, 
 	the users will no longer be befriended. The relationship in the database and 
 	also the IDs in the coresponding lists will be deleted. 
+	
+5. Tracked Time: tracked_time.png
+
+6. Link to Git: https://github.com/BernhardJakobMatthiasWeidinger/MonsterTradingCardsGame.git
