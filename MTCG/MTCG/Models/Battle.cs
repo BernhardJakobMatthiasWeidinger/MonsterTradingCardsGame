@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using MTCG.Exceptions;
 
@@ -9,6 +10,8 @@ namespace MTCG.Models {
         public User User2 { get; private set; }
 
         private string log;
+        private List<Card> deck1;
+        private List<Card> deck2;
         private AutoResetEvent waitHandle = new AutoResetEvent(false);
 
         public Battle(Guid id, User user1) {
@@ -17,6 +20,7 @@ namespace MTCG.Models {
             }
             this.Id = id;
             this.User1 = user1;
+            deck1 = new List<Card>(User1.Deck);
         }
 
         public string InitializeBattle() {
@@ -30,6 +34,7 @@ namespace MTCG.Models {
                 throw new InconsistentNumberException();
             }
             this.User2 = user2;
+            deck2 = new List<Card>(User2.Deck);
 
             //plays until no card in deck is available or 100 rounds passes
             string res = "";
@@ -43,8 +48,8 @@ namespace MTCG.Models {
             //add winner to battle and log
             log = res += BattleResult() + "\n";
 
-            User1.ConfigureDeckAfterBattle();
-            User2.ConfigureDeckAfterBattle();
+            User1.Deck = deck1;
+            User2.Deck = deck2;
             waitHandle.Set();
 
             return log;
@@ -102,8 +107,6 @@ namespace MTCG.Models {
         
         private void GiveCard(User winner, User loser, Card cardToGive) {
             loser.Deck.Remove(cardToGive);
-            loser.Stack.Remove(cardToGive);
-            winner.Stack.Add(cardToGive);
             winner.Deck.Add(cardToGive);
         }
     }

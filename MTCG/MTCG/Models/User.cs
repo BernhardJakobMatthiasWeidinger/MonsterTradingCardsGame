@@ -98,18 +98,6 @@ namespace MTCG.Models {
             Deck = res;
         }
 
-        public void ConfigureDeckAfterBattle() {
-            if (Deck.Count > 4) {
-                //deck should only consist of the 4 strongest cards
-                List<Card> sortedList = Deck.OrderByDescending(c => c.Damage).ToList().Take(4).ToList();
-                Deck = sortedList;
-            } else if (Deck.Count < 4) {
-                //add strongest remaining cards from stack to deck
-                List<Card> sortedList = Stack.OrderByDescending(c => c.Damage).ToList().Except(Deck).Take(4-Deck.Count).ToList();
-                Deck.AddRange(sortedList);
-            }
-        }
-
         public void AddFriend(User other) {
             if (this.Friends.Contains(other.Id)) {
                 throw new FriendException($"User {other.Username} is already your friend!");

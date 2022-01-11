@@ -52,22 +52,13 @@ namespace MTCG.DAL {
 
             //update database
             lock (this) {
-                UpdateUserAfterBattle(user);
+                DBConnection.UpdateUser(user);
                 if (battles.Contains(battle)) {
                     battles.Remove(battle);
                 }
             }
 
             return log;
-        }
-
-        private void UpdateUserAfterBattle(User user) {
-            DBConnection.UpdateUser(user);
-
-            foreach (Card card in user.Stack) {
-                bool inDeck = user.Deck.Contains(card);
-                DBConnection.UpdateCard(card.Id, inDeck, user.Id);
-            }
         }
     }
 }

@@ -27,5 +27,3 @@ As a mandatory unqiue feature, I added a the functionality of friends. I added a
 	With the request DELETE /friends/ and the username as the payload, 
 	the users will no longer be befriended. The relationship in the database and 
 	also the IDs in the coresponding lists will be deleted. 
-
-

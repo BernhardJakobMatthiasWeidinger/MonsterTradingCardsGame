@@ -63,15 +63,17 @@ namespace MTCG.Test.Models {
             b1.Play(u2);
 
             //assert
-            Assert.GreaterOrEqual(u1.Stack.Count, 5);
+            Assert.GreaterOrEqual(u1.Stack.Count, 4);
             Assert.AreEqual(4, u1.Deck.Count);
+            Assert.AreEqual(new List<Card> { m1, m2, m3, m4 }, u1.Deck);
             Assert.AreEqual(1, u1.GamesPlayed);
             Assert.AreEqual(1, u1.GamesWon);
             Assert.AreEqual(0, u1.GamesLost);
             Assert.AreEqual(103, u1.Elo);
 
-            Assert.LessOrEqual(u2.Stack.Count, 3);
-            Assert.AreEqual(0, u2.Deck.Count);
+            Assert.LessOrEqual(u2.Stack.Count, 4);
+            Assert.AreEqual(4, u2.Deck.Count);
+            Assert.AreEqual(new List<Card> { m5, m6, m7, m8 }, u2.Deck);
             Assert.AreEqual(1, u2.GamesPlayed);
             Assert.AreEqual(0, u2.GamesWon);
             Assert.AreEqual(1, u2.GamesLost);

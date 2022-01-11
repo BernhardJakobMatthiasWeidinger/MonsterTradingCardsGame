@@ -162,24 +162,6 @@ namespace MTCG.Test.Models {
         }
 
         [Test]
-        [TestCase(3)]
-        [TestCase(4)]
-        [TestCase(5)]
-        public void testConfigureDeckAfterBattle(int countCards) {
-            //arrange
-            u1.Stack.AddRange(new List<Card> { m1, m2, m3, m4, m5 });
-            u1.Deck.AddRange(u1.Stack.GetRange(0, countCards));
-
-            //act
-            u1.ConfigureDeckAfterBattle();
-
-            //assert
-            Assert.AreEqual(5, u1.Stack.Count);
-            Assert.AreEqual(4, u1.Deck.Count);
-            Assert.AreEqual(new List<Card> { m1, m2, m3, m4 }, u1.Deck);
-        }
-
-        [Test]
         public void testAddFriend() {
             //arrange
             User u3 = new User(Guid.NewGuid(), "otto", "supersecretpassword1");
