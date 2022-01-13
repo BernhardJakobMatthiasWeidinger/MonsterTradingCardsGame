@@ -1,5 +1,6 @@
 ﻿using MTCG.DAL;
 using MTCG.Models;
+using MTCG.Exceptions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -56,7 +57,11 @@ namespace MTCG {
         }
 
         public void ConfigureDeck(User user, List<Guid> cardIds) {
-            dBUserRepository.ConfigureDeck(user, cardIds);
+            if (dBTradeRepository.CheckIfTradeExist(user, cardIds)) {
+                throw new EntityAlreadyExistsException();
+            } else {
+                dBUserRepository.ConfigureDeck(user, cardIds);
+            }
         }
 
         public string GetScoreboard(bool json) {

@@ -12,6 +12,20 @@ namespace MTCG.DAL {
     public class DBTradeRepository : ITradeRepository {
         private readonly List<Trade> trades = new List<Trade>();
 
+        public bool CheckIfTradeExist(User user, List<Guid> cardIds) {
+            //check, if any of the provided cards is already in a trade
+            lock (this) {
+                List<Trade> tradesOfUser = trades.FindAll(t => t.Provider == user);
+                foreach (Guid cardId in cardIds) {
+                    if (tradesOfUser.Any(t => t.CardToTrade.Id == cardId)) {
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+        }
+
         public string GetTrades(User user, bool json) {
             //get all trades in json or plain format
             lock (this) {

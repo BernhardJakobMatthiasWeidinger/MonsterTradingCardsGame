@@ -9,7 +9,6 @@ namespace MTCG.DAL {
     public interface IUserRepository {
         User GetUserByAuthToken(string authToken);
         User GetUserByCredentials(string username, string password);
-        User GetUserByUsername(string username);
         User GetUserById(Guid id);
         bool InsertUser(User user);
         string GetScoreboard(bool json);

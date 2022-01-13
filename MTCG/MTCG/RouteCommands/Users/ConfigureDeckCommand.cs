@@ -38,6 +38,8 @@ namespace MTCG.RouteCommands.Users {
                     response.StatusCode = StatusCode.Conflict;
                 } else if (ex is NotInDeckOrStackException) {
                     response.StatusCode = StatusCode.Forbidden;
+                } else if (ex is EntityAlreadyExistsException) {
+                    response.StatusCode = StatusCode.Conflict;
                 } else {
                     response.StatusCode = StatusCode.BadRequest;
                 }
