@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace MTCG.DAL {
-    public class DBTradeRepository {
+    public class DBTradeRepository : ITradeRepository {
         private readonly List<Trade> trades = new List<Trade>();
 
         public string GetTrades(User user, bool json) {

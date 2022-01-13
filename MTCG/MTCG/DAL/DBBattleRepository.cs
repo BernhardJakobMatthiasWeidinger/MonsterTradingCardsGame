@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace MTCG.DAL {
-    public class DBBattleRepository {
+    public class DBBattleRepository : IBattleRepository {
         private readonly List<Battle> battles = new List<Battle>();
 
         public string Battle(User user, string user1Name = "") {

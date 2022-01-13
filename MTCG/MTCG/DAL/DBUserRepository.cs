@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace MTCG.DAL {
-    public class DBUserRepository {
+    public class DBUserRepository : IUserRepository {
         private readonly List<User> users = new List<User>();
 
         public DBUserRepository() {

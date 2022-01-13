@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace MTCG.DAL {
-    public class DBPackageRepository {
+    public class DBPackageRepository : IPackageRepository {
         private readonly List<Package> packages = new List<Package>();
 
         public DBPackageRepository() {
