@@ -1,7 +1,58 @@
 1. Design
-Model class diagramm: class_diagramm.png
+I split up the main logic of my project into 4 parts: 
+The models, which contains data of each entity (f.e. the User or Card class),
+the Data Access Layer (DAL), which contains and processes all entities (f.e. DBBattleRepository),
+the MTCGManager, which contains all repositories and 
+the Route Commands, which handles all requests from clients.
+
+	1.1 Models (Class Diagram: class_diagramm.png)
+	1.1.1 Cards: 	There are 2 types of cards: Monster- and Spell-Cards. 
+					Each Card contains an element type and monster cards additionally a monster
+					type. Each type will be classified by the card name.
+	1.1.2 Users:	This class contains all relevant data of a user, like its 
+					username, coins, stats and stack.
+	1.1.3 Packages: A package only contains a list of cards. This package will be deleted, after
+					a user buys it with 5 coins.
+	1.1.4 Trades:	A trade contains a card, which is offered to be traded, the user, 
+					which provided this card and the conditions of the other card.
+	1.1.5 Rules:	There are 2 kinds of rules: Element- and Special-Rules. 
+					An element rule contains each element type, which effects each other and 
+					the multiplier, how the card damage should be affected
+					(f.e. new ElementRule(ElementType.fire, ElementType.normal, 2, 0.5) means
+					the damage of the fire card will be doubled, the damage of the normal card will be halved).
+					A special rule contains substrings of the card names, which effects each other and
+					the new damage of the cards. If a damage is set to null, the damage won't be changed
+					(f.e. new SpecialRule("goblin", "dragon", 0, null) means, that the damage of 
+					any goblin card will be temporarily set to 0, the damage of the dragon card stays the same).
+	1.1.6 RuleSet:	This class contains all element and special rules and how they are applied. 
+					In this case, if a special rule will be activated, no element rule will be applied.
+	1.1.7 Battle:	This class processes the fight of 2 users and returns a log to each user. It
+					uses the RuleSet class to compare the cards.
+	
+	1.2 DAL
+	The DAL consists of 4 repositories: 
+	DBBattleRepository, DBPackageRepository, DBTradeRepository and DBUserRepository.
+	Each repository uses a database connection, to select, insert, update and delete the data and
+	also contains a list of each entity, to cache the data so the server doesn't have to call the 
+	database for each select.
+	1.2.1 DBBattleRepository: This repository manages all battles.
+	1.2.2 DBPackageRepository: This repository manages all packages.
+	1.2.3 DBTradeRepository: This repository manages all trades.
+	1.2.4 DBUserRepository: This repository manages all users, its cards (stack and deck) and 
+					friend relationships (chapter 4).
+	
+	1.3 MTCGManager
+	This manager contains all repositories and uses them to handle the entire logic of the server.
+	
+	1.4 Route Commands
+	Route commands will be used to handle incoming requests. Each command only contains a 
+	execute method, which processes the requests and returns a fitting response.
+	There are 2 types of commands: RouteCommands and ProtectedRouteCommands. 
+	RouteCommands can be executed by any client, ProtectedRouteCommands only from clients with 
+	a valid token (which will be returned by the "normal" RouteCommands.
 
 2. Lessons learned
+
 	2.1 Battle Log
 	One problem arised, when I tried to return the battle log to each of 
 	the participating players, but that was not possible, because only 
