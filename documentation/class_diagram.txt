@@ -19,105 +19,141 @@ enum MonsterType {
     Knight
     Kraken
     Elf
+    Troll
 }
 
 abstract class Card {
-    +<<get>> -<<set>> id : Guid
-    +<<get>> -<<set>> name : String
-    +<<get>> -<<set>> damage : int
-    +<<get>> -<<set>> elementType : ElementType
+    +<<get>> -<<set>> Id : Guid
+    +<<get>> -<<set>> Name : String
+    +<<get>> -<<set>> Damage : int
+    +<<get>> -<<set>> ElementType : ElementType
 
     +{method} Card(id : Guid, name : String, damage : int)
+    +{method} ToString() : string
 }
 
 class MonsterCard{
-    +<<get>> -<<set>> monsterType : MonsterType
+    +<<get>> -<<set>> MonsterType : MonsterType
 
-    +{method} Card(id : Guid, name : String, damage : int)
+    +{method} MonsterCard(id : Guid, name : String, damage : int)
+    +{method} ToString() : string
 }
 
-class SpellCard {}
+class SpellCard {
+    +{method} SpellCard(id : Guid, name : String, damage : int)
+}
+
+interface IRule {
+    CheckRule(card1 : Card, card2 : Card, calcDamage1 : double, calcDamage2 : double) : bool
+}
+
+class ElementRule {
+    +<<get>> -<<set>> Element1 : ElementType
+    +<<get>> -<<set>> Element2 : ElementType
+    +<<get>> -<<set>> Multiplier1: double
+    +<<get>> -<<set>> Multiplier2 : double
+
+    +{method} ElementRule(element1 : ElementType, element2 : ElementType, multiplier1 : double, multiplier2 : double)
+    +{method} CheckRule(card1 : Card, card2 : Card, calcDamage1 : double, calcDamage2 : double) : bool
+}
+
+class SpecialRule {
+    +<<get>> -<<set>> CardName1 : string
+    +<<get>> -<<set>> CardName2 : string
+    +<<get>> -<<set>> Damage1? : double
+    +<<get>> -<<set>> Damage2? : double
+
+    +{method} SpecialRule (cardName1 : string, cardName2 : string, damage1 : double?, damage2 : double?)
+    +{method} CheckRule(card1 : Card, card2 : Card, calcDamage1 : double, calcDamage2 : double) : bool
+}
+
+class RuleSet {
+    -{static} elementRules : List<ElementRule>
+    -{static} specialRules : List<SpecialRule>
+
+    -{method} {static} CompareElementType(card1 : Card, card2 : Card, calcDamage1 : double, calcDamage2 : double) : Tuple<double, double>
+    -{method} {static} CompareSpecialRule(card1 : Card, card2 : Card, calcDamage1 : double, calcDamage2 : double) : Tuple<double, double>
+    -{method} {static} CompareAllRules(user1 : string, user2 : string card1 : Card, card2 : Card, calcDamage1 : double, calcDamage2 : double) : Tuple<double, double>
+}
 
 class Package {
-    +<<get>> -<<set>> id : Guid
-    +<<get>> -<<set>> cards : List<Card>
+    +<<get>> -<<set>> Id : Guid
+    +<<get>> -<<set>> Cards : List<Card>
 
-    +{method} Package(cards : List<Card>)
-    +{method} aquirePackage(user User) : void
+    +{method} Package(id : Guid, cards : List<Card>)
+    +{method} AquirePackage(user : User) : void
 }
 
 class User { 
-    +<<get>> -<<set>> id : Guid
-    +<<get>> -<<set>> username : String
-    +<<get>> -<<set>> password : String
+    +<<get>> -<<set>> Id : Guid
+    +<<get>> -<<set>> Username : String
+    +<<get>> -<<set>> Password : String
 
-    +{field} <<get, set>> name : String
-    +{field} <<get, set>> bio : String
-    +{field} <<get, set>> image : String
-    +{field} <<get, set>> coins : int
-    +{field} <<get, set>> gamesPlayed : int
-    +{field} <<get, set>> gamesWon : int
-    +{field} <<get, set>> elo : int
-    +{field} <<get, set>> stack : List<Card>
-    +{field} <<get, set>> deck : List<Card>
+    +{field} <<get, set>> Name : String
+    +{field} <<get, set>> Bio : String
+    +{field} <<get, set>> Image : String
+    +{field} <<get, set>> Coins : int
+    +{field} <<get, set>> GamesPlayed : int
+    +{field} <<get, set>> GamesWon : int
+    +{field} <<get, set>> Elo : int
+    +{field} <<get, set>> Stack : List<Card>
+    +{field} <<get, set>> Deck : List<Card>
+    +{field} <<get, set>> Friends : List<Guid>
 
-    +{method} User(username : string, password : string)
-    +{method} getCardFromDeck() : Card
-    +{method} getUserData(isJson : bool) : string
-    +{method} getUserStats(isJson : bool) : string
+    +{method} User(id : Guid, username : string, password : string)
+    +{method} ToString() : string
+    +{method} SetUserData(name : string, bio : string, image : string) : void
+    +{method} GetCardFromDeck() : Card
+    +{method} ConfigureDeck(guids : List<Guid>) : void
+    +{method} AddFriend(other : User) : void
+    +{method} RemoveFriend(other : User) : void
+    +{method} GetUserData(isJson : bool) : string
+    +{method} GetUserStats(isJson : bool) : string
+    +{method} DeckToString(isJson : bool) : string
+    +{method} StackToString(isJson : bool) : string
 
 }
 
 class Trade {
-    +<<get>> -<<set>> id : Guid
-    +<<get>> -<<set>> cardToTrade : Card
-    +<<get>> -<<set>> user : User
-    +<<get>> -<<set>> cardType : CardType
-    +<<get>> -<<set>> elementType: ElementType
-    +<<get>> -<<set>> minimumDamage : int
+    +<<get>> -<<set>> Id : Guid
+    +<<get>> -<<set>> CardToTrade : Card
+    +<<get>> -<<set>> Provider : User
+    +<<get>> -<<set>> CardType : CardType
+    +<<get>> -<<set>> MinimumDamage : int
 
-    +{method} Trade(id: Guid, cardToTrade : Card, user : User, cardType : CardType, elementType : ElementType, minimumDamage : int)
+    +{method} Trade(id: Guid, cardToTrade : Card, user : User, cardType : CardType, minimumDamage : int)
+    +{method} ToString() : string
+    +{method} TradeCard(u2 : User, cardForTrade : Card) : void
+    +{method} TradeToString(json : bool) : string
 }
 
 class Battle {
-    +<<get>> -<<set>> id : Guid
-    +<<get>> -<<set>> player1 : User
-    +<<get>> -<<set>> player2 : User
+    +<<get>> -<<set>> Id : Guid
+    +<<get>> -<<set>> User1 : User
+    +<<get>> -<<set>> User2 : User
 
-    +{method} Battle(player1 : User)
-    +{method} play(player2 : User) : string
-    +{method} compareCards() : string
-}
+    -log : string
+    -deck1 : List<Card>
+    -deck2 : List<Card>
+    -waitHandle : AutoResetEvent
 
-class DBUtils {
-    -{method} {static} GetConnection() : NpgsqlConnection
+    +{method} Battle(id : Guid, user1 : User)
+    +{method} InitializeBattle() : string
+    +{method} Play(user2 : User) : string
 
-    +{method} {static} selectRecords(tableName : string, colNames : List<string>, conditionName : string, conditionValue : Guid)
-    +{method} {static} insertRecord(tableName : string, colNames : List<string>, colValues : List<string>)
-    +{method} {static} updateRecord(tableName : string, colNames : List<string>, colValues : List<values>, conditionName : string, conditionValue : Guid)
-    +{method} {static} deleteRecord(tableName : string, colName : string, colValue : Guid)
-}
-
-class RestUtils {
-    -{field} {static} listener : HttpListener
-    -{field} {static} url : string
-    -{field} {static} battles : List<Battle>
-    -{field} {static} trades : List<Trade>
-    -{field} {static} packages : List<Pacakge>
-    -{field} {static} users : List<User>
-
-    -{method} {static} generateToken(user : User) : string
-    -{method} {static} getTradingDeals(userId : Guid) : List<Trade>
-    -{method} {static} tradeCard(tradeId : Guid, cardToTrade : Guid, userId : Guid) : bool
-    -{method} {static} deleteTrade(tradeId : Guid) : bool
-    -{method} {static} addToBattleQueue(id : Guid) : void
-    -{method} {static} checkBattleQueue(id : Guid) : void
-    
-    +{method} {static} HandleIncomingRequests : Task
+    -{method} BattleResult() : string
+    -{method} CompareCards(round : int) : string
+    -{method} CalculateStatsAfterBattle(winner : User, loser : User, draw : bool) : void
+    -{method} GiveCard(winner : User, loser : User, draw : bool) : void
 }
 
 Card<|--MonsterCard
 Card<|--SpellCard
+
+IRule<|--ElementRule
+IRule<|--SpecialRule
+RuleSet "0,1" o-- "*" IRule: contains
+Battle --> RuleSet: uses
 
 Card -- ElementType
 MonsterCard -- MonsterType
@@ -130,6 +166,4 @@ Trade "0,1" o-- "1" Card: contains
 Trade "*" o-- "1" User: contains
 
 Battle "0,1" o-- "2" User: contains
-
-RestUtils ..> DBUtils
 @enduml
