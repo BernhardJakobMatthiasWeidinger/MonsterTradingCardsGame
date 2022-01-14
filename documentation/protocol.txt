@@ -78,6 +78,6 @@ which stores the IDs of the befriended users.
 	the users will no longer be befriended. The relationship in the database and 
 	also the IDs in the coresponding lists will be deleted. 
 	
-5. Tracked Time: tracked_time.png
+5. Tracked Time: tracked_time.pdf
 
 6. Link to Git: https://github.com/BernhardJakobMatthiasWeidinger/MonsterTradingCardsGame.git
