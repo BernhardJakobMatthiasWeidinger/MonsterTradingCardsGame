@@ -59,17 +59,23 @@ namespace MTCG.Models {
 
         private string BattleResult(bool roundsReached) {
             string res = "";
-            res = $"{User1.Username} Cards: {User1.Deck.Count}, {User2.Username} Cards: {User2.Deck.Count}";
-            if (User1.Deck.Count > User2.Deck.Count) {
-                res += $" => Winner: {User1.Username}";
-                CalculateStatsAfterBattle(User1, User2);
-            } else if (User1.Deck.Count < User2.Deck.Count) {
-                CalculateStatsAfterBattle(User2, User1);
-                res += $" => Winner: {User2.Username}";
+            if (!roundsReached) {
+                res = $"{User1.Username} Cards: {User1.Deck.Count}, {User2.Username} Cards: {User2.Deck.Count}";
+                if (User1.Deck.Count > User2.Deck.Count) {
+                    res += $" => Winner: {User1.Username}";
+                    CalculateStatsAfterBattle(User1, User2);
+                } else if (User1.Deck.Count < User2.Deck.Count) {
+                    CalculateStatsAfterBattle(User2, User1);
+                    res += $" => Winner: {User2.Username}";
+                } else {
+                    CalculateStatsAfterBattle(User1, User2, true);
+                    res += $" => Draw";
+                }
             } else {
                 CalculateStatsAfterBattle(User1, User2, true);
-                res += $" => Draw";
+                res += $"100 rounds reached => Draw";
             }
+            
 
             return res;
         }
