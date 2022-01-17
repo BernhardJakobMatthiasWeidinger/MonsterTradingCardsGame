@@ -15,7 +15,7 @@ namespace MTCG.Test.Models {
 
         private static List<SpecialRule> specialRules = new List<SpecialRule> {
             new SpecialRule("goblin", "dragon", 0, null),
-            new SpecialRule("wizard", "ork", null, 0),
+            new SpecialRule("wizzard", "ork", null, 0),
             new SpecialRule("knight", "waterspell", 0, 9999),
             new SpecialRule("kraken", "spell", null, 0),
             new SpecialRule("fireelf", "dragon", null, 0),
@@ -90,10 +90,10 @@ namespace MTCG.Test.Models {
 
         [Test]
         [TestCase("Goblin", 10.0, "Dragon", 35.0, 0, 35.0, 0)]
-        [TestCase("Ork", 10.0, "Wizard", 35.0, 0, 35.0, 1)]
+        [TestCase("Ork", 10.0, "Wizzard", 35.0, 0, 35.0, 1)]
         [TestCase("RegularSpell", 10.0, "Kraken", 35.0, 0, 35.0, 3)]
         [TestCase("Dragon", 10.0, "FireElf", 35.0, 0, 35.0, 4)]
-        [TestCase("FireWizard", 10.0, "WaterOrk", 35.0, 10, 0, 1)]
+        [TestCase("FireWizzard", 10.0, "WaterOrk", 35.0, 10, 0, 1)]
         [TestCase("WaterKraken", 10.0, "FireSpell", 35.0, 10, 0, 3)]
         [TestCase("FireElf", 10.0, "WaterDragon", 35.0, 10, 0, 4)]
         [TestCase("FireDragon", 10.0, "WaterGoblin", 35.0, 10, 0, 0)]

@@ -70,8 +70,8 @@ namespace MTCG.Test.Models {
         [Test]
         public void testTradeCard() {
             //arrange
-            MonsterCard m_1 = new MonsterCard(Guid.NewGuid(), "WaterWizard", 30.0);
-            MonsterCard m_2 = new MonsterCard(Guid.NewGuid(), "WaterWizard", 30.0);
+            MonsterCard m_1 = new MonsterCard(Guid.NewGuid(), "WaterWizzard", 30.0);
+            MonsterCard m_2 = new MonsterCard(Guid.NewGuid(), "WaterWizzard", 30.0);
 
             u1.Stack.Add(m_1);
             u2.Stack.Add(m_2);
@@ -128,7 +128,7 @@ namespace MTCG.Test.Models {
         public void testTradeCard_throwsExceptionTooSmallDamage() {
             //arrange
             Trade t1 = new Trade(Guid.NewGuid(), m5, u1, CardType.monster, 20.0);
-            MonsterCard m = new MonsterCard(Guid.NewGuid(), "WaterWizard", 10.0);
+            MonsterCard m = new MonsterCard(Guid.NewGuid(), "WaterWizzard", 10.0);
             u2.Stack.Add(m);
 
             //act & assert

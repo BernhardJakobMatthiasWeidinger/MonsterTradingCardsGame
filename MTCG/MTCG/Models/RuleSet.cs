@@ -12,7 +12,7 @@ namespace MTCG.Models {
 
         private static List<SpecialRule> specialRules = new List<SpecialRule> {
             new SpecialRule("goblin", "dragon", 0, null),
-            new SpecialRule("wizard", "ork", null, 0),
+            new SpecialRule("wizzard", "ork", null, 0),
             new SpecialRule("knight", "waterspell", 0, 9999),
             new SpecialRule("kraken", "spell", null, 0),
             new SpecialRule("fireelf", "dragon", null, 0),

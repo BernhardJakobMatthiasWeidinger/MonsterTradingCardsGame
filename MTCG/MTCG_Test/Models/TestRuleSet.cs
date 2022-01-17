@@ -19,7 +19,7 @@ namespace MTCG.Test.Models {
         [Test]
         [TestCase("Maxi", "Mini", "RegularSpell", 10, "RegularSpell", 10, 10, 10)]
         [TestCase("Maxi", "Mini", "FireSpell", 10, "FireOrk", 10, 10, 10)]
-        [TestCase("Maxi", "Mini", "WaterDragon", 10, "Wizard", 10, 10, 10)]
+        [TestCase("Maxi", "Mini", "WaterDragon", 10, "Wizzard", 10, 10, 10)]
         public void testCompareAllRules_noCalculation(string user1, string user2, string name1, double damage1, string name2, double damage2, double expected1, double expected2) {
             //arrange
             Card card1 = setUpCard(name1, damage1);

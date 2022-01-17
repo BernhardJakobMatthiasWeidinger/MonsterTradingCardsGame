@@ -17,13 +17,13 @@ the Route Commands, which handles all requests from clients.
 					which provided this card and the conditions of the other card.
 	1.1.5 Rules:	There are 2 kinds of rules: Element- and Special-Rules. 
 					An element rule contains each element type, which effects each other and 
-					the multiplier, how the card damage should be affected
+					the multipliers, how the card damage should be affected
 					(f.e. new ElementRule(ElementType.fire, ElementType.normal, 2, 0.5) means
 					the damage of the fire card will be doubled, the damage of the normal card will be halved).
 					A special rule contains substrings of the card names, which effects each other and
 					the new damage of the cards. If a damage is set to null, the damage won't be changed
 					(f.e. new SpecialRule("goblin", "dragon", 0, null) means, that the damage of 
-					any goblin card will be temporarily set to 0, the damage of the dragon card stays the same).
+					any goblin card will be set to 0 for a round, the damage of the dragon card stays the same).
 	1.1.6 RuleSet:	This class contains all element and special rules and how they are applied. 
 					In this case, if a special rule will be activated, no element rule will be applied.
 	1.1.7 Battle:	This class processes the fight of 2 users and returns a log to each user. It
@@ -33,8 +33,8 @@ the Route Commands, which handles all requests from clients.
 	The DAL consists of 4 repositories: 
 	DBBattleRepository, DBPackageRepository, DBTradeRepository and DBUserRepository.
 	Each repository uses a database connection, to select, insert, update and delete the data and
-	also contains a list of each entity, to cache the data so the server doesn't have to call the 
-	database for each select.
+	also contains a list of each entity to cache the data, so the server doesn't have to call the 
+	database for each select statement.
 	1.2.1 DBBattleRepository: This repository manages all battles.
 	1.2.2 DBPackageRepository: This repository manages all packages.
 	1.2.3 DBTradeRepository: This repository manages all trades.
@@ -45,11 +45,11 @@ the Route Commands, which handles all requests from clients.
 	This manager contains all repositories and uses them to handle the entire logic of the server.
 	
 	1.4 Route Commands
-	Route commands will be used to handle incoming requests. Each command only contains a 
+	Route commands will be used to handle incoming requests. Each command only contains an
 	execute method, which processes the requests and returns a fitting response.
 	There are 2 types of commands: RouteCommands and ProtectedRouteCommands. 
 	RouteCommands can be executed by any client, ProtectedRouteCommands only from clients with 
-	a valid token (which will be returned by the "normal" RouteCommands.
+	a valid token (which will be returned by the "normal" RouteCommands).
 
 2. Lessons learned
 
@@ -92,7 +92,7 @@ possible code paths are covered.
 	3.1 Method names with no exception
 	The basic structure of my test names is as follows: testMethod or testMethod_explanation. 
 	For the explanation, I either wrote the expected result 
-	(f.e. testGetUserData_plain and testGetUserData_json) or the expected behaviour 
+	(f.e. testGetUserData_plain and testGetUserData_json) or the expected behavior 
 	(f.e. testCompareAllRules_noCalculation and testCompareAllRules_withCalculation)
 
 	3.2 Method names with exception
@@ -102,14 +102,14 @@ possible code paths are covered.
 	(f.e. testConfigureDeck_throwsExceptionInvalidCard).
 
 4. Unique Feature - Friends
-As a mandatory unqiue feature, I added a the functionality of friends. 
+As a mandatory unique feature, I added a the functionality of friends. 
 I added a table "friends" into the database, which consists of two columns 
 with the IDs of the befriended users. 
 At the server itself, I added a list of Guids to the user class, 
 which stores the IDs of the befriended users. 
 
 	4.1 Add Friends	
-	The first feature is the posibility to add friends. To add a user as a friend, 
+	The first feature is the possibility to add friends. To add a user as a friend, 
 	send the request POST /friends with the username of the friend as a payload, 
 	the IDs of the users will be added to the database and to the Guid lists.
 
@@ -127,7 +127,7 @@ which stores the IDs of the befriended users.
 	4.4 Remove Friends
 	With the request DELETE /friends and the username as the payload, 
 	the users will no longer be befriended. The relationship in the database and 
-	also the IDs in the coresponding lists will be deleted. 
+	also the IDs in the corresponding lists will be deleted. 
 	
 5. Tracked Time: tracked_time.pdf
 

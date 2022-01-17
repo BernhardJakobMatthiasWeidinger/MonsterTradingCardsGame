@@ -35,6 +35,7 @@ namespace MTCG {
                 JsonSettings();
 
                 var httpServer = new HttpServer(IPAddress.Any, 10001, router);
+                Console.WriteLine("Server started");
                 httpServer.Start();
             } else {
                 Console.WriteLine("Cannot connect to DB");

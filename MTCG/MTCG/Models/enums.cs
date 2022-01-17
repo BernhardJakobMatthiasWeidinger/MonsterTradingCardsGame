@@ -16,7 +16,7 @@ namespace MTCG.Models {
     public enum MonsterType {
         goblin,
         dragon,
-        wizard,
+        wizzard,
         ork,
         knight,
         kraken,

@@ -83,7 +83,7 @@ namespace MTCG.Test.Models {
         [TestCase("WaterKnight", MonsterType.knight)]
         [TestCase("Kraken", MonsterType.kraken)]
         [TestCase("Ork", MonsterType.ork)]
-        [TestCase("FireWizard", MonsterType.wizard)]
+        [TestCase("FireWizzard", MonsterType.wizzard)]
         public void testConstructor_monsterType(string name, MonsterType monsterType) {
             //arrange
             //act

@@ -38,15 +38,17 @@ namespace MTCG.Models {
 
             //plays until no card in deck is available or 100 rounds passes
             string res = "";
+            bool roundsReached = true;
             for (int i=1; i <= 100; ++i) {
                 res += CompareCards(i) + "\n";
                 if (User1.Deck.Count == 0 || User2.Deck.Count == 0) {
+                    roundsReached = false;
                     break;
                 } 
             }
 
             //add winner to battle and log
-            log = res += BattleResult() + "\n";
+            log = res += BattleResult(roundsReached) + "\n";
 
             User1.Deck = deck1;
             User2.Deck = deck2;
@@ -55,7 +57,7 @@ namespace MTCG.Models {
             return log;
         }
 
-        private string BattleResult() {
+        private string BattleResult(bool roundsReached) {
             string res = "";
             res = $"{User1.Username} Cards: {User1.Deck.Count}, {User2.Username} Cards: {User2.Deck.Count}";
             if (User1.Deck.Count > User2.Deck.Count) {
