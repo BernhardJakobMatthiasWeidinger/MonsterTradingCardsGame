@@ -13,14 +13,14 @@ using System.Security.Cryptography;
 namespace MTCG {
     public class MTCGManager {
         private readonly DBUserRepository dBUserRepository;
-        private readonly DBPackageRepository dBCardRepository;
+        private readonly DBPackageRepository dBPackageRepository;
         private readonly DBTradeRepository dBTradeRepository;
         private readonly DBBattleRepository dBBattleRepository;
 
-        public MTCGManager(DBUserRepository dBUserRepository, DBPackageRepository dBCardRepository, 
+        public MTCGManager(DBUserRepository dBUserRepository, DBPackageRepository dBPackageRepository, 
             DBTradeRepository dBTradeRepository, DBBattleRepository dBBattleRepository) {
             this.dBUserRepository = dBUserRepository;
-            this.dBCardRepository = dBCardRepository;
+            this.dBPackageRepository = dBPackageRepository;
             this.dBTradeRepository = dBTradeRepository;
             this.dBBattleRepository = dBBattleRepository;
 
@@ -41,11 +41,35 @@ namespace MTCG {
         }
 
         public Package CreatePackage(string username, string payload) {
-            return dBCardRepository.CreatePackage(username, payload);
+            List<Card> packageCards = new List<Card>();
+            JArray jsonCards = JsonConvert.DeserializeObject<JArray>(payload);
+
+            //create cards and add to package
+            lock (this) {
+                foreach (JObject card in jsonCards) {
+                    Guid id = Guid.Parse(card["Id"].ToString());
+                    string name = card["Name"].ToString();
+                    double damage = Double.Parse(card["Damage"].ToString());
+
+                    Card c;
+                    if (name.ToLower().Contains("spell")) {
+                        c = new SpellCard(id, name, damage);
+                    } else {
+                        c = new MonsterCard(id, name, damage);
+                    }
+
+                    if (dBUserRepository.CheckIfCardExsists(c) || dBPackageRepository.CheckIfCardExsists(c)) {
+                        throw new EntityAlreadyExistsException();
+                    } else {
+                        packageCards.Add(c);
+                    }
+                }
+            }
+            return dBPackageRepository.CreatePackage(username, packageCards);
         }
 
         public bool AcquirePackage(User user) {
-            return dBCardRepository.AcquirePackage(user);
+            return dBPackageRepository.AcquirePackage(user);
         }
 
         public List<Card> GetStack(Guid userId) {
@@ -62,6 +86,10 @@ namespace MTCG {
             } else {
                 dBUserRepository.ConfigureDeck(user, cardIds);
             }
+        }
+
+        public void SetUserData(User user, string payload) {
+            dBUserRepository.SetUserData(user, payload);
         }
 
         public string GetScoreboard(bool json) {

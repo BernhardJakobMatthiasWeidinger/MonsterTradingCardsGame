@@ -116,6 +116,15 @@ namespace MTCG.DAL {
             }
         }
 
+        public void SetUserData(User user, string payload) {
+            JObject jObject = (JObject)JsonConvert.DeserializeObject(payload);
+
+            lock (this) {
+                user.SetUserData(jObject["Name"].ToString(), jObject["Bio"].ToString(), jObject["Image"].ToString());
+                DBConnection.UpdateUser(user);
+            }
+        }
+
         public List<Card> GetStack(Guid userId) {
             lock (this) {
                 return users.FirstOrDefault(u => u.Id == userId).Stack;
@@ -192,6 +201,15 @@ namespace MTCG.DAL {
                 user1.RemoveFriend(user2);
                 DBConnection.DeleteFriend(user1.Id, user2.Id);
             }
+        }
+
+        public bool CheckIfCardExsists(Card card) {
+            foreach (User u in users) {
+                if (u.Stack.Any(c => c.Id == card.Id)) {
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }

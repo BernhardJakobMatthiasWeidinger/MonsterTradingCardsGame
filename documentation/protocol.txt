@@ -35,14 +35,19 @@ the Route Commands, which handles all requests from clients.
 	Each repository uses a database connection, to select, insert, update and delete the data and
 	also contains a list of each entity to cache the data, so the server doesn't have to call the 
 	database for each select statement.
-	1.2.1 DBBattleRepository: This repository manages all battles.
-	1.2.2 DBPackageRepository: This repository manages all packages.
+	1.2.1 DBBattleRepository: This repository manages all battles. 
+					A player can either join a random battle with the command /battles, 
+					but the ELO difference of both players has to be 10 or smaller, or 
+					join a specific battle with the command /battles/{username},
+					the ELO difference doesn't matter, but the users have to be befriended (chapter 4).
+	1.2.2 DBPackageRepository: This repository manages all packages. Only the user "admin" can 
+					add packages. 
 	1.2.3 DBTradeRepository: This repository manages all trades.
 	1.2.4 DBUserRepository: This repository manages all users, its cards (stack and deck) and 
 					friend relationships (chapter 4).
 	
 	1.3 MTCGManager
-	This manager contains all repositories and uses them to handle the entire logic of the server.
+	This manager contains all 4 repositories and uses them to handle the entire logic of the server.
 	
 	1.4 Route Commands
 	Route commands will be used to handle incoming requests. Each command only contains an

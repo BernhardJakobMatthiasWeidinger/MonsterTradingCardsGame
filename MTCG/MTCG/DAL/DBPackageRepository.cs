@@ -16,33 +16,18 @@ namespace MTCG.DAL {
             packages = DBConnection.SelectAllPackages();
         }
 
-        public Package CreatePackage(string username, string payload) {
+        public Package CreatePackage(string username, List<Card> packageCards) {
             if (username != "admin") {
                 return null;
             }
 
-            List<Card> packageCards = new List<Card>();
-            JArray jsonCards = JsonConvert.DeserializeObject<JArray>(payload);
-            Package package;
-
             //create cards and add to package
             lock (this) {
-                foreach (JObject card in jsonCards) {
-                    Guid id = Guid.Parse(card["Id"].ToString());
-                    string name = card["Name"].ToString();
-                    double damage = Double.Parse(card["Damage"].ToString());
-
-                    if (name.ToLower().Contains("spell")) {
-                        packageCards.Add(new SpellCard(id, name, damage));
-                    } else {
-                        packageCards.Add(new MonsterCard(id, name, damage));
-                    }
-                }
-                package = new Package(Guid.NewGuid(), packageCards);
+                Package package = new Package(Guid.NewGuid(), packageCards);
+                DBConnection.InsertPackage(package);
                 packages.Add(package);
+                return package;
             }
-
-            return package;
         }
 
         public bool AcquirePackage(User user) {
@@ -68,6 +53,15 @@ namespace MTCG.DAL {
                     return false;
                 }
             }
+        }
+
+        public bool CheckIfCardExsists(Card card) {
+            foreach (Package package in packages) {
+                if (package.Cards.Any(c => c.Id == card.Id)) {
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }
