@@ -141,7 +141,7 @@ namespace MTCG.Models {
                 o["elo"] = Elo;
                 res = JsonConvert.SerializeObject(o);
             } else {
-                res += $"username:{Username, -20} gamesPlayed:{GamesPlayed, -3} gamesWon:{GamesWon, -3} gamesLost:{GamesWon, -3} elo:{Elo, -4}";
+                res += $"username:{Username, -20} gamesPlayed:{GamesPlayed, -3} gamesWon:{GamesWon, -3} gamesLost:{GamesLost, -3} elo:{Elo, -4}";
             }
             return res;
         }

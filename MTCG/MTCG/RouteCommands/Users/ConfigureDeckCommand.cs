@@ -31,8 +31,13 @@ namespace MTCG.RouteCommands.Users {
                     cardIds.Add(Guid.Parse(id.ToString()));
                 }
 
-                mTCGManager.ConfigureDeck(User, cardIds);
-                response.StatusCode = StatusCode.Ok;
+                //check if duplicate entry
+                if (cardIds.Count != cardIds.Distinct().Count()) {
+                    response.StatusCode = StatusCode.Conflict;
+                } else {
+                    mTCGManager.ConfigureDeck(User, cardIds);
+                    response.StatusCode = StatusCode.Ok;
+                }
             } catch (Exception ex) {
                 if (ex is InconsistentNumberException) {
                     response.StatusCode = StatusCode.Conflict;

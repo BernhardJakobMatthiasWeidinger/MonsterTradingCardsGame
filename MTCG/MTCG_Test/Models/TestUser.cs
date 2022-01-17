@@ -270,7 +270,7 @@ namespace MTCG.Test.Models {
             string dataPlain = u1.GetUserStats(false);
 
             //assert
-            Assert.AreEqual($"username:{u1.Username, -20} gamesPlayed:{u1.GamesPlayed, -3} gamesWon:{u1.GamesWon, -3} gamesLost:{u1.GamesWon, -3} elo:{u1.Elo, -4}", dataPlain);
+            Assert.AreEqual($"username:{u1.Username, -20} gamesPlayed:{u1.GamesPlayed, -3} gamesWon:{u1.GamesWon, -3} gamesLost:{u1.GamesLost, -3} elo:{u1.Elo, -4}", dataPlain);
         }
 
         [Test]
