@@ -12,5 +12,6 @@ namespace MTCG.DAL {
         void CreateTrade(Guid id, Card cardToTrade, User provider, CardType cardType, double minimumDamage);
         void TradeCard(User trader, Guid tradeId, Card card);
         void DeleteTrade(User provider, Guid tradeId);
+        bool CheckIfTradeExist(User user, List<Guid> cardIds);
     }
 }

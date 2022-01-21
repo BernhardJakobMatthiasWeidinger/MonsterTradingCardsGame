@@ -12,13 +12,13 @@ using System.Security.Cryptography;
 
 namespace MTCG {
     public class MTCGManager {
-        private readonly DBUserRepository dBUserRepository;
-        private readonly DBPackageRepository dBPackageRepository;
-        private readonly DBTradeRepository dBTradeRepository;
-        private readonly DBBattleRepository dBBattleRepository;
+        private readonly IUserRepository dBUserRepository;
+        private readonly IPackageRepository dBPackageRepository;
+        private readonly ITradeRepository dBTradeRepository;
+        private readonly IBattleRepository dBBattleRepository;
 
-        public MTCGManager(DBUserRepository dBUserRepository, DBPackageRepository dBPackageRepository, 
-            DBTradeRepository dBTradeRepository, DBBattleRepository dBBattleRepository) {
+        public MTCGManager(IUserRepository dBUserRepository, IPackageRepository dBPackageRepository,
+            ITradeRepository dBTradeRepository, IBattleRepository dBBattleRepository) {
             this.dBUserRepository = dBUserRepository;
             this.dBPackageRepository = dBPackageRepository;
             this.dBTradeRepository = dBTradeRepository;

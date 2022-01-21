@@ -12,12 +12,14 @@ namespace MTCG.DAL {
         User GetUserById(Guid id);
         bool InsertUser(User user);
         string GetScoreboard(bool json);
+        void SetUserData(User user, string payload);
 
         Card GetCardById(Guid id);
         void AssignCardsAtStart();
         List<Card> GetStack(Guid userId);
         List<Card> GetDeck(Guid userId);
         void ConfigureDeck(User user, List<Guid> cardIds);
+        bool CheckIfCardExsists(Card card);
 
         void AssignFriendsAtStart();
         string GetFriends(User user, bool isJson);
