@@ -24,7 +24,7 @@ namespace MTCG.RouteCommands.Users {
 
             try {
                 mTCGManager.DeleteFriend(User, other);
-                response.StatusCode = StatusCode.Created;
+                response.StatusCode = StatusCode.Ok;
             } catch (EntityNotFoundException) {
                 response.StatusCode = StatusCode.NotFound;
             } catch (FriendException) {

@@ -24,7 +24,7 @@ namespace MTCG.RouteCommands.Users {
 
             try {
                 mTCGManager.AddFriend(User, other);
-                response.StatusCode = StatusCode.Created;
+                response.StatusCode = StatusCode.Ok;
             } catch (FriendException) {
                 response.StatusCode = StatusCode.Conflict;
             } catch (EntityNotFoundException) {

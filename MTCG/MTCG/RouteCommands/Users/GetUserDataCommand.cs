@@ -23,7 +23,9 @@ namespace MTCG.RouteCommands.Users {
             if (User.Username == username) {
                 response.StatusCode = StatusCode.Ok;
                 response.Payload = User.GetUserData(true);
-            } 
+            } else {
+                response.StatusCode = StatusCode.Forbidden;
+            }
 
             return response;
         }

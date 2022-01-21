@@ -50,7 +50,7 @@ namespace MTCG.DAL {
 
                     return true;
                 } else {
-                    return false;
+                    throw new EntityNotFoundException();
                 }
             }
         }

@@ -22,6 +22,7 @@ namespace MTCG.RouteCommands.Battles {
             Response response = new Response();
             try {
                 response.Payload = mTCGManager.GetLogFromBattle(User, username);
+                response.StatusCode = StatusCode.Ok;
             } catch (EntityAlreadyExistsException) {
                 response.StatusCode = StatusCode.Conflict;
             } catch (InconsistentNumberException) {
